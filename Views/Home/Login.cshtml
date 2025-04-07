@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<h2 class="text-center">Login</h2>
+
+<form class="d-flex flex-column align-items-center" method="post" asp-action="Login">
+    <div class="mb-3 w-50">
+        <label for="exampleInputUsername" class="form-label">Username</label>
+        <input type="text" class="form-control" id="exampleInputUsername" name="Username" aria-describedby="usernameHelp" required>
+        <div id="usernameHelp" class="form-text">Introduza o seu username.</div>
+    </div>
+    <div class="mb-3 w-50">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" name="Password" required>
+        <div id="passHelp" class="form-text">Introduza a sua password.</div>
+    </div>
+    <button type="submit" class="btn custom-login-btn btn-lg">Login</button>
+</form>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger mt-3">@ViewBag.ErrorMessage</div>
+}

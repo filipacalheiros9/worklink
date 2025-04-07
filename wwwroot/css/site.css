@@ -1,0 +1,96 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+.custom-login-btn, .custom-register-btn {
+  width: auto; /* Define a largura automática */
+  padding: 10px 20px; /* Define o padding */
+  font-size: 16px; /* Define o tamanho da fonte */
+}
+
+.custom-login-btn {
+  background-color: green;
+  color: white;
+  border: 2px solid green;
+}
+
+.custom-register-btn {
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+}
+
+.custom-login-btn:hover {
+  background-color: darkgreen;
+  color: white;
+}
+
+.custom-register-btn:hover {
+  background-color: lightgray;
+  color: black;
+  border: 2px solid black;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+
+
+.resource-box {
+  background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com opacidade */
+  border: 1px solid black;
+  padding: 15px; /* Reduz o padding */
+  margin: 10px; /* Adiciona margem em todos os lados */
+  border-radius: 10px; /* Cantos arredondados */
+  backdrop-filter: blur(10px); /* Aplica desfoque na imagem de fundo */
+  box-sizing: border-box; /* Inclui borda e padding no tamanho total */
+  flex: 1 1 calc(33.333% - 20px); /* Ajusta a largura das caixas */
+}
+
+body {
+  background-image: url('/Images/copy-space-coffee-cookies.jpg');
+  background-size: cover; /* Faz a imagem cobrir toda a tela */
+  background-position: center; /* Centraliza a imagem */
+  background-repeat: no-repeat; /* Evita repetição */
+}
