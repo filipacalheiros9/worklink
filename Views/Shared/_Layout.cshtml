@@ -8,6 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WorkLink</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApplication2.styles.css" asp-append-version="true" />
@@ -35,13 +36,19 @@
                             }
                             else
                             {
-                                <li class="nav-item d-flex align-items-center">
-                                    <a class="nav-link" asp-controller="Home" asp-action="HomePageLogin" title="Perfil">
+                                <li class="nav-item dropdown-user position-relative">
+                                    <button class="btn user-icon" onclick="toggleUserMenu()">
                                         <i class="bi bi-person-circle fs-4"></i>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link btn btn-outline-danger" asp-controller="Home" asp-action="Logout">Logout</a>
+                                    </button>
+
+                                    <div id="userDropdownMenu" class="user-dropdown-menu d-none p-3 shadow border rounded bg-white position-absolute" style="top: 60px; right: 10px; z-index: 1000; min-width: 200px;">
+                                        <a class="dropdown-item" asp-controller="Home" asp-action="Perfil">👤 O meu perfil</a>
+                                        <a class="dropdown-item" asp-controller="Home" asp-action="CriarProjeto">📁 Os meus projetos</a>
+                                        <a class="dropdown-item" asp-controller="Home" asp-action="AsMinhasEquipas">👥 As minhas equipas</a>
+                                        <a class="dropdown-item" asp-controller="Home" asp-action="Defenicoes">⚙️ Definições</a>
+                                        <hr class="dropdown-divider">
+                                        <a class="dropdown-item text-danger" asp-controller="Home" asp-action="Logout">🚪 Terminar sessão</a>
+                                    </div>
                                 </li>
                             }
                         </ul>
@@ -63,6 +70,23 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        function toggleUserMenu() {
+            const menu = document.getElementById("userDropdownMenu");
+            menu.classList.toggle("d-none");
+        }
+
+        document.addEventListener("click", function (e) {
+            const btn = document.querySelector(".user-icon");
+            const menu = document.getElementById("userDropdownMenu");
+
+            if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.add("d-none");
+            }
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

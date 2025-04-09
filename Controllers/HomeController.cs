@@ -84,4 +84,24 @@ public class HomeController : Controller
         HttpContext.Session.Clear(); 
         return RedirectToAction("Index"); 
     }
+    
+    public IActionResult Perfil()
+    {
+        return View();
+    }
+
+    public IActionResult AsMinhasEquipas()
+    {
+        return View();
+    }
+
+    public IActionResult CriarProjeto()
+    {
+        return View();
+    }
+
+    public IActionResult Defenicoes()
+    {
+        return View();
+    }
 }

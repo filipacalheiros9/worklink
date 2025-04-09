@@ -1,0 +1,67 @@
+﻿@model WebApplication2.Entities.Utilizador
+
+@{
+    ViewData["Title"] = "O meu perfil";
+}
+
+<h1 class="mb-4 text-center">O meu perfil</h1>
+
+@if (ViewBag.Sucesso != null)
+{
+    <div class="alert alert-success text-center">@ViewBag.Sucesso</div>
+}
+
+<div class="container">
+    <form asp-action="Edit" method="post" class="p-4 border rounded shadow-sm bg-light">
+        <input type="hidden" asp-for="IdUtilizador" />
+
+        <div class="form-group row align-items-center mb-3">
+            <label for="Nome" class="col-sm-2 col-form-label font-weight-bold">Nome</label>
+            <div class="col-sm-9">
+                <input asp-for="Nome" class="form-control" readonly />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="col-sm-1 text-right">
+                <button type="button" class="btn btn-link p-0" onclick="enableEdit('Nome')">
+                    <i class="fas fa-pencil-alt text-primary"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group row align-items-center mb-3">
+            <label for="Username" class="col-sm-2 col-form-label font-weight-bold">Username</label>
+            <div class="col-sm-9">
+                <input asp-for="Username" class="form-control" readonly />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="col-sm-1 text-right">
+                <button type="button" class="btn btn-link p-0" onclick="enableEdit('Username')">
+                    <i class="fas fa-pencil-alt text-primary"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group row align-items-center mb-4">
+            <label for="Password" class="col-sm-2 col-form-label font-weight-bold">Password</label>
+            <div class="col-sm-9">
+                <input asp-for="Password" type="password" class="form-control" readonly />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="col-sm-1 text-right">
+                <button type="button" class="btn btn-link p-0" onclick="enableEdit('Password')">
+                    <i class="fas fa-pencil-alt text-primary"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary px-5">Salvar</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function enableEdit(fieldId) {
+        document.getElementById(fieldId).removeAttribute('readonly');
+    }
+</script>

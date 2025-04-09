@@ -8,6 +8,13 @@ html {
   }
 }
 
+.page-title-style {
+  background-size: cover;
+  padding: 50px;
+  color: black;
+  font-family: Arial, sans-serif;
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
@@ -31,9 +38,9 @@ body {
 }
 
 .custom-login-btn, .custom-register-btn {
-  width: auto; /* Define a largura automática */
-  padding: 10px 20px; /* Define o padding */
-  font-size: 16px; /* Define o tamanho da fonte */
+  width: auto; 
+  padding: 10px 20px;
+  font-size: 16px; 
 }
 
 .custom-login-btn {
@@ -76,21 +83,171 @@ main {
 }
 
 
-
 .resource-box {
-  background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com opacidade */
+  background-color: rgba(255, 255, 255, 0.8); 
   border: 1px solid black;
-  padding: 15px; /* Reduz o padding */
-  margin: 10px; /* Adiciona margem em todos os lados */
-  border-radius: 10px; /* Cantos arredondados */
-  backdrop-filter: blur(10px); /* Aplica desfoque na imagem de fundo */
-  box-sizing: border-box; /* Inclui borda e padding no tamanho total */
-  flex: 1 1 calc(33.333% - 20px); /* Ajusta a largura das caixas */
+  padding: 15px; 
+  margin: 10px; 
+  border-radius: 10px; 
+  backdrop-filter: blur(10px); 
+  box-sizing: border-box;
+  flex: 1 1 calc(33.333% - 20px);
 }
 
 body {
-  background-image: url('/Images/copy-space-coffee-cookies.jpg');
-  background-size: cover; /* Faz a imagem cobrir toda a tela */
-  background-position: center; /* Centraliza a imagem */
-  background-repeat: no-repeat; /* Evita repetição */
+  background-image: url('/Images/');
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+}
+
+
+.dropdown-user {
+  position: relative;
+}
+
+.user-icon {
+  background: none;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  background-color: #fff;
+  color: #000; 
+  padding: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  width: 220px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.user-dropdown-menu a {
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #000; 
+  transition: background 0.2s, color 0.2s;
+}
+
+.user-dropdown-menu a:hover {
+  background-color: rgba(66, 62, 64, 0.55); 
+  color: white; 
+}
+
+.user-dropdown-menu hr {
+  margin: 8px 0;
+  border: 0;
+  height: 1px;
+  background-color: #ddd;
+}
+
+.d-none {
+  display: none !important;
+}
+
+
+
+\\------------------------------------------------\\
+                      \\PERFIL\\
+\\------------------------------------------------\\
+
+
+.perfil-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 140px);
+  padding: 2rem 1rem;
+  background-color: #f2f2f2;
+}
+
+.perfil-card {
+  background-color: white;
+  padding: 3rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+}
+
+.perfil-header {
+  margin-bottom: 2rem;
+}
+
+.perfil-info div {
+  text-align: left;
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+}
+
+/* Estilo para o formulário */
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para os campos */
+.form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+input[readonly] {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+/* Estilo para o botão de lápis */
+button.btn-link {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #007bff;
+  font-size: 1.2rem;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+button.btn-link:hover {
+  color: #0056b3;
+}
+
+/* Botão de salvar */
+button[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #006400;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #006400;
 }

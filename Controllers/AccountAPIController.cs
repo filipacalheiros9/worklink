@@ -9,11 +9,11 @@ namespace WebApplication2.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountAPIController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public AccountController(ApplicationDbContext context)
+        public AccountAPIController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -65,4 +65,6 @@ namespace WebApplication2.Controllers
         public string Username { get; set; }
         public string Password { get; set; }
     }
+    
+    
 }
