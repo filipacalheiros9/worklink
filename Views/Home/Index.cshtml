@@ -2,27 +2,68 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center page-title-style" >
-    <h1 class="display-4">Seja bem vindo à WorkLink!</h1>
-    <p>Aqui podes criar projetos, montar a tua equipa e muito mais!</p>
-    <a href="/Projects/Create" class="btn custom-login-btn btn-lg m-2">Criar Projeto</a>
-    <a href="/Teams" class="btn btn-secondary btn-lg m-2">Ver Equipas</a>
+<!-- FONT AWESOME + CSS PRINCIPAL -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+<link href="/css/index.css" rel="stylesheet" />
+
+<!-- HERO SECTION -->
+<div class="text-center page-title-style mt-5">
+    <h1 class="display-4 titulo-epico">Seja bem vindo à WorkLink!</h1>
+    <p class="subtexto-epico">Aqui podes criar projetos, montar a tua equipa e muito mais!</p>
 </div>
 
-<div class="container mt-5 mb-7">
-    <h2 class="text-center">Funcionalidades</h2>
-    <div class="row mt-5">
-        <div class="col-md-4 resource-box">
+<!-- FUNCIONALIDADES -->
+<div class="container mt-5 mb-7 funcionalidades-sec">
+    <h2 class="text-center mb-5 text-success"> Funcionalidades </h2>
+
+    <div class="feature-row">
+        <div class="feature-card">
+            <i class="fas fa-project-diagram"></i>
             <h3>Gestão de Projetos</h3>
-            <p>Crie e gerencie os seus projetos de forma eficiente.</p>
+            <p>Organiza e acompanha os teus projetos de forma eficiente e intuitiva.</p>
         </div>
-        <div class="col-md-4 resource-box">
+        <div class="feature-card">
+            <i class="fas fa-users-cog"></i>
             <h3>Montagem de Equipas</h3>
-            <p>Encontre e colabore com os melhores profissionais.</p>
+            <p>Forma equipas com os teus colegas e colabora em novas aventuras.</p>
         </div>
-        <div class="col-md-4 resource-box">
+        <div class="feature-card">
+            <i class="fas fa-headset"></i>
             <h3>Comunicação</h3>
-            <p>Comunique-se facilmente com sua equipa.</p>
+            <p>Fica em contacto com a tua equipa para uma colaboração contínua e eficaz.</p>
+        </div>
+    </div>
+
+    <div class="feature-row">
+        <div class="feature-card">
+            <i class="fas fa-bell"></i>
+            <h3>Notificações</h3>
+            <p>Recebe alertas em tempo real sobre atualizações, tarefas e colaborações.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-file-upload"></i>
+            <h3>Partilha de Ficheiros</h3>
+            <p>Troca tarefas já existentes de forma rápida e segura entre projetos.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-star-half-alt"></i>
+            <h3>Feedback & Avaliações</h3>
+            <p>Partilha feedback ao longo do projeto e avalia o desempenho no final.</p>
         </div>
     </div>
 </div>
+
+
+<script>
+    const cards = document.querySelectorAll('.feature-card');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    cards.forEach(card => observer.observe(card));
+</script>
+

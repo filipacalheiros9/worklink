@@ -35,21 +35,26 @@ public class HomeController : Controller
     }
 
     
+    
     [HttpPost]
-    public async Task<IActionResult> Login(string username, string password)
+    public async Task<IActionResult> Login(string Username, string Password)
     {
         var utilizador = await _context.Utilizadores
-            .FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+            .FirstOrDefaultAsync(u => u.Username == Username && u.Password == Password);
 
         if (utilizador != null)
         {
+            
+            HttpContext.Session.SetString("IdUtilizador", utilizador.IdUtilizador.ToString());
             HttpContext.Session.SetString("LoggedIn", "true");
-            return RedirectToAction("HomePageLogin");
+
+            return RedirectToAction("HomePageLogin", "Home"); 
         }
 
-        ViewBag.LoginErro = "Credenciais inválidas.";
+        ViewBag.ErrorMessage = "Credenciais inválidas.";
         return View();
     }
+
 
     public IActionResult Register()
     {
@@ -85,10 +90,26 @@ public class HomeController : Controller
         return RedirectToAction("Index"); 
     }
     
-    public IActionResult Perfil()
+    public async Task<IActionResult> Perfil()
     {
-        return View();
+        var idStr = HttpContext.Session.GetString("IdUtilizador");
+
+        if (string.IsNullOrEmpty(idStr))
+            return RedirectToAction("Login", "Home");
+
+        decimal id = decimal.Parse(idStr);
+
+        var utilizador = await _context.Utilizadores
+            .Where(u => u.IdUtilizador == id)
+            .FirstOrDefaultAsync();
+
+        if (utilizador == null)
+            return RedirectToAction("Login", "Home");
+
+        return View(utilizador);
     }
+
+
 
     public IActionResult AsMinhasEquipas()
     {

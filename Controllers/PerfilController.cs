@@ -14,46 +14,43 @@ public class PerfilController : Controller
         _context = context;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Index()
+    [HttpPut]
+    public async Task<IActionResult> UpdatePerfil([FromBody] UtilizadorUpdateDto model)
     {
-        var userId = HttpContext.Session.GetInt32("UserId");
-        if (userId == null)
-        {
-            return RedirectToAction("Login", "Home");
-        }
+        var idStr = HttpContext.Session.GetString("IdUtilizador");
+        if (string.IsNullOrEmpty(idStr))
+            return Unauthorized(new { Message = "Sessão inválida ou expirada." });
 
-        var utilizador = await _context.Utilizadores.FindAsync(userId);
+        decimal id = decimal.Parse(idStr);
+
+        if (id != model.IdUtilizador)
+            return BadRequest(new { Message = "ID da sessão não coincide com o pedido." });
+
+        var utilizador = await _context.Utilizadores
+            .Where(u => u.IdUtilizador == id)
+            .FirstOrDefaultAsync();
+
         if (utilizador == null)
+            return NotFound(new { Message = "Utilizador não encontrado." });
+
+        try
         {
-            return NotFound();
-        }
-
-        return View(utilizador);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Edit(Utilizador model)
-    {
-        if (ModelState.IsValid)
-        {
-            var utilizador = await _context.Utilizadores.FindAsync(model.IdUtilizador);
-            if (utilizador == null)
-            {
-                return NotFound();
-            }
-
             utilizador.Nome = model.Nome;
             utilizador.Username = model.Username;
             utilizador.Password = model.Password;
 
-            _context.Utilizadores.Update(utilizador);
             await _context.SaveChangesAsync();
 
-            ViewBag.Sucesso = "Perfil atualizado com sucesso!";
-            return View("Index", utilizador);
+            return Ok(new { Message = "Perfil atualizado com sucesso." });
         }
-
-        return View("Index", model);
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { Message = "Erro ao atualizar: " + ex.Message });
+        }
     }
+
+
+
+
+    
 }

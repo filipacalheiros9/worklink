@@ -9,6 +9,26 @@
       "PackagePath": "staticwebassets\\Images\\copy-space-coffee-cookies.jpg"
     },
     {
+      "Id": "C:\\Users\\Asus\\worklink\\wwwroot\\Images\\light-satin-soft-blue-abstract-creative-background-design_851755-210477.png",
+      "PackagePath": "staticwebassets\\Images\\light-satin-soft-blue-abstract-creative-background-design_851755-210477.png"
+    },
+    {
+      "Id": "C:\\Users\\Asus\\worklink\\wwwroot\\css\\Login.css",
+      "PackagePath": "staticwebassets\\css\\Login.css"
+    },
+    {
+      "Id": "C:\\Users\\Asus\\worklink\\wwwroot\\css\\index.css",
+      "PackagePath": "staticwebassets\\css\\index.css"
+    },
+    {
+      "Id": "C:\\Users\\Asus\\worklink\\wwwroot\\css\\perfil.css",
+      "PackagePath": "staticwebassets\\css\\perfil.css"
+    },
+    {
+      "Id": "C:\\Users\\Asus\\worklink\\wwwroot\\css\\register.css",
+      "PackagePath": "staticwebassets\\css\\register.css"
+    },
+    {
       "Id": "C:\\Users\\Asus\\worklink\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

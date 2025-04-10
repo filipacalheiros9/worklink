@@ -1,11 +1,29 @@
 html {
   font-size: 14px;
+  position: relative;
+  min-height: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+body {
+  margin-bottom: 60px;
+  height: 100%;
+  background-image: url('/Images/');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
 }
 
 .page-title-style {
@@ -19,88 +37,30 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
-}
-
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
-}
-
 .custom-login-btn, .custom-register-btn {
-  width: auto; 
+  width: auto;
   padding: 10px 20px;
-  font-size: 16px; 
-}
-
-.custom-login-btn {
-  background-color: green;
-  color: white;
-  border: 2px solid green;
-}
-
-.custom-register-btn {
-  background-color: white;
-  color: black;
-  border: 2px solid black;
+  font-size: 16px;
 }
 
 .custom-login-btn:hover {
-  background-color: darkgreen;
-  color: white;
+  background-color: #006400;
 }
 
 .custom-register-btn:hover {
   background-color: lightgray;
-  color: black;
-  border: 2px solid black;
 }
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.wrapper {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-main {
-  flex: 1;
-}
-
 
 .resource-box {
-  background-color: rgba(255, 255, 255, 0.8); 
+  background-color: rgba(255, 255, 255, 0.8);
   border: 1px solid black;
-  padding: 15px; 
-  margin: 10px; 
-  border-radius: 10px; 
-  backdrop-filter: blur(10px); 
+  padding: 15px;
+  margin: 10px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
   box-sizing: border-box;
   flex: 1 1 calc(33.333% - 20px);
 }
-
-body {
-  background-image: url('/Images/');
-  background-size: cover; 
-  background-position: center; 
-  background-repeat: no-repeat; 
-}
-
 
 .dropdown-user {
   position: relative;
@@ -118,7 +78,7 @@ body {
   right: 0;
   top: 45px;
   background-color: #fff;
-  color: #000; 
+  color: #000;
   padding: 10px 0;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -127,18 +87,19 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  animation: fadeIn 0.2s ease;
 }
 
 .user-dropdown-menu a {
   padding: 10px 20px;
   text-decoration: none;
-  color: #000; 
+  color: #000;
   transition: background 0.2s, color 0.2s;
 }
 
 .user-dropdown-menu a:hover {
-  background-color: rgba(66, 62, 64, 0.55); 
-  color: white; 
+  background-color: rgba(66, 62, 64, 0.55);
+  color: white;
 }
 
 .user-dropdown-menu hr {
@@ -152,12 +113,15 @@ body {
   display: none !important;
 }
 
+.dropdown-user .user-icon:hover {
+  background-color: #e8f5e9;
+  transition: background-color 0.3s ease;
+}
 
-
-\\------------------------------------------------\\
-                      \\PERFIL\\
-\\------------------------------------------------\\
-
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 .perfil-container {
   display: flex;
@@ -188,7 +152,6 @@ body {
   font-size: 1rem;
 }
 
-/* Estilo para o formulário */
 form {
   max-width: 600px;
   margin: 0 auto;
@@ -199,7 +162,6 @@ form {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilo para os campos */
 .form-group {
   margin-bottom: 20px;
   position: relative;
@@ -216,7 +178,6 @@ input[readonly] {
   cursor: not-allowed;
 }
 
-/* Estilo para o botão de lápis */
 button.btn-link {
   position: absolute;
   right: 10px;
@@ -234,7 +195,6 @@ button.btn-link:hover {
   color: #0056b3;
 }
 
-/* Botão de salvar */
 button[type="submit"] {
   display: block;
   width: 100%;
@@ -251,3 +211,34 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #006400;
 }
+
+--OLHO DO INPUT DE SENHA--*
+
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper .form-control {
+  padding-right: 2.5rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.password-wrapper:hover .password-toggle {
+  opacity: 1;
+}
+

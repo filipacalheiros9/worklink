@@ -2,23 +2,62 @@
     ViewData["Title"] = "Login";
 }
 
-<h2 class="text-center">Login</h2>
+<!-- FONT AWESOME -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+<link href="/css/login.css" rel="stylesheet" />
 
-<form class="d-flex flex-column align-items-center" method="post" asp-action="Login">
-    <div class="mb-3 w-50">
-        <label for="exampleInputUsername" class="form-label">Nome do utilizador</label>
-        <input type="text" class="form-control" id="exampleInputUsername" name="Username" aria-describedby="usernameHelp" required>
-        <div id="usernameHelp" class="form-text">Introduza o seu nome do utilizador.</div>
-    </div>
-    <div class="mb-3 w-50">
-        <label for="exampleInputPassword1" class="form-label">Palavra passe</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" name="Password" required>
-        <div id="passHelp" class="form-text">Introduza a sua palavra passe.</div>
-    </div>
-    <button type="submit" class="btn custom-login-btn btn-lg">Login</button>
-</form>
+<div class="login-container">
+    <h2><i class="fas fa-sign-in-alt me-2"></i> Login</h2>
 
-@if (ViewBag.ErrorMessage != null)
-{
-    <div class="alert alert-danger mt-3">@ViewBag.ErrorMessage</div>
-}
+    <form method="post" asp-action="Login">
+        <div class="mb-3">
+            <label for="username" class="form-label">Nome do utilizador</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user text-success"></i></span>
+                <input type="text" class="form-control" id="username" name="Username" required />
+            </div>
+        </div>
+
+        <div class="mb-3 w-100">
+            <label for="Password" class="form-label">Palavra-passe</label>
+            <div class="input-group password-wrapper">
+                <span class="input-group-text bg-white"><i class="fas fa-lock text-success"></i></span>
+                <input type="password" class="form-control" id="Password" name="Password" required />
+                <button type="button" class="password-toggle" onclick="togglePassword('Password', this)">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div>
+
+
+
+        <button type="submit" class="btn btn-login">Entrar</button>
+    </form>
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger mt-3 d-flex align-items-center" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <div>@ViewBag.ErrorMessage</div>
+        </div>
+    }
+</div>
+
+
+<script>
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+</script>
+
+

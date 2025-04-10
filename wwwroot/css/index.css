@@ -1,0 +1,126 @@
+﻿
+
+@keyframes fundoAnimado {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
+}
+
+@keyframes fadeBody {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.titulo-epico {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: .15em solid #4caf50;
+    animation: typing 3s steps(40, end), blink-caret .75s step-end infinite;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.subtexto-epico {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 1.5s ease-out 3s forwards;
+    color: #666;
+    font-size: 1.25rem;
+    font-weight: 400;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #4caf50; }
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-chamada {
+    display: inline-block;
+    background: #4caf50;
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
+}
+
+.btn-chamada:hover {
+    background: #66bb6a;
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(76, 175, 80, 0.8);
+}
+
+.funcionalidades-sec .feature-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.funcionalidades-sec .feature-card {
+    flex: 0 0 calc(33.333% - 2rem);
+    background: #1f1f1f;
+    border: 2px solid #4caf50;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+    transition: all 0.3s ease;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    max-width: 320px;
+}
+
+.funcionalidades-sec .feature-card:hover {
+    transform: scale(1.05) rotate(-1deg);
+    background: radial-gradient(circle at center, #66bb6a, #2e7d32);
+    box-shadow: 0 0 50px rgba(76, 175, 80, 0.6);
+}
+
+.funcionalidades-sec .feature-card:hover::before {
+    content: "\f508"; /* fa-user-tie */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    font-size: 4rem;
+    color: #a5d6a7;
+    opacity: 0.3;
+    top: 10px;
+    right: 10px;
+    animation: floatIcon 0.6s ease-in-out;
+}
+
+.funcionalidades-sec .feature-card i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+    animation: pulse 1.5s infinite;
+}
+
+.funcionalidades-sec .feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 900;
+}
+
+.funcionalidades-sec .feature-card p {
+    font-size: 1rem;
+    color: #e0e0e0;
+}

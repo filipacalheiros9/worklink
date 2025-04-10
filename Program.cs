@@ -42,6 +42,8 @@ else
 }
 
 
+
+
 app.MapControllers();
 app.UseHttpsRedirection();
 app.UseRouting();
@@ -56,6 +58,7 @@ app.MapControllerRoute(
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+app.UseRouting();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
