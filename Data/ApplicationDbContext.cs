@@ -19,16 +19,21 @@ namespace WebApplication2.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Membro>().HasKey(m => m.IdMembro);
-            modelBuilder.Entity<Projeto>().HasKey(p => p.IdProjeto);
-            modelBuilder.Entity<Tarefa>().HasKey(t => t.IdTarefa);
-            modelBuilder.Entity<Utilizador>()
-                .HasKey(u => u.IdUtilizador);
 
-            modelBuilder.Entity<Utilizador>()
-                .Property(u => u.IdUtilizador)
-                .ValueGeneratedOnAdd();
-            // Additional model configurations can be added here
+            modelBuilder.Entity<Projeto>(entity =>
+            {
+                entity.HasKey(e => e.IdProjeto);
+
+                entity.Property(e => e.NomeProjeto).IsRequired();
+                entity.Property(e => e.NomeCliente).IsRequired();
+                entity.Property(e => e.PrecoHora);
+        
+                // Configurar corretamente a relação
+                entity.HasOne(e => e.IdUtilizadorNavigation)
+                    .WithMany(u => u.Projetos) // assumes Utilizador tem ICollection<Projeto> Projetos
+                    .HasForeignKey(e => e.IdUtilizador)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -1,128 +1,110 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebApplication2.Data;
+using System.Diagnostics;
 using WebApplication2.Entities;
 using WebApplication2.Models;
-
-namespace WebApplication2.Controllers;
-
-public class HomeController : Controller
+using WebApplication2.Services;
+using WebApplication2.Factories; 
+namespace WebApplication2.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-    private readonly ApplicationDbContext _context;
-
-    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+    public partial class HomeController : Controller
     {
-        _logger = logger;
-        _context = context;
-    }
+        private readonly ILogger<HomeController> _logger;
+        private readonly IUtilizadorService _utilizadorService;
 
-    public IActionResult Index()
-    {
-        return View();
-    }
-
-    public IActionResult Contato()
-    {
-        return View();
-    }
-
-    [HttpGet]
-    public IActionResult Login()
-    {
-        return View();
-    }
-
-    
-    
-    [HttpPost]
-    public async Task<IActionResult> Login(string Username, string Password)
-    {
-        var utilizador = await _context.Utilizadores
-            .FirstOrDefaultAsync(u => u.Username == Username && u.Password == Password);
-
-        if (utilizador != null)
+        public HomeController(ILogger<HomeController> logger, IUtilizadorService utilizadorService)
         {
-            
-            HttpContext.Session.SetString("IdUtilizador", utilizador.IdUtilizador.ToString());
-            HttpContext.Session.SetString("LoggedIn", "true");
-
-            return RedirectToAction("HomePageLogin", "Home"); 
+            _logger = logger;
+            _utilizadorService = utilizadorService;
         }
 
-        ViewBag.ErrorMessage = "Credenciais inválidas.";
-        return View();
-    }
+        public IActionResult Index() => View();
+        public IActionResult Contato() => View();
+        public IActionResult Register() => View();
+        public IActionResult HomePageLogin() => View();
+        public IActionResult AsMinhasEquipas() => View();
+        public IActionResult CriarProjeto() => View();
+        public IActionResult Defenicoes() => View();
+        
+        public IActionResult adminpage() => View();
 
+        [HttpGet]
+        public IActionResult Login() => View();
 
-    public IActionResult Register()
-    {
-        return View();
-    }
-    
-    [HttpPost]
-    public async Task<IActionResult> Register(Utilizador utilizador)
-    {
-        if (ModelState.IsValid)
+        
+        [HttpPost]
+        public async Task<IActionResult> Login(string Username, string Password)
         {
-            _context.Utilizadores.Add(utilizador);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            var utilizador = await _utilizadorService.ValidateLoginAsync(Username, Password);
+
+            if (utilizador != null)
+            {
+                HttpContext.Session.SetString("IdUtilizador", utilizador.IdUtilizador.ToString());
+                HttpContext.Session.SetString("LoggedIn", "true");
+                HttpContext.Session.SetString("Cargo", utilizador.cargo);
+
+                // Redireciona com base no cargo do utilizador
+                if (utilizador.cargo == "admin")
+                {
+                    return RedirectToAction("adminpage", "Home");
+                }
+                else
+                {
+                    return RedirectToAction("HomePageLogin", "Home");
+                }
+            }
+
+            ViewBag.ErrorMessage = "Credenciais inválidas.";
+            return View();
         }
-        return View(utilizador);
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-    
-    public IActionResult HomePageLogin()
-    {
-        return View();
-    }
-    
-    public IActionResult Logout()
-    {
-        HttpContext.Session.Clear(); 
-        return RedirectToAction("Index"); 
-    }
-    
-    public async Task<IActionResult> Perfil()
-    {
-        var idStr = HttpContext.Session.GetString("IdUtilizador");
-
-        if (string.IsNullOrEmpty(idStr))
-            return RedirectToAction("Login", "Home");
-
-        decimal id = decimal.Parse(idStr);
-
-        var utilizador = await _context.Utilizadores
-            .Where(u => u.IdUtilizador == id)
-            .FirstOrDefaultAsync();
-
-        if (utilizador == null)
-            return RedirectToAction("Login", "Home");
-
-        return View(utilizador);
-    }
 
 
+        [HttpPost]
+        public async Task<IActionResult> Register(Utilizador utilizador)
+        {
+            if (ModelState.IsValid)
+            {
+                
+                var totalUtilizadores = await _utilizadorService.CountUtilizadoresAsync();
+                
+                var novoUtilizador = UtilizadorFactory.CriarNovo(
+                    utilizador.Nome,
+                    utilizador.Username,
+                    utilizador.Password,
+                    totalUtilizadores
+                );
+                
+                await _utilizadorService.RegisterUtilizadorAsync(novoUtilizador);
 
-    public IActionResult AsMinhasEquipas()
-    {
-        return View();
-    }
+                return RedirectToAction("Index");
+            }
+            return View(utilizador);
+        }
+        
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear(); 
+            return RedirectToAction("Index"); 
+        }
 
-    public IActionResult CriarProjeto()
-    {
-        return View();
-    }
+        public async Task<IActionResult> Perfil()
+        {
+            var idStr = HttpContext.Session.GetString("IdUtilizador");
 
-    public IActionResult Defenicoes()
-    {
-        return View();
+            if (string.IsNullOrEmpty(idStr) || !decimal.TryParse(idStr, out var id))
+                return RedirectToAction("Login", "Home");
+
+            var utilizador = await _utilizadorService.GetUtilizadorByIdAsync(id);
+
+            if (utilizador == null)
+                return RedirectToAction("Login", "Home");
+
+            return View(utilizador);
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }

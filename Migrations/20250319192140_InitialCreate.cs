@@ -21,6 +21,7 @@ namespace WebApplication2.Migrations
                     Nome = table.Column<string>(type: "text", nullable: false),
                     Username = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
+                    cargo = table.Column<string>(type: "text", nullable: false),
                     NHabitualHoras = table.Column<decimal>(type: "numeric", nullable: true)
                 },
                 constraints: table =>

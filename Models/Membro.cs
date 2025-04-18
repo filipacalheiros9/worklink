@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WebApplication2.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using WebApplication2.Entities; 
 
 public partial class Membro
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public decimal IdMembro { get; set; }
 
     public string Nome { get; set; } = null!;
@@ -21,3 +22,4 @@ public partial class Membro
 
     public virtual Utilizador IdUtilizadorNavigation { get; set; } = null!;
 }
+

@@ -1,5 +1,6 @@
 ﻿@{
     var loggedIn = Context.Session.GetString("LoggedIn") == "true";
+    var cargo = Context.Session.GetString("Cargo") ?? "";
 }
 
 <!DOCTYPE html>
@@ -21,11 +22,13 @@
 
 <body>
     <div class="wrapper">
-        <!-- NAVBAR INCRÍVEL -->
+        <!-- NAVBAR -->
         <header>
             <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm px-3">
                 <div class="container-fluid">
-                    <a class="navbar-brand d-flex align-items-center fw-bold text-success fs-4" asp-controller="Home" asp-action="@(loggedIn ? "HomePageLogin" : "Index")">
+                    <a class="navbar-brand d-flex align-items-center fw-bold text-success fs-4" 
+                       asp-controller="Home" 
+                       asp-action="@(loggedIn ? (cargo == "Admin" ? "AdminPage" : "HomePageLogin") : "Index")">
                         <i class="fas fa-link me-2"></i> WorkLink
                     </a>
 

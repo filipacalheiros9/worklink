@@ -138,6 +138,10 @@ namespace WebApplication2.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
+                    
+                    b.Property<string>("cargo")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Username")
                         .IsRequired()

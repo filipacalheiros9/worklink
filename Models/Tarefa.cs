@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WebApplication2.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using WebApplication2.Entities; 
 
 public partial class Tarefa
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public decimal IdTarefa { get; set; }
 
     public string NomeTarefa { get; set; } = null!;
@@ -21,3 +22,4 @@ public partial class Tarefa
 
     public virtual Projeto IdProjetoNavigation { get; set; } = null!;
 }
+

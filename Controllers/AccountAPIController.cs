@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApplication2.Data;
+using WebApplication2.DTO;
 using WebApplication2.Entities;
 
 namespace WebApplication2.Controllers
@@ -38,7 +39,7 @@ namespace WebApplication2.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] Register.RegisterModel model)
         {
             if (ModelState.IsValid)
             {
@@ -46,7 +47,8 @@ namespace WebApplication2.Controllers
                 {
                     Nome = model.FullName,
                     Username = model.Username,
-                    Password = model.Password // Note: Hash the password before saving
+                    Password = model.Password,
+                    cargo = model.cargo
                 };
 
                 _context.Utilizadores.Add(user);
@@ -59,12 +61,9 @@ namespace WebApplication2.Controllers
         }
     }
 
-    public class RegisterModel
-    {
-        public string FullName { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-    }
+    
+    
+    
     
     
 }

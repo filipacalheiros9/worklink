@@ -1,19 +1,40 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using WebApplication2.Data;
-
-
+using WebApplication2.Data.Repositories; // 🔥 adiciona este
+using WebApplication2.Services;          // 🔥 adiciona este
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Banco de Dados
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+// Serviços
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllers(); // para API Controllers
 builder.Services.AddSession();
-builder.Services.AddControllers();
 
+// 🔥 Registar Repositórios e Serviços
+builder.Services.AddScoped<IUtilizadorRepository, UtilizadorRepository>();
+builder.Services.AddScoped<IUtilizadorService, UtilizadorService>();
 
+// 🔥 ADICIONAR Autenticação por Cookies
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Home/Login"; // página de login
+        options.LogoutPath = "/Home/Logout"; // página de logout
+        options.AccessDeniedPath = "/Home/AcessoNegado"; // (se quiseres uma página de acesso negado)
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    });
+
+builder.Services.AddAuthorization();
+
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -24,9 +45,10 @@ builder.Services.AddSwaggerGen(c =>
         Description = "API para a aplicação Blazor Sandbox"
     });
 });
+
 var app = builder.Build();
 
-
+// Middlewares
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -38,32 +60,24 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    app.UseHsts(); 
+    app.UseHsts();
 }
 
-
-
-
-app.MapControllers();
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 app.UseRouting();
+
 app.UseSession();
 
+// 🔥 Estes têm de vir nesta ordem:
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
+// Rotas
+app.MapControllers(); // APIs
 app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
-app.UseRouting();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-});
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}"); // MVC tradicional
 
 app.Run();
