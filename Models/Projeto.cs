@@ -19,7 +19,7 @@ public partial class Projeto
 
     public decimal IdUtilizador { get; set; }
 
-    public virtual Utilizador IdUtilizadorNavigation { get; set; } = null!;
+    public virtual Utilizador? IdUtilizadorNavigation { get; set; }
 
     public virtual ICollection<Membro> Membros { get; set; } = new List<Membro>();
 }

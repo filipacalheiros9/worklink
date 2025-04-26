@@ -16,7 +16,7 @@ public partial class Utilizador
     public string Username { get; set; }
 
     public string Password { get; set; }
-    
+
     public string cargo { get; set; } = "Utilizador";
 
     public decimal? NHabitualHoras { get; set; }

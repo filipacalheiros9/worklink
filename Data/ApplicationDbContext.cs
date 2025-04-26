@@ -26,11 +26,9 @@ namespace WebApplication2.Data
 
                 entity.Property(e => e.NomeProjeto).IsRequired();
                 entity.Property(e => e.NomeCliente).IsRequired();
-                entity.Property(e => e.PrecoHora);
-        
-                // Configurar corretamente a relação
+
                 entity.HasOne(e => e.IdUtilizadorNavigation)
-                    .WithMany(u => u.Projetos) // assumes Utilizador tem ICollection<Projeto> Projetos
+                    .WithMany(u => u.Projetos)
                     .HasForeignKey(e => e.IdUtilizador)
                     .OnDelete(DeleteBehavior.Restrict);
             });

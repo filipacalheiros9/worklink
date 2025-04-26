@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using WebApplication2.Entities;
 using WebApplication2.Models;
 using WebApplication2.Services;
@@ -24,7 +27,7 @@ namespace WebApplication2.Controllers
         public IActionResult AsMinhasEquipas() => View();
         public IActionResult CriarProjeto() => View();
         public IActionResult Defenicoes() => View();
-        
+        public IActionResult Tarefas() => View();
         public IActionResult adminpage() => View();
 
         [HttpGet]
@@ -38,6 +41,21 @@ namespace WebApplication2.Controllers
 
             if (utilizador != null)
             {
+                // ✅ CRIA AS CLAIMS
+                var claims = new List<Claim>
+                {
+                    new Claim("id", utilizador.IdUtilizador.ToString()),
+                    new Claim(ClaimTypes.Name, utilizador.Username),
+                    new Claim(ClaimTypes.Role, utilizador.cargo)
+                };
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                // ✅ SIGN IN COM COOKIES
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                // Se quiseres ainda usar a sessão, podes manter
                 HttpContext.Session.SetString("IdUtilizador", utilizador.IdUtilizador.ToString());
                 HttpContext.Session.SetString("LoggedIn", "true");
                 HttpContext.Session.SetString("Cargo", utilizador.cargo);
@@ -80,10 +98,11 @@ namespace WebApplication2.Controllers
             return View(utilizador);
         }
         
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.Session.Clear(); 
-            return RedirectToAction("Index"); 
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Perfil()

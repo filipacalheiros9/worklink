@@ -59,9 +59,18 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
+    // COMENTA ISTO PARA VER O ERRO REAL:
+    // app.UseExceptionHandler("/Home/Error");
+
     app.UseHsts();
 }
+
+// Adiciona isto ANTES de app.Run()
+AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
+{
+    Console.WriteLine("🔴 UNHANDLED EXCEPTION:");
+    Console.WriteLine(eventArgs.ExceptionObject?.ToString());
+};
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -70,14 +79,13 @@ app.UseRouting();
 
 app.UseSession();
 
-// 🔥 Estes têm de vir nesta ordem:
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Rotas
-app.MapControllers(); // APIs
+app.MapControllers();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"); // MVC tradicional
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
