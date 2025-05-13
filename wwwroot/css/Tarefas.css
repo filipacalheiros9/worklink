@@ -1,0 +1,323 @@
+﻿body {
+    background-color: #f4f4f4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eaeaea;
+}
+
+.dashboard-title {
+    margin: 0;
+    font-size: 2rem;
+    color: #198754;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 600;
+}
+
+.dashboard-title i {
+    font-size: 1.5em;
+}
+
+.project-name {
+    color: #333;
+    font-weight: 500;
+}
+
+.kanban-board {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 20px 0;
+    align-items: flex-start;
+    min-height: 70vh;
+}
+
+.kanban-column {
+    background-color: #1e1e1e;
+    color: white;
+    border-radius: 12px;
+    min-width: 300px;
+    max-width: 300px;
+    padding: 18px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    height: fit-content;
+    min-height: 400px;
+}
+
+.kanban-column h3 {
+    text-align: center;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid #444;
+    padding-bottom: 12px;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+}
+
+.card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 100px;
+    flex-grow: 1;
+    padding: 5px;
+    transition: background-color 0.2s;
+}
+
+.card-list.drag-over {
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 8px;
+}
+
+.kanban-card {
+    background-color: #ffffff;
+    color: #333;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-size: 14px;
+    line-height: 1.5;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    cursor: grab;
+    border-left: 4px solid #198754;
+}
+
+.kanban-card:active {
+    cursor: grabbing;
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.kanban-card .task-text {
+    flex: 1;
+    text-align: left;
+    margin-left: 10px;
+    word-break: break-word;
+    padding-right: 30px;
+}
+
+.kanban-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.kanban-card .actions {
+    display: none;
+    gap: 8px;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255,255,255,0.9);
+    padding: 4px 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.kanban-card:hover .actions {
+    display: flex;
+}
+
+.kanban-card button {
+    background: transparent;
+    border: none;
+    color: #555;
+    cursor: pointer;
+    font-size: 14px;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.kanban-card button:hover {
+    color: #000;
+    background-color: #f0f0f0;
+}
+
+.kanban-card input[type="checkbox"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+.add-task-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    background: #198754;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.add-task-btn:hover {
+    background: #157347;
+    transform: translateY(-2px);
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    width: 350px;
+    text-align: left;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.popup-title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #444;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border 0.3s;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    border-color: #198754;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.2);
+}
+
+.form-help {
+    color: #666;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+.form-actions {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-primary {
+    padding: 10px 16px;
+    background-color: #198754;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    min-width: 100px;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #157347;
+}
+
+.btn-secondary {
+    padding: 10px 16px;
+    background-color: #e9e9e9;
+    color: #333;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    min-width: 100px;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #d4d4d4;
+}
+
+/* Animações */
+@keyframes pulseHighlight {
+    0% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
+}
+
+.highlight-animation {
+    animation: pulseHighlight 1.5s ease-out;
+}

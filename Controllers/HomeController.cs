@@ -29,11 +29,12 @@ namespace WebApplication2.Controllers
         public IActionResult Defenicoes() => View();
         public IActionResult Tarefas() => View();
         public IActionResult adminpage() => View();
-
+        public IActionResult TarefasIND() => View();
         [HttpGet]
         public IActionResult Login() => View();
 
         
+                
         [HttpPost]
         public async Task<IActionResult> Login(string Username, string Password)
         {
@@ -41,7 +42,7 @@ namespace WebApplication2.Controllers
 
             if (utilizador != null)
             {
-                // ✅ CRIA AS CLAIMS
+               
                 var claims = new List<Claim>
                 {
                     new Claim("id", utilizador.IdUtilizador.ToString()),
@@ -52,7 +53,7 @@ namespace WebApplication2.Controllers
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
 
-                // ✅ SIGN IN COM COOKIES
+                
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
                 // Se quiseres ainda usar a sessão, podes manter
@@ -125,5 +126,7 @@ namespace WebApplication2.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+       
     }
 }

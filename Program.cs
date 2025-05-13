@@ -12,29 +12,35 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-// Serviços
+// Serviços MVC e API
 builder.Services.AddControllersWithViews();
-builder.Services.AddControllers(); // para API Controllers
+builder.Services.AddControllers();
 builder.Services.AddSession();
 
-// 🔥 Registar Repositórios e Serviços
+
 builder.Services.AddScoped<IUtilizadorRepository, UtilizadorRepository>();
 builder.Services.AddScoped<IUtilizadorService, UtilizadorService>();
 
-// 🔥 ADICIONAR Autenticação por Cookies
+builder.Services.AddScoped<ITarefaIndService, TarefaIndService>();
+builder.Services.AddScoped<ITarefaINDRepositorio, TarefaINDRepositorio>();
+
+builder.Services.AddScoped<IProjetoService, ProjetoService>();
+builder.Services.AddScoped<IProjetoRepositorio, ProjetoRepository>();
+
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Home/Login"; // página de login
-        options.LogoutPath = "/Home/Logout"; // página de logout
-        options.AccessDeniedPath = "/Home/AcessoNegado"; // (se quiseres uma página de acesso negado)
+        options.LoginPath = "/Home/Login"; 
+        options.LogoutPath = "/Home/Logout"; 
+        options.AccessDeniedPath = "/Home/AcessoNegado"; 
         options.Cookie.HttpOnly = true;
         options.ExpireTimeSpan = TimeSpan.FromDays(7);
     });
 
 builder.Services.AddAuthorization();
 
-// Swagger
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -48,7 +54,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Middlewares
+// Ambiente de desenvolvimento
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -59,13 +65,10 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    // COMENTA ISTO PARA VER O ERRO REAL:
-    // app.UseExceptionHandler("/Home/Error");
-
     app.UseHsts();
 }
 
-// Adiciona isto ANTES de app.Run()
+
 AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
 {
     Console.WriteLine("🔴 UNHANDLED EXCEPTION:");
@@ -82,10 +85,10 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
 app.MapControllers();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-

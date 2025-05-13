@@ -3232,11 +3232,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\PC\\Downloads\\gedrfhgbd\\Nova_pasta\\Nova pasta (3)\\Nova pasta\\WebApplication2\\WebApplication2.csproj",
+      "projectUniqueName": "C:\\Users\\PC\\Downloads\\ES_Final_Sprint3\\gedrfhgbd\\Nova_pasta\\Nova pasta (3)\\Nova pasta\\WebApplication2\\WebApplication2.csproj",
       "projectName": "WebApplication2",
-      "projectPath": "C:\\Users\\PC\\Downloads\\gedrfhgbd\\Nova_pasta\\Nova pasta (3)\\Nova pasta\\WebApplication2\\WebApplication2.csproj",
+      "projectPath": "C:\\Users\\PC\\Downloads\\ES_Final_Sprint3\\gedrfhgbd\\Nova_pasta\\Nova pasta (3)\\Nova pasta\\WebApplication2\\WebApplication2.csproj",
       "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\PC\\Downloads\\gedrfhgbd\\Nova_pasta\\Nova pasta (3)\\Nova pasta\\WebApplication2\\obj\\",
+      "outputPath": "C:\\Users\\PC\\Downloads\\ES_Final_Sprint3\\gedrfhgbd\\Nova_pasta\\Nova pasta (3)\\Nova pasta\\WebApplication2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config"

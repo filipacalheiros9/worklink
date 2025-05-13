@@ -120,7 +120,7 @@ namespace WebApplication2.Controllers
                 if (projeto == null)
                     return NotFound(new { message = "Projeto não encontrado ou não pertence a este utilizador." });
 
-                // Atualizar campos
+                
                 projeto.NomeProjeto = projetoDTO.NomeProjeto;
                 projeto.NomeCliente = projetoDTO.NomeCliente;
                 projeto.PrecoHora = projetoDTO.PrecoHora;
@@ -176,13 +176,6 @@ namespace WebApplication2.Controllers
                 Console.WriteLine(ex.ToString());
                 return StatusCode(500, new { message = "Erro interno", detalhe = ex.Message });
             }
-        }
-
-        public class ProjetoCreate
-        {
-            public string NomeProjeto { get; set; }
-            public string NomeCliente { get; set; }
-            public decimal? PrecoHora { get; set; }
         }
     }
 }

@@ -1,0 +1,186 @@
+﻿@{
+    ViewData["Title"] = "Tarefas Individuais API";
+}
+
+<h1 class="text-center mb-4">Tarefas Individuais</h1>
+
+<div class="container">
+    <button class="btn btn-success mb-3" onclick="openCreateModal()">Nova Tarefa</button>
+
+    <table class="table table-striped shadow-sm rounded">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome da Tarefa</th>
+                <th>Data Início</th>
+                <th>Hora Início</th>
+                <th>Data Fim</th>
+                <th>Hora Fim</th>
+                <th>Projeto</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tarefasTable">
+            <!-- Aqui vai ser preenchido via JS -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal de Criar/Editar -->
+<div id="tarefaModal" class="modal" tabindex="-1" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 id="modalTitle">Nova Tarefa</h5>
+                <button type="button" class="btn-close" onclick="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="tarefaId">
+                <div class="form-group mb-2">
+                    <label>Nome Tarefa</label>
+                    <input type="text" class="form-control" id="nomeTarefa">
+                </div>
+                <div class="form-group mb-2">
+                    <label>Data Início</label>
+                    <input type="date" class="form-control" id="dtInicio">
+                </div>
+                <div class="form-group mb-2">
+                    <label>Hora Início</label>
+                    <input type="time" class="form-control" id="hrInicio">
+                </div>
+                <div class="form-group mb-2">
+                    <label>Data Fim</label>
+                    <input type="date" class="form-control" id="dtFim">
+                </div>
+                <div class="form-group mb-2">
+                    <label>Hora Fim</label>
+                    <input type="time" class="form-control" id="hrFim">
+                </div>
+                <div class="form-group mb-2">
+                    <label>ID Projeto (se aplicável)</label>
+                    <input type="number" class="form-control" id="idProjeto" value="0">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveTarefa()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// URL base da API
+const apiUrl = '/api/TarefaIND';
+
+// Carregar Tarefas ao iniciar
+window.onload = function() {
+    loadTarefas();
+};
+
+// Carrega tarefas individuais
+function loadTarefas() {
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            let html = '';
+            data.forEach(tarefa => {
+                html += `
+                    <tr>
+                        <td>${tarefa.idTarefa}</td>
+                        <td>${tarefa.nomeTarefa}</td>
+                        <td>${tarefa.dtInicio ?? '-'}</td>
+                        <td>${tarefa.hrInicio}</td>
+                        <td>${tarefa.dtFim ?? '-'}</td>
+                        <td>${tarefa.hrFim}</td>
+                        <td>${tarefa.idProjeto}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="openEditModal(${tarefa.idTarefa})">Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteTarefa(${tarefa.idTarefa})">Apagar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('tarefasTable').innerHTML = html;
+        });
+}
+
+// Abrir Modal Nova Tarefa
+function openCreateModal() {
+    document.getElementById('modalTitle').innerText = "Nova Tarefa";
+    document.getElementById('tarefaId').value = '';
+    document.getElementById('nomeTarefa').value = '';
+    document.getElementById('dtInicio').value = '';
+    document.getElementById('hrInicio').value = '';
+    document.getElementById('dtFim').value = '';
+    document.getElementById('hrFim').value = '';
+    document.getElementById('idProjeto').value = '0';
+    document.getElementById('tarefaModal').style.display = 'block';
+}
+
+// Abrir Modal Editar Tarefa
+function openEditModal(id) {
+    fetch(`${apiUrl}/${id}`)
+        .then(response => response.json())
+        .then(tarefa => {
+            document.getElementById('modalTitle').innerText = "Editar Tarefa";
+            document.getElementById('tarefaId').value = tarefa.idTarefa;
+            document.getElementById('nomeTarefa').value = tarefa.nomeTarefa;
+            document.getElementById('dtInicio').value = tarefa.dtInicio;
+            document.getElementById('hrInicio').value = tarefa.hrInicio;
+            document.getElementById('dtFim').value = tarefa.dtFim;
+            document.getElementById('hrFim').value = tarefa.hrFim;
+            document.getElementById('idProjeto').value = tarefa.idProjeto;
+            document.getElementById('tarefaModal').style.display = 'block';
+        });
+}
+
+// Fechar Modal
+function closeModal() {
+    document.getElementById('tarefaModal').style.display = 'none';
+}
+
+// Guardar Tarefa (Criar ou Atualizar)
+function saveTarefa() {
+    const id = document.getElementById('tarefaId').value;
+    const tarefa = {
+        nomeTarefa: document.getElementById('nomeTarefa').value,
+        dtInicio: document.getElementById('dtInicio').value,
+        hrInicio: document.getElementById('hrInicio').value,
+        dtFim: document.getElementById('dtFim').value,
+        hrFim: document.getElementById('hrFim').value,
+        idProjeto: parseInt(document.getElementById('idProjeto').value)
+    };
+
+    if (id) {
+        fetch(`${apiUrl}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(tarefa)
+        }).then(() => {
+            closeModal();
+            loadTarefas();
+        });
+    } else {
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(tarefa)
+        }).then(() => {
+            closeModal();
+            loadTarefas();
+        });
+    }
+}
+
+// Apagar Tarefa
+function deleteTarefa(id) {
+    if (confirm('Tens a certeza que queres apagar?')) {
+        fetch(`${apiUrl}/${id}`, {
+            method: 'DELETE'
+        }).then(() => {
+            loadTarefas();
+        });
+    }
+}
+</script>
