@@ -1,0 +1,265 @@
+﻿@{
+  ViewData["Title"] = "Tarefas";
+  var projetoNome = ViewBag.NomeProjeto;
+  var idProjeto = ViewBag.ProjetoId;
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+<link href="/css/Tarefas.css" rel="stylesheet" />
+
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">
+      <i class="fas fa-tasks"></i> Tarefas do Projeto: <span class="project-name">@projetoNome</span>
+    </h1>
+  </div>
+
+  <!-- POPUP CRIAÇÃO -->
+  <div id="popup" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="popup-title">Nova Tarefa</h3>
+      <div class="form-group">
+        <label for="popup-nome">Nome:</label>
+        <input type="text" id="popup-nome" class="form-input" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="popup-nome">Dinheiro:</label>
+        <input type="text" id="popup-money" class="form-input" autocomplete="off">
+      </div>
+      
+      <div class="form-group">
+        <label for="popup-datetime">Data e hora de início:</label>
+        <input type="datetime-local" id="popup-datetime" class="form-input" autocomplete="off">
+        <small class="form-help">(Se vazio, a hora atual será usada)</small>
+      </div>
+
+      <div class="form-actions">
+        <button onclick="confirmarPopup()" class="btn-primary">Confirmar</button>
+        <button onclick="fecharPopup()" class="btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP EDIÇÃO -->
+  <div id="popup-editar" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="popup-title">Editar Tarefa</h3>
+      <div class="form-group">
+        <label for="edit-nome">Nome:</label>
+        <input type="text" id="edit-nome" class="form-input">
+      </div>
+      <div class="form-group">
+        <label for="edit-preco">Preço por hora (€):</label>
+        <input type="number" id="edit-preco" class="form-input" step="0.01" min="0">
+      </div>
+      <div class="form-group">
+        <label for="edit-datetime">Data e hora de fim:</label>
+        <input type="datetime-local" id="edit-datetime" class="form-input">
+      </div>
+      <div class="form-actions">
+        <button onclick="confirmarEdicao()" class="btn-primary">Salvar</button>
+        <button onclick="fecharPopupEditar()" class="btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="kanban-board" id="kanbanBoard"></div>
+</div>
+
+<script>
+  const idProjeto = @Html.Raw(Json.Serialize(ViewBag.ProjetoId)) || 0;
+  let colunaAlvo;
+  let tarefaSendoEditada;
+
+  window.onload = async () => {
+    const colunas = ["A fazer", "Em progresso", "A testar", "Finalizado"];
+    const refs = {};
+
+    colunas.forEach(titulo => {
+      const coluna = criarColuna(titulo);
+      refs[titulo] = coluna.querySelector('.card-list');
+    });
+
+    try {
+      const res = await fetch(`/Tarefas/MinhasTarefas/${idProjeto}`);
+      if (!res.ok) throw new Error("Erro ao carregar tarefas.");
+      const tarefas = await res.json();
+      console.log("Tarefas carregadas:", tarefas);
+      tarefas.forEach(t => {
+        const el = criarCard(t.idTarefa, t.nomeTarefa, t.dtInicio, t.precoHora || 0);
+        refs["A fazer"].appendChild(el);
+      });
+    } catch (e) {
+      console.error(e);
+      alert("Erro ao carregar tarefas.");
+    }
+  };
+
+  function criarColuna(nome) {
+    const board = document.getElementById('kanbanBoard');
+    const coluna = document.createElement('div');
+    coluna.className = 'kanban-column';
+
+    coluna.innerHTML = `
+    <h3>${nome}</h3>
+    <div class="card-list"></div>
+    <button class="add-task-btn"><i class="fas fa-plus"></i> Nova Tarefa</button>
+  `;
+
+    const lista = coluna.querySelector('.card-list');
+    lista.addEventListener('dragover', e => e.preventDefault());
+    lista.addEventListener('drop', e => {
+      e.preventDefault();
+      const id = e.dataTransfer.getData("text/plain");
+      const card = document.getElementById(id);
+      if (card && !lista.contains(card)) lista.appendChild(card);
+    });
+
+    coluna.querySelector('.add-task-btn').onclick = () => {
+      colunaAlvo = coluna;
+      abrirPopupCriacao();
+    };
+
+    board.appendChild(coluna);
+    return coluna;
+  }
+
+  function criarCard(id, texto, data, preco = 0) {
+    const card = document.createElement('div');
+    card.className = 'kanban-card';
+    card.id = `tarefa-${id}`;
+    card.draggable = true;
+
+    card.innerHTML = `
+    <input type="checkbox" title="Início: ${new Date(data).toLocaleString()}">
+    <span class="task-text">${texto}</span>
+    <small class="text-muted">€${Number(preco).toFixed(2)}/h</small>
+    <div class="actions">
+      <button class="edit-btn"><i class="fas fa-pencil-alt"></i></button>
+      <button class="delete-btn"><i class="fas fa-trash"></i></button>
+    </div>
+  `;
+
+    card.addEventListener("dragstart", e => {
+      e.dataTransfer.setData("text/plain", card.id);
+      setTimeout(() => card.style.opacity = '0.5', 0);
+    });
+
+    card.addEventListener("dragend", () => card.style.opacity = '1');
+
+    card.querySelector('.edit-btn').onclick = () => {
+      tarefaSendoEditada = card;
+      document.getElementById('edit-nome').value = texto;
+      const precoInput = document.getElementById('edit-preco');
+      if (precoInput) precoInput.value = preco;
+      document.getElementById('edit-datetime').value = '';
+      document.getElementById('popup-editar').style.display = 'flex';
+    };
+
+    card.querySelector('.delete-btn').onclick = () => {
+      if (confirm("Eliminar esta tarefa?")) excluirTarefa(id, card);
+    };
+
+    return card;
+  }
+
+  function abrirPopupCriacao() {
+    document.getElementById('popup-nome').value = '';
+    document.getElementById('popup-datetime').value = '';
+    document.getElementById('popup-money').value = '';
+    document.getElementById('popup').style.display = 'flex';
+  }
+
+  function fecharPopup() {
+    document.getElementById('popup').style.display = 'none';
+  }
+
+  function fecharPopupEditar() {
+    document.getElementById('popup-editar').style.display = 'none';
+  }
+
+  async function confirmarPopup() {
+    const nome = document.getElementById('popup-nome').value.trim();
+    const preco = parseFloat(document.getElementById('popup-money').value.replace(',', '.')) || 0;
+    const dataHora = document.getElementById('popup-datetime').value;
+    const agora = new Date().toISOString();
+    const [dt, hr] = (dataHora || agora).split("T");
+
+    const tarefa = {
+      nomeTarefa: nome,
+      precoHora: preco,
+      dtInicio: dt,
+      hrInicio: hr ? hr.split('.')[0] : '00:00:00',
+      idProjeto: idProjeto
+    };
+
+    try {
+      const res = await fetch('/Tarefas/CriarTarefa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(tarefa)
+      });
+
+      if (!res.ok) throw new Error("Erro ao criar tarefa.");
+      const data = await res.json();
+      const novaCard = criarCard(data.idTarefa, data.nomeTarefa, data.dtInicio, data.precoHora);
+      colunaAlvo.querySelector('.card-list').appendChild(novaCard);
+      fecharPopup();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function confirmarEdicao() {
+    const nome = document.getElementById('edit-nome').value.trim();
+    const preco = parseFloat(document.getElementById('edit-preco').value.replace(',', '.')) || 0;
+    const dataHora = document.getElementById('edit-datetime').value;
+    const [dt, hr] = dataHora ? dataHora.split("T") : [null, null];
+
+    const id = tarefaSendoEditada.id.replace("tarefa-", "");
+    const tarefa = {
+      nomeTarefa: nome,
+      precoHora: preco,
+      dtFim: dt || null,
+      hrFim: hr || null,
+      idProjeto: idProjeto
+    };
+
+    try {
+      const res = await fetch(`/Tarefas/AtualizarTarefa/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(tarefa)
+      });
+
+      if (!res.ok) throw new Error("Erro ao atualizar tarefa.");
+      tarefaSendoEditada.querySelector('.task-text').textContent = nome;
+      tarefaSendoEditada.querySelector('small').textContent = `€${preco.toFixed(2)}/h`;
+      fecharPopupEditar();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function excluirTarefa(id, card) {
+    try {
+      const res = await fetch(`/Tarefas/EliminarTarefa/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error("Erro ao eliminar tarefa.");
+      card.remove();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      fecharPopup();
+      fecharPopupEditar();
+    }
+    if (e.key === "Enter" && e.ctrlKey) {
+      if (document.getElementById('popup').style.display === 'flex') confirmarPopup();
+      if (document.getElementById('popup-editar').style.display === 'flex') confirmarEdicao();
+    }
+  });
+</script>
