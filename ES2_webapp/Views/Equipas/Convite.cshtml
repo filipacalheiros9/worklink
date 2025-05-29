@@ -18,8 +18,8 @@ else
         {
             <div class="list-group-item mb-3 border rounded shadow-sm p-3">
                 <h5 class="mb-1 text-success">Equipa: @convite.Equipa?.Nome</h5>
-                <p class="mb-1">@(!string.IsNullOrWhiteSpace(convite.Mensagem) ? convite.Mensagem : "(sem mensagem)")</p>
-                <small class="text-muted">Enviado em: @convite.DataEnvio.ToString("dd/MM/yyyy HH:mm")</small>
+                <p class="mb-1">@(!string.IsNullOrEmpty(convite.Mensagem) ? convite.Mensagem : "(sem mensagem)")</p>
+                <small class="text-muted">Enviado em: @convite.DataEnvio.ToString("dd/MM/yyyy")</small>
                 <div class="mt-2">
                     @if (convite.Resposta == null)
                     {

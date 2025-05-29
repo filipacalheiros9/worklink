@@ -25,7 +25,7 @@ namespace WebApplication2.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Utilizador>>> GetUsers()
         {
-            // Inclui o Cargo para que ele esteja disponível ao consultar usuários
+           
             return await _context.Utilizadores
                 .Include(u => u.Cargo)
                 .ToListAsync();

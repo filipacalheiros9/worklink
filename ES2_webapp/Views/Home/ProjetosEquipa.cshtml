@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projetos da Equipa</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #000;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 40px 20px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #198754;
+        }
+
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .project-item {
+            background-color: #f9fbff;
+            border: 1px solid #d8e2ef;
+            border-left: 6px solid #198754;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .project-item:hover {
+            transform: scale(1.015);
+            box-shadow: 0 6px 24px rgba(25, 135, 84, 0.15);
+        }
+
+        .project-item strong {
+            font-size: 1.25rem;
+        }
+
+        .project-item span {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.95rem;
+            color: #444;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .btn {
+            background-color: #198754;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s ease;
+            box-shadow: 0 4px 12px rgba(25, 135, 84, 0.2);
+        }
+
+        .btn:hover {
+            background-color: #157347;
+        }
+
+        .cancel-btn {
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #000;
+            box-shadow: 0 2px 6px rgba(25, 135, 84, 0.15);
+        }
+
+        .cancel-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .fa-trash {
+            color: #d63031;
+            cursor: pointer;
+        }
+
+        .fa-trash:hover {
+            transform: scale(1.2);
+        }
+
+        .popup {
+            background-color: #ffffff;
+            padding: 30px 25px;
+            border-radius: 16px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 90%;
+            max-width: 440px;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            display: none;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            color: #000;
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            z-index: 10;
+        }
+
+        label {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2><i class="fas fa-folder me-2"></i> Projetos da Equipa</h2>
+        <button class="btn" id="createProjectBtn">
+            <i class="fa-solid fa-plus"></i> Criar Projeto
+        </button>
+    </div>
+    <div class="project-list" id="projectList"></div>
+</div>
+
+<div class="popup-overlay" id="popupOverlay"></div>
+<div class="popup" id="popup">
+    <h2>Criar Projeto</h2>
+    <form id="createProjectForm">
+        <label for="nomeProjeto">Nome do Projeto</label>
+        <input type="text" id="nomeProjeto" required>
+
+        <label for="nomeCliente">Nome do Cliente</label>
+        <input type="text" id="nomeCliente" required>
+
+        <button type="submit" class="btn">Salvar</button>
+        <button type="button" class="btn cancel-btn" id="cancelBtn">Cancelar</button>
+    </form>
+</div>
+
+<script>
+    const equipaId = new URLSearchParams(window.location.search).get('idEquipa');
+    let projetos = [];
+
+    async function carregarProjetos() {
+        try {
+            const res = await fetch(`/api/Projeto/PorEquipa/${equipaId}`);
+            projetos = await res.json();
+            mostrarProjetos();
+        } catch (error) {
+            alert('Erro ao carregar projetos.');
+        }
+    }
+
+    function mostrarProjetos() {
+        const list = document.getElementById('projectList');
+        list.innerHTML = '';
+        projetos.forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'project-item';
+            div.innerHTML = `
+                <strong>${p.nomeProjeto}</strong>
+                <span>Cliente: ${p.nomeCliente}</span>
+                <span>Criador: ${p.criador}</span>
+                <div class="actions">
+                    <button class="btn" onclick="irParaTarefas(${p.idProjeto})">
+                        <i class="fa-solid fa-list-check"></i> Tarefas
+                    </button>
+                    <i class="fa-solid fa-trash" title="Eliminar" onclick="eliminarProjeto(${p.idProjeto})"></i>
+                </div>`;
+            list.appendChild(div);
+        });
+    }
+
+    async function criarProjeto(e) {
+        e.preventDefault();
+        const nomeProjeto = document.getElementById('nomeProjeto').value.trim();
+        const nomeCliente = document.getElementById('nomeCliente').value.trim();
+
+        const res = await fetch('/api/Projeto/CriarProjetoEquipa', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome: nomeProjeto, nomeCliente, equipaId })
+        });
+
+        if (res.ok) {
+            await carregarProjetos();
+            fecharModal();
+            alert('Projeto criado.');
+        } else {
+            alert('Erro ao criar projeto.');
+        }
+    }
+
+    async function eliminarProjeto(id) {
+        if (!confirm('Eliminar este projeto?')) return;
+        const res = await fetch(`/api/Projeto/EliminarProjetoEquipa/${id}`, {
+            method: 'DELETE'
+        });
+        if (res.ok) {
+            await carregarProjetos();
+            alert('Projeto eliminado.');
+        } else {
+            alert('Erro ao eliminar.');
+        }
+    }
+
+    function abrirModal() {
+        document.getElementById('popup').style.display = 'block';
+        document.getElementById('popupOverlay').style.display = 'block';
+    }
+
+    function fecharModal() {
+        document.getElementById('popup').style.display = 'none';
+        document.getElementById('popupOverlay').style.display = 'none';
+        document.getElementById('createProjectForm').reset();
+    }
+
+    function irParaTarefas(id) {
+        window.location.href = `/Tarefas?projetoId=${id}`;
+    }
+
+    document.getElementById('createProjectBtn').addEventListener('click', abrirModal);
+    document.getElementById('cancelBtn').addEventListener('click', fecharModal);
+    document.getElementById('popupOverlay').addEventListener('click', fecharModal);
+    document.getElementById('createProjectForm').addEventListener('submit', criarProjeto);
+
+    window.onload = carregarProjetos;
+</script>
+</body>
+</html>
