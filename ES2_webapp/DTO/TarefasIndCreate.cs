@@ -8,5 +8,5 @@ public class TarefasIndCreate
     public DateOnly? DtFim { get; set; }
     public TimeSpan HrFim { get; set; }
     public decimal PrecoHora { get; set; }
-    public decimal IdProjeto { get; set; }
+    public int IdProjeto { get; set; }
 }

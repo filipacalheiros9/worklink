@@ -17,15 +17,35 @@ namespace WebApplication2.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IActionResult> Index(decimal projetoId)
+        public async Task<IActionResult> Index(int projetoId) // ✅ mudou para int
         {
             var projeto = await _context.Projetos.FindAsync(projetoId);
             if (projeto == null) return NotFound();
 
             ViewBag.ProjetoId = projeto.IdProjeto;
             ViewBag.NomeProjeto = projeto.NomeProjeto;
-
             return View("~/Views/Home/Tarefas.cshtml");
+        }
+
+        [HttpGet("MinhasTarefas/{idProjeto}")]
+        public async Task<IActionResult> GetTarefasPorProjeto(int idProjeto) // ✅ mudou para int
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
+            if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
+                return Unauthorized();
+
+            var projeto = await _context.Projetos
+                .FirstOrDefaultAsync(p => p.IdProjeto == idProjeto && p.IdUtilizador == idUtilizador);
+
+            if (projeto == null)
+                return NotFound();
+
+            var tarefas = await _context.ProjetoTarefa
+                .Where(pt => pt.IdProjeto == idProjeto)
+                .Select(pt => pt.Tarefa)
+                .ToListAsync();
+
+            return Ok(tarefas);
         }
 
         [HttpPost("CriarTarefa")]
@@ -35,14 +55,12 @@ namespace WebApplication2.Controllers
                 return BadRequest(new { message = "Dados inválidos." });
 
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
-            if (userIdClaim == null)
+            if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
                 return Unauthorized(new { message = "Utilizador não autenticado." });
 
-            if (!decimal.TryParse(userIdClaim.Value, out var idUtilizador))
-                return BadRequest(new { message = "ID do utilizador inválido." });
+            var projeto = await _context.Projetos
+                .FirstOrDefaultAsync(p => p.IdProjeto == dto.IdProjeto && p.IdUtilizador == idUtilizador);
 
-            // Verifica se o projeto pertence ao utilizador
-            var projeto = await _context.Projetos.FirstOrDefaultAsync(p => p.IdProjeto == dto.IdProjeto && p.IdUtilizador == idUtilizador);
             if (projeto == null)
                 return NotFound(new { message = "Projeto não encontrado ou não pertence ao utilizador." });
 
@@ -54,6 +72,7 @@ namespace WebApplication2.Controllers
                 DtFim = dto.DtFim,
                 HrFim = dto.HrFim,
                 PrecoHora = dto.PrecoHora,
+                IdUtilizador = null // ✅ porque está ligada à equipa/projeto
             };
 
             _context.Tarefas.Add(tarefa);
@@ -78,32 +97,8 @@ namespace WebApplication2.Controllers
             });
         }
 
-        [HttpGet("MinhasTarefas/{idProjeto}")]
-        public async Task<IActionResult> GetTarefasPorProjeto(decimal idProjeto)
-        {
-            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
-            if (userIdClaim == null)
-                return Unauthorized(new { message = "Utilizador não autenticado." });
-
-            if (!decimal.TryParse(userIdClaim.Value, out var idUtilizador))
-                return BadRequest(new { message = "ID do utilizador inválido." });
-
-            var projeto = await _context.Projetos
-                .FirstOrDefaultAsync(p => p.IdProjeto == idProjeto && p.IdUtilizador == idUtilizador);
-
-            if (projeto == null)
-                return NotFound(new { message = "Projeto não encontrado ou não pertence ao utilizador." });
-
-            var tarefas = await _context.ProjetoTarefa
-                .Where(pt => pt.IdProjeto == idProjeto)
-                .Select(pt => pt.Tarefa)
-                .ToListAsync();
-
-            return Ok(tarefas);
-        }
-
         [HttpPut("AtualizarTarefa/{id}")]
-        public async Task<IActionResult> AtualizarTarefa(int id, [FromBody] TarefaCreate dto)
+        public async Task<IActionResult> AtualizarTarefa(int id, [FromBody] TarefaEditDto dto)
         {
             try
             {
@@ -113,7 +108,8 @@ namespace WebApplication2.Controllers
 
                 tarefa.NomeTarefa = dto.NomeTarefa;
                 tarefa.DtFim = dto.DtFim;
-                tarefa.HrFim = dto.HrFim;
+                tarefa.HrFim = dto.HrFim ?? tarefa.HrFim;
+                tarefa.PrecoHora = dto.PrecoHora;
 
                 await _context.SaveChangesAsync();
                 return Ok(new { message = "Tarefa atualizada com sucesso." });
@@ -128,35 +124,31 @@ namespace WebApplication2.Controllers
             }
         }
 
-        [HttpDelete("EliminarTarefa/{id}")]
-        public async Task<IActionResult> EliminarTarefa(int id)
+        [HttpDelete("EliminarProjeto/{id}")] // ❗este método devia estar noutro controller, mas vamos manter
+        public async Task<IActionResult> EliminarProjeto(int id) // ✅ mudou para int
         {
             try
             {
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
-                if (userIdClaim == null)
-                    return Unauthorized(new { message = "Utilizador não autenticado." });
+                if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
+                    return Unauthorized();
 
-                if (!decimal.TryParse(userIdClaim.Value, out var idUtilizador))
-                    return BadRequest(new { message = "ID do utilizador inválido." });
+                var projeto = await _context.Projetos
+                    .Include(p => p.ProjetosTarefas)
+                    .ThenInclude(pt => pt.Tarefa)
+                    .FirstOrDefaultAsync(p => p.IdProjeto == id && p.IdUtilizador == idUtilizador);
 
-                var projetoTarefa = await _context.ProjetoTarefa
-                    .Include(pt => pt.Tarefa)
-                    .Include(pt => pt.Projeto)
-                    .FirstOrDefaultAsync(pt => pt.TarefaId == id && pt.Projeto.IdUtilizador == idUtilizador);
+                if (projeto == null)
+                    return NotFound(new { message = "Projeto não encontrado ou não pertence ao utilizador." });
 
-                if (projetoTarefa == null)
-                    return NotFound(new { message = "Tarefa não encontrada ou não pertence ao utilizador." });
-
-                _context.Tarefas.Remove(projetoTarefa.Tarefa);
-                _context.ProjetoTarefa.Remove(projetoTarefa);
+                _context.Projetos.Remove(projeto);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "Tarefa eliminada com sucesso." });
+                return Ok(new { message = "Projeto e tarefas associadas eliminados com sucesso." });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Erro interno", detalhe = ex.Message });
+                return StatusCode(500, new { message = "Erro ao eliminar projeto", detalhe = ex.Message });
             }
         }
     }

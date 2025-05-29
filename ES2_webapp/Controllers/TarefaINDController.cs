@@ -83,12 +83,26 @@ namespace WebApplication2.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTarefa(int id)
         {
-            var tarefa = await _context.Tarefas.FindAsync(id);
-            if (tarefa == null) return NotFound();
+            try
+            {
+                var tarefa = await _context.Tarefas.FindAsync(id);
+                if (tarefa == null)
+                    return NotFound(new { message = "Tarefa não encontrada." });
+                
+                
+                var relacoes = _context.ProjetoTarefa.Where(pt => pt.TarefaId == id);
+                _context.ProjetoTarefa.RemoveRange(relacoes);
+                
+                
+                _context.Tarefas.Remove(tarefa);
+                await _context.SaveChangesAsync();
 
-            _context.Tarefas.Remove(tarefa);
-            await _context.SaveChangesAsync();
-            return NoContent();
+                return Ok(new { message = "Tarefa apagada com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Erro interno ao apagar a tarefa.", erro = ex.Message });
+            }
         }
 
         [HttpGet("ProjetosParaExportar")]
@@ -107,7 +121,7 @@ namespace WebApplication2.Controllers
         }
 
         [HttpPost("CopiarTarefa/{idTarefa}")]
-        public async Task<IActionResult> CopiarTarefa(int idTarefa, [FromQuery] decimal idProjeto)
+        public async Task<IActionResult> CopiarTarefa(int idTarefa, [FromQuery] int idProjeto)
         {
             var tarefaOriginal = await _context.Tarefas.FindAsync(idTarefa);
             if (tarefaOriginal == null)
@@ -125,7 +139,7 @@ namespace WebApplication2.Controllers
                 DtFim = tarefaOriginal.DtFim,
                 HrFim = tarefaOriginal.HrFim,
                 PrecoHora = tarefaOriginal.PrecoHora,
-                IdUtilizador = tarefaOriginal.IdUtilizador
+                IdUtilizador = null,
             };
 
             _context.Tarefas.Add(novaTarefa);

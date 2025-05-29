@@ -1,7 +1,280 @@
 ﻿@{
-    ViewData["Title"] = "AsMinhasEquipas";
+    ViewBag.Title = "Minhas Equipas";
 }
-<div class="text page-title-style">
-    <h3 class="display-4" >As Minhas Equipas</h3>
-    <p>Cria as tuas equipas para um melhor desenvolvimento de trabalhos</p>
+
+<!-- ✅ CSS Estilizado -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h2 {
+        color: #2e7d32;
+        margin-bottom: 20px;
+    }
+
+    .btn-custom {
+        background-color: #2e7d32;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .btn-custom:hover {
+        background-color: #27642b;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 12px;
+        background-color: #f8f8f8;
+        margin-bottom: 12px;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 14px;
+        padding: 25px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        margin-bottom: 12px;
+    }
+
+    #autocompleteResultados {
+        max-height: 150px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+
+    #autocompleteResultados div {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    #autocompleteResultados div:hover {
+        background-color: #eeeeee;
+    }
+
+    .d-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .mt-3 {
+        margin-top: 1rem;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+</style>
+
+<div class="container">
+    <h2>Minhas Equipas</h2>
+    <button id="btnAbrirModal" class="btn-custom" onclick="abrirModalCriarEquipa()">+ Criar Equipa</button>
+    <div id="listaEquipas" class="mt-3"></div>
 </div>
+
+<div id="modalCriarEquipa" class="modal">
+    <div class="modal-content">
+        <h4 class="text-center">Criar Nova Equipa</h4>
+        <input type="text" id="nomeEquipa" placeholder="Nome da Equipa" class="form-control" />
+        <button class="btn-custom" onclick="criarEquipa()">Salvar</button>
+        <button class="btn btn-secondary mt-2" onclick="fecharModalCriarEquipa()">Cancelar</button>
+    </div>
+</div>
+
+<div id="modalConvite" class="modal">
+    <div class="modal-content">
+        <h4 class="text-center">Convidar Utilizador</h4>
+        <input type="text" id="inputUsername" placeholder="Pesquisar utilizador..." class="form-control" autocomplete="off" />
+        <div id="autocompleteResultados"></div>
+        <textarea id="mensagemConvite" placeholder="Mensagem (opcional)" class="form-control"></textarea>
+        <button class="btn-custom" onclick="enviarConvite()">Enviar</button>
+        <button class="btn btn-secondary mt-2" onclick="fecharModalConvite()">Cancelar</button>
+    </div>
+</div>
+
+<script>
+    let equipaSelecionadaId = null;
+    let usernameSelecionado = null;
+
+    window.onload = async function () {
+        await carregarEquipas();
+    };
+
+    async function carregarEquipas() {
+        const container = document.getElementById("listaEquipas");
+        container.innerHTML = "<p>A carregar...</p>";
+
+        try {
+            const res = await fetch("/api/Equipa/Minhas");
+            const equipas = await res.json();
+
+            if (!res.ok) throw new Error(equipas.message || "Erro");
+
+            container.innerHTML = equipas.length === 0
+                ? "<p>Não estás em nenhuma equipa.</p>"
+                : equipas.map(e =>
+                    `<div class="card">
+                        <div class="d-flex">
+                            <strong>${e.nome}</strong>
+                            <div>
+                                <button class="btn-custom" onclick="abrirModalConvite(${e.idEquipa})">Convidar</button>
+                                <button class="btn btn-danger btn-sm ms-2" onclick="apagarEquipa(${e.idEquipa})">Apagar</button>
+                            </div>
+                        </div>
+                    </div>`
+                ).join('');
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = "<p>Erro ao carregar equipas.</p>";
+        }
+    }
+
+    async function apagarEquipa(id) {
+        if (!confirm("Tens a certeza que queres apagar esta equipa e os seus projetos?")) return;
+
+        const res = await fetch(`/api/Equipa/Apagar/${id}`, {
+            method: "DELETE"
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            alert("Equipa apagada com sucesso.");
+            await carregarEquipas();
+        } else {
+            alert(data.message || "Erro ao apagar equipa.");
+        }
+    }
+
+    function abrirModalCriarEquipa() {
+        document.getElementById("modalCriarEquipa").style.display = "flex";
+    }
+
+    function fecharModalCriarEquipa() {
+        document.getElementById("modalCriarEquipa").style.display = "none";
+    }
+
+    async function criarEquipa() {
+        const nome = document.getElementById("nomeEquipa").value.trim();
+        if (!nome) return alert("Nome obrigatório");
+
+        const res = await fetch("/api/Equipa/Criar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nome: nome })
+        });
+
+        if (res.ok) {
+            alert("Equipa criada!");
+            fecharModalCriarEquipa();
+            await carregarEquipas();
+        } else {
+            const erro = await res.json();
+            alert(erro.message || "Erro ao criar equipa");
+        }
+    }
+
+    function abrirModalConvite(idEquipa) {
+        equipaSelecionadaId = idEquipa;
+        usernameSelecionado = null;
+        document.getElementById("inputUsername").value = "";
+        document.getElementById("mensagemConvite").value = "";
+        document.getElementById("autocompleteResultados").innerHTML = "";
+        document.getElementById("modalConvite").style.display = "flex";
+    }
+
+    function fecharModalConvite() {
+        document.getElementById("modalConvite").style.display = "none";
+    }
+
+    async function enviarConvite() {
+        const mensagem = document.getElementById("mensagemConvite").value.trim();
+        if (!usernameSelecionado || !equipaSelecionadaId) return alert("Seleciona um utilizador.");
+
+        const res = await fetch("/api/Equipa/Convidar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                usernameDestinatario: usernameSelecionado,
+                mensagem: mensagem,
+                idEquipa: equipaSelecionadaId
+            })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            alert("Convite enviado.");
+            fecharModalConvite();
+        } else {
+            alert(data.message || "Erro ao enviar convite.");
+        }
+    }
+
+    document.getElementById('inputUsername').addEventListener('input', async function () {
+        const query = this.value.trim();
+        if (query.length < 2) {
+            document.getElementById('autocompleteResultados').innerHTML = "";
+            return;
+        }
+
+        const res = await fetch(`/api/Equipa/PesquisarUtilizador?query=${encodeURIComponent(query)}`);
+        const data = await res.json();
+
+        let html = '';
+        data.forEach(user => {
+            html += `<div onclick="selecionarUsername('${user.username}')">${user.username}</div>`;
+        });
+
+        document.getElementById('autocompleteResultados').innerHTML = html;
+    });
+
+    function selecionarUsername(username) {
+        usernameSelecionado = username;
+        document.getElementById("inputUsername").value = username;
+        document.getElementById("autocompleteResultados").innerHTML = "";
+    }
+
+    window.addEventListener("click", function (e) {
+        const modal1 = document.getElementById("modalCriarEquipa");
+        const modal2 = document.getElementById("modalConvite");
+        if (e.target === modal1) modal1.style.display = "none";
+        if (e.target === modal2) modal2.style.display = "none";
+    });
+</script>

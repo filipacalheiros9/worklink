@@ -1,0 +1,198 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ES2_webapp.Data;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using WebApplication2.DTO;
+using WebApplication2.Models;
+
+namespace WebApplication2.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class EquipaController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public EquipaController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+    [HttpPost("Criar")]
+    public async Task<IActionResult> CriarEquipa([FromBody] CriarEquipaDto dto)
+    {
+        try
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            if (!decimal.TryParse(userIdClaim, out var idCriador))
+                return Unauthorized(new { message = "Utilizador não autenticado." });
+
+            if (string.IsNullOrWhiteSpace(dto.Nome))
+                return BadRequest(new { message = "O nome da equipa é obrigatório." });
+
+            var equipa = new Equipa
+            {
+                Nome = dto.Nome,
+                IdCriador = idCriador
+            };
+
+            _context.Equipas.Add(equipa);
+            await _context.SaveChangesAsync();
+
+            _context.EquipaUtilizadores.Add(new EquipaUtilizador
+            {
+                EquipaId = equipa.IdEquipa,
+                UtilizadorId = idCriador
+            });
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Equipa criada com sucesso.",
+                equipaId = equipa.IdEquipa
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                message = "Erro interno ao criar equipa.",
+                detalhe = ex.InnerException?.Message ?? ex.Message
+            });
+        }
+    }
+
+    [HttpGet("Minhas")]
+    public async Task<IActionResult> MinhasEquipas()
+    {
+        var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
+        if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var userId))
+            return Unauthorized();
+
+        var equipas = await _context.EquipaUtilizadores
+            .Where(eu => eu.UtilizadorId == userId)
+            .Include(eu => eu.Equipa)
+            .Select(eu => new
+            {
+                eu.Equipa.IdEquipa,
+                eu.Equipa.Nome
+            })
+            .ToListAsync();
+
+        return Ok(equipas);
+    }
+
+    [HttpPost("Convidar")]
+    public async Task<IActionResult> Convidar([FromBody] EnviarConviteDto dto)
+    {
+        var remetenteId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+        if (!decimal.TryParse(remetenteId, out var idRemetente))
+            return Unauthorized();
+
+        var destinatario = await _context.Utilizadores
+            .FirstOrDefaultAsync(u => u.Username == dto.UsernameDestinatario);
+
+        if (destinatario == null)
+            return NotFound(new { message = "Utilizador não encontrado." });
+
+        var convite = new Convite
+        {
+            Mensagem = dto.Mensagem ?? "",
+            FoiLido = false,
+            Resposta = null,
+            IdUtilizadorRemetente = idRemetente,
+            IdUtilizadorDestinatario = destinatario.IdUtilizador,
+            DataEnvio = DateTime.UtcNow,
+            IdEquipa = dto.IdEquipa
+        };
+
+        _context.Convites.Add(convite);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Convite enviado com sucesso." });
+    }
+
+    [HttpGet("PesquisarUtilizador")]
+    public async Task<IActionResult> PesquisarUtilizador([FromQuery] string query)
+    {
+        if (string.IsNullOrWhiteSpace(query) || query.Length < 3)
+            return BadRequest(new { message = "Insira pelo menos 3 letras." });
+
+        var resultados = await _context.Utilizadores
+            .Where(u => u.Username.ToLower().Contains(query.ToLower()))
+            .Select(u => new { u.Username })
+            .Take(5)
+            .ToListAsync();
+
+        return Ok(resultados);
+    }
+    
+    [HttpDelete("Apagar/{id}")]
+    public async Task<IActionResult> ApagarEquipa(int id)
+    {
+        try
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
+            if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
+
+            var equipa = await _context.Equipas
+                .Include(e => e.Convites)
+                .Include(e => e.EquipaUtilizadores )
+                .Include(e => e.Projetos) 
+                .ThenInclude(p => p.ProjetosTarefas)
+                .ThenInclude(pt => pt.Tarefa)
+                .FirstOrDefaultAsync(e => e.IdEquipa == id && e.IdCriador == userId);
+
+            if (equipa == null)
+                return NotFound(new { message = "Equipa não encontrada ou não pertence ao utilizador." });
+            _context.Convites.RemoveRange(equipa.Convites);
+
+            
+            _context.EquipaUtilizadores.RemoveRange(equipa.EquipaUtilizadores );
+            
+            foreach (var projeto in equipa.Projetos)
+            {
+                foreach (var pt in projeto.ProjetosTarefas)
+                {
+                    _context.Tarefas.Remove(pt.Tarefa);
+                }
+
+                _context.ProjetoTarefa.RemoveRange(projeto.ProjetosTarefas);
+                _context.Projetos.Remove(projeto);
+            }
+            
+            _context.Equipas.Remove(equipa);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Equipa e dependências eliminadas com sucesso." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Erro ao eliminar equipa.", detalhe = ex.Message });
+        }
+    }
+
+    
+
+    [HttpGet]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public async Task<IActionResult> Convites()
+    {
+        var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+        if (!decimal.TryParse(userId, out var idUser))
+            return RedirectToAction("Login", "Home");
+
+        var convites = await _context.Convites
+            .Include(c => c.Equipa)
+            .Where(c => c.IdUtilizadorDestinatario == idUser)
+            .OrderByDescending(c => c.DataEnvio)
+            .ToListAsync();
+
+        return View("~/Views/Home/Convites.cshtml", convites);
+    }
+    }
+}

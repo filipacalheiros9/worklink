@@ -2,19 +2,31 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using WebApplication2.Entities;
 
-namespace WebApplication2.Models;
-
-public class Convites
+public class Convite
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    
-    public decimal IdMensagem { get; set;}
-    public string Mensagem { get; set; } = null!;
-    public Boolean Resposta { get; set; }
-    public decimal IdUtilizadorRemetente{ get; set;}
-    public decimal IdUtilizador { get; set; }
+    public int IdMensagem { get; set; }
 
-    [ForeignKey("IdUtilizador")]
+    [Required]
+    public string Mensagem { get; set; } = string.Empty;
+
+    // null = pendente | true = aceite | false = recusado
+    public bool? Resposta { get; set; }
+
+    public bool FoiLido { get; set; } = false;
+
+    public decimal IdUtilizadorRemetente { get; set; }
+
+    public decimal IdUtilizadorDestinatario { get; set; }
+
+    [ForeignKey("IdUtilizadorDestinatario")]
     public virtual Utilizador? Utilizador { get; set; }
+
+    public DateTime DataEnvio { get; set; } = DateTime.UtcNow;
+    
+    public int IdEquipa { get; set; }
+
+    [ForeignKey("IdEquipa")]
+    public Equipa Equipa { get; set; } = null!;
 }

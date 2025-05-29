@@ -1,14 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebApplication2.Models;
-
-public class Equipas
+public class Equipa
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    
-    public decimal idEquipa { get; set; }
-    public string nome { get; set; } = null!;
+    public int IdEquipa { get; set; }
+
+    public string Nome { get; set; } = string.Empty;
+
     public decimal? NHabitualHoras { get; set; }
+
+    public decimal IdCriador { get; set; }
+
+    public ICollection<EquipaUtilizador> EquipaUtilizadores { get; set; }
+    public ICollection<Convite> Convites { get; set; } = new List<Convite>();
+    public ICollection<Projeto> Projetos { get; set; } = new List<Projeto>();
 }
+
+
+

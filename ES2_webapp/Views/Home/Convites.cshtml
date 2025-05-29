@@ -1,0 +1,62 @@
+﻿@using WebApplication2.Models
+@model List<Convite>
+
+@{
+    ViewBag.Title = "Convites Recebidos";
+}
+
+<h2 class="text-success">Convites Recebidos</h2>
+
+@if (!Model.Any())
+{
+    <p>Não tens convites no momento.</p>
+}
+else
+{
+    <div class="list-group mt-3">
+        @foreach (var convite in Model)
+        {
+            <div class="list-group-item mb-3 border rounded shadow-sm p-3">
+                <h5 class="mb-1 text-success">@convite.Equipa?.Nome</h5>
+                <p class="mb-1">@convite.Mensagem</p>
+                <small class="text-muted">Enviado em: @convite.DataEnvio.ToString("dd/MM/yyyy HH:mm")</small>
+                <div class="mt-2">
+                    @if (convite.Resposta == null)
+                    {
+                        <button class="btn btn-success btn-sm me-2" onclick="responderConvite(@convite.IdMensagem, true)">Aceitar</button>
+                        <button class="btn btn-danger btn-sm" onclick="responderConvite(@convite.IdMensagem, false)">Recusar</button>
+                    }
+                    else if (convite.Resposta == true)
+                    {
+                        <span class="badge bg-success">Aceite</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Recusado</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script>
+    async function responderConvite(id, aceitar) {
+        const confirmacao = confirm(aceitar ? "Aceitar este convite?" : "Recusar este convite?");
+        if (!confirmacao) return;
+
+        const res = await fetch(`/api/Equipa/ResponderConvite/${id}?aceitar=${aceitar}`, {
+            method: 'POST'
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(data.message || "Erro ao responder convite.");
+        }
+    }
+</script>
+}

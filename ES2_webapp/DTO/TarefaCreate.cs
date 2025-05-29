@@ -7,6 +7,7 @@ public class TarefaCreate
     public TimeSpan HrInicio { get; set; }
     public DateOnly? DtFim { get; set; }
     public TimeSpan HrFim { get; set; }
-    public decimal IdProjeto { get; set; }
+    public int IdProjeto { get; set; }
     public decimal PrecoHora { get; set; }
+    public decimal IdUtilizador { get; set; }
 }

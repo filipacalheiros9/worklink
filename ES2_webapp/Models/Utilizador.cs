@@ -20,5 +20,5 @@ public partial class Utilizador
     public decimal? NHabitualHoras { get; set; }
 
     public virtual ICollection<Cargo> Cargos { get; set; } = new List<Cargo>();
-    public virtual ICollection<Projeto> Projetos { get; set; } = new List<Projeto>();
+    public ICollection<Projeto> Projetos { get; set; } = new List<Projeto>();
 }

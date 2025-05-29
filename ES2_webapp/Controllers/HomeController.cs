@@ -31,9 +31,11 @@ namespace WebApplication2.Controllers
         public IActionResult Tarefas() => View();
         public IActionResult adminpage() => View();
         public IActionResult TarefasIND() => View();
-
+        public IActionResult Convites() => View();
         [HttpGet]
         public IActionResult Login() => View();
+        
+        
 
         [HttpPost]
         public async Task<IActionResult> Login(string Username, string Password)

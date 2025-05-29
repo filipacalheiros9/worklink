@@ -16,7 +16,7 @@ public class Tarefa
     
     public decimal? PrecoHora { get; set; }
     
-    public decimal IdUtilizador { get; set; }
+    public decimal? IdUtilizador { get; set; }
     
     public ICollection<ProjetoTarefa> ProjetosTarefas { get; set; } = new List<ProjetoTarefa>();
 }

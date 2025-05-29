@@ -161,6 +161,10 @@ namespace WebApplication2.Controllers
 
                 if (projeto == null)
                     return NotFound(new { message = "Projeto não encontrado ou não te pertence." });
+                
+                
+                var relacoes = _context.ProjetoTarefa.Where(pt => pt.IdProjeto == id);
+                _context.ProjetoTarefa.RemoveRange(relacoes);
 
                 _context.Projetos.Remove(projeto);
                 await _context.SaveChangesAsync();
@@ -171,7 +175,11 @@ namespace WebApplication2.Controllers
             {
                 Console.WriteLine("ERRO AO ELIMINAR PROJETO:");
                 Console.WriteLine(ex.ToString());
-                return StatusCode(500, new { message = "Erro interno", detalhe = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Erro interno",
+                    detalhe = ex.InnerException?.Message ?? ex.Message
+                });
             }
         }
     }
