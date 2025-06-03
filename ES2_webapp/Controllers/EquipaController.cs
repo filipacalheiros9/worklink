@@ -1,21 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ES2_webapp.Data;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using WebApplication2.DTO;
+using WebApplication2.Models;
 
+namespace WebApplication2.Controllers;
 
-namespace WebApplication2.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class EquipaController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class EquipaController : Controller
-    {
-        private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext _context;
 
-        public EquipaController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+    public EquipaController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
 
     [HttpPost("Criar")]
     public async Task<IActionResult> CriarEquipa([FromBody] CriarEquipaDto dto)
@@ -72,10 +74,10 @@ namespace WebApplication2.Controllers
         var equipas = await _context.EquipaUtilizadores
             .Where(eu => eu.UtilizadorId == userId)
             .Include(eu => eu.Equipa)
-            .Select(eu => new {
+            .Select(eu => new
+            {
                 eu.Equipa.IdEquipa,
-                eu.Equipa.Nome,
-                IsCriador = eu.Equipa.IdCriador == userId // ✅ adiciona esta propriedade
+                eu.Equipa.Nome
             })
             .ToListAsync();
 
@@ -88,14 +90,6 @@ namespace WebApplication2.Controllers
         var remetenteId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
         if (!decimal.TryParse(remetenteId, out var idRemetente))
             return Unauthorized();
-
-        // 🔒 Verifica se o utilizador atual é o criador da equipa
-        var equipa = await _context.Equipas.FirstOrDefaultAsync(e => e.IdEquipa == dto.IdEquipa);
-        if (equipa == null)
-            return NotFound(new { message = "Equipa não encontrada." });
-
-        if (equipa.IdCriador != idRemetente)
-            return Forbid("Apenas o criador da equipa pode convidar utilizadores.");
 
         var destinatario = await _context.Utilizadores
             .FirstOrDefaultAsync(u => u.Username == dto.UsernameDestinatario);
@@ -193,7 +187,7 @@ namespace WebApplication2.Controllers
             return RedirectToAction("Login", "Home");
 
         var convites = await _context.Convites
-            .Include(c => c.Equipa) // Carrega a equipa relacionada
+            .Include(c => c.Equipa)
             .Where(c => c.IdUtilizadorDestinatario == idUser)
             .OrderByDescending(c => c.DataEnvio)
             .ToListAsync();
@@ -201,58 +195,12 @@ namespace WebApplication2.Controllers
         return View("~/Views/Home/Convites.cshtml", convites);
     }
 
-    
-    [HttpGet("Convites")]
-    public async Task<IActionResult> ObterConvitesDropdown()
-    {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-        if (!decimal.TryParse(userId, out var idUser))
-            return Unauthorized();
-
-        var convites = await _context.Convites
-            .Include(c => c.Equipa)
-            .Where(c => c.IdUtilizadorDestinatario == idUser)
-            .OrderByDescending(c => c.DataEnvio)
-            .Take(3)
-            .ToListAsync();
-
-        return Ok(convites.Select(c => new {
-            c.IdMensagem,
-            Equipa = c.Equipa?.Nome,
-            c.Mensagem,
-            Data = c.DataEnvio.ToString("dd/MM/yyyy HH:mm"),
-            c.Resposta
-        }));
-    }
-    
-    
-    [HttpGet("ConvitesResumo")]
-    public async Task<IActionResult> ConvitesResumo()
-    {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-        if (!decimal.TryParse(userId, out var idUser))
-            return Unauthorized();
-
-        var convites = await _context.Convites
-            .Include(c => c.Equipa)
-            .Where(c => c.IdUtilizadorDestinatario == idUser)
-            .OrderByDescending(c => c.DataEnvio)
-            .Take(3)
-            .Select(c => new {
-                equipaNome = c.Equipa.Nome,
-                mensagem = c.Mensagem
-            })
-            .ToListAsync();
-
-        return Ok(convites);
-    }
-
-    
     [HttpPost("ResponderConvite/{idMensagem}")]
     public async Task<IActionResult> ResponderConvite(int idMensagem, [FromQuery] bool aceitar)
     {
         var convite = await _context.Convites.FindAsync(idMensagem);
-        if (convite == null) return NotFound();
+        if (convite == null)
+            return NotFound();
 
         convite.Resposta = aceitar;
         convite.FoiLido = true;
@@ -268,22 +216,5 @@ namespace WebApplication2.Controllers
 
         await _context.SaveChangesAsync();
         return Ok(new { message = aceitar ? "Convite aceite." : "Convite recusado." });
-    }
-
-    [HttpGet("/Equipa/Convites")]
-    public async Task<IActionResult> ConvitesPage()
-    {
-        var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-        if (!decimal.TryParse(userId, out var idUser))
-            return RedirectToAction("Login", "Home");
-
-        var convites = await _context.Convites
-            .Include(c => c.Equipa)
-            .Where(c => c.IdUtilizadorDestinatario == idUser)
-            .OrderByDescending(c => c.DataEnvio)
-            .ToListAsync();
-
-        return View("~/Views/Equipas/Convite.cshtml", convites);
-    }
     }
 }

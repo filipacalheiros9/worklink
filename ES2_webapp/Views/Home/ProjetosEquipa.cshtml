@@ -149,6 +149,8 @@
         label {
             font-size: 0.95rem;
             font-weight: 500;
+            display: block;
+            margin-top: 16px;
         }
 
         input[type="text"] {
@@ -158,6 +160,12 @@
             border-radius: 8px;
             font-size: 1rem;
             background-color: #fff;
+            margin-top: 6px;
+        }
+
+        .popup button[type="submit"],
+        .popup button.cancel-btn {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -191,19 +199,24 @@
     const equipaId = new URLSearchParams(window.location.search).get('idEquipa');
     let projetos = [];
 
+    
     async function carregarProjetos() {
         try {
-            const res = await fetch(`/api/Projeto/PorEquipa/${equipaId}`);
+            const res = await fetch(`/ProjetoEquipas/PorEquipa/${equipaId}`);
+            if (!res.ok) throw new Error('Falha ao obter projetos');
             projetos = await res.json();
             mostrarProjetos();
         } catch (error) {
             alert('Erro ao carregar projetos.');
+            console.error(error);
         }
     }
+
 
     function mostrarProjetos() {
         const list = document.getElementById('projectList');
         list.innerHTML = '';
+
         projetos.forEach(p => {
             const div = document.createElement('div');
             div.className = 'project-item';
@@ -221,43 +234,71 @@
         });
     }
 
+
     async function criarProjeto(e) {
         e.preventDefault();
+
         const nomeProjeto = document.getElementById('nomeProjeto').value.trim();
         const nomeCliente = document.getElementById('nomeCliente').value.trim();
 
-        const res = await fetch('/api/Projeto/CriarProjetoEquipa', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nome: nomeProjeto, nomeCliente, equipaId })
-        });
+       
+        const payload = {
+            Nome: nomeProjeto,
+            NomeCliente: nomeCliente,
+            EquipaId: parseInt(equipaId, 10)
+        };
 
-        if (res.ok) {
+        try {
+            const res = await fetch('/ProjetoEquipas/CriarProjetoEquipa', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                console.error(err);
+                throw new Error('Falha ao criar projeto');
+            }
+
             await carregarProjetos();
             fecharModal();
-            alert('Projeto criado.');
-        } else {
+            alert('Projeto criado com sucesso.');
+        } catch (error) {
             alert('Erro ao criar projeto.');
+            console.error(error);
         }
     }
 
+    
     async function eliminarProjeto(id) {
         if (!confirm('Eliminar este projeto?')) return;
-        const res = await fetch(`/api/Projeto/EliminarProjetoEquipa/${id}`, {
-            method: 'DELETE'
-        });
-        if (res.ok) {
+
+        try {
+            const res = await fetch(`/ProjetoEquipas/EliminarProjetoEquipa/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                console.error(err);
+                throw new Error('Falha ao eliminar projeto');
+            }
+
             await carregarProjetos();
-            alert('Projeto eliminado.');
-        } else {
-            alert('Erro ao eliminar.');
+            alert('Projeto eliminado com sucesso.');
+        } catch (error) {
+            alert('Erro ao eliminar projeto.');
+            console.error(error);
         }
     }
+
 
     function abrirModal() {
         document.getElementById('popup').style.display = 'block';
         document.getElementById('popupOverlay').style.display = 'block';
     }
+
 
     function fecharModal() {
         document.getElementById('popup').style.display = 'none';
@@ -265,15 +306,17 @@
         document.getElementById('createProjectForm').reset();
     }
 
+
     function irParaTarefas(id) {
         window.location.href = `/Tarefas?projetoId=${id}`;
     }
 
+    
     document.getElementById('createProjectBtn').addEventListener('click', abrirModal);
     document.getElementById('cancelBtn').addEventListener('click', fecharModal);
     document.getElementById('popupOverlay').addEventListener('click', fecharModal);
     document.getElementById('createProjectForm').addEventListener('submit', criarProjeto);
-
+    
     window.onload = carregarProjetos;
 </script>
 </body>
