@@ -240,7 +240,12 @@
 
             // Monta o payload exatamente como o DTO espera:
             // { nome: "...", nomeCliente: "...", equipaId: 26 }
-            const payload = { nome: nomeProjeto, nomeCliente, equipaId: parseInt(equipaId) };
+            const payload = {
+                Nome: nomeProjeto,
+                Cliente: nomeCliente,
+                EquipaId: parseInt(equipaId)
+            };
+
 
             const urlPost = "/api/ProjetoEquipas/CriarProjetoEquipa";
             console.log("Chamando POST em:", urlPost, "com payload:", payload);
