@@ -63,24 +63,6 @@
         margin-bottom: 12px;
     }
 
-    #autocompleteResultados {
-        max-height: 150px;
-        overflow-y: auto;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        margin-bottom: 10px;
-    }
-
-    #autocompleteResultados div {
-        padding: 8px;
-        cursor: pointer;
-    }
-
-    #autocompleteResultados div:hover {
-        background-color: #eeeeee;
-    }
-
     .d-flex {
         display: flex;
         justify-content: space-between;
@@ -104,6 +86,24 @@
     .gap-2 > * {
         margin-left: 8px;
     }
+
+    #autocompleteResultados {
+        max-height: 150px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+
+    #autocompleteResultados div {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    #autocompleteResultados div:hover {
+        background-color: #eeeeee;
+    }
 </style>
 
 <div class="container">
@@ -112,6 +112,7 @@
     <div id="listaEquipas" class="mt-3"></div>
 </div>
 
+<!-- Modal Criar Equipa -->
 <div id="modalCriarEquipa" class="modal">
     <div class="modal-content">
         <h4 class="text-center">Criar Nova Equipa</h4>
@@ -121,6 +122,7 @@
     </div>
 </div>
 
+<!-- Modal Convite -->
 <div id="modalConvite" class="modal">
     <div class="modal-content">
         <h4 class="text-center">Convidar Utilizador</h4>
@@ -129,6 +131,15 @@
         <textarea id="mensagemConvite" placeholder="Mensagem (opcional)" class="form-control"></textarea>
         <button class="btn-custom" onclick="enviarConvite()">Enviar</button>
         <button class="btn btn-secondary mt-2" onclick="fecharModalConvite()">Cancelar</button>
+    </div>
+</div>
+
+<!-- Modal Membros -->
+<div id="modalMembros" class="modal">
+    <div class="modal-content">
+        <h4 class="text-center">Membros da Equipa</h4>
+        <ul id="listaMembros" class="list-group mb-3"></ul>
+        <button class="btn btn-secondary mt-2" onclick="fecharModalMembros()">Fechar</button>
     </div>
 </div>
 
@@ -160,13 +171,10 @@
                                 ${!e.isCriador ? '<small class="text-muted">Convidado</small>' : ''}
                             </div>
                             <div class="d-flex gap-2">
-                                ${e.isCriador
-                        ? `<button class="btn btn-sm btn-custom" onclick="abrirModalConvite(${e.idEquipa})">Convidar</button>`
-                        : ''}
+                                ${e.isCriador ? `<button class="btn btn-sm btn-custom" onclick="abrirModalConvite(${e.idEquipa})">Convidar</button>` : ''}
                                 <a href="/Home/ProjetosEquipa?idEquipa=${e.idEquipa}" class="btn btn-sm btn-custom">Projetos</a>
-                                ${e.isCriador
-                        ? `<button class="btn btn-sm btn-danger" onclick="apagarEquipa(${e.idEquipa})">Apagar</button>`
-                        : ''}
+                                <button class="btn btn-sm btn-secondary" onclick="abrirModalMembros(${e.idEquipa})">Membros</button>
+                                ${e.isCriador ? `<button class="btn btn-sm btn-danger" onclick="apagarEquipa(${e.idEquipa})">Apagar</button>` : ''}
                             </div>
                         </div>
                     </div>`
@@ -174,28 +182,6 @@
         } catch (err) {
             console.error(err);
             container.innerHTML = "<p>Erro ao carregar equipas.</p>";
-        }
-    }
-
-    async function apagarEquipa(id) {
-        if (!confirm("Tens a certeza que queres apagar esta equipa? Isto eliminará também os projetos e tarefas associados.")) return;
-
-        try {
-            const res = await fetch(`/api/Equipa/Apagar/${id}`, {
-                method: "DELETE"
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-                alert(data.message || "Equipa apagada.");
-                await carregarEquipas();
-            } else {
-                alert(data.message || "Erro ao apagar equipa.");
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Erro inesperado ao apagar equipa.");
         }
     }
 
@@ -214,7 +200,7 @@
         const res = await fetch("/api/Equipa/Criar", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ nome: nome })
+            body: JSON.stringify({ nome })
         });
 
         if (res.ok) {
@@ -249,7 +235,7 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 usernameDestinatario: usernameSelecionado,
-                mensagem: mensagem,
+                mensagem,
                 idEquipa: equipaSelecionadaId
             })
         });
@@ -287,10 +273,85 @@
         document.getElementById("autocompleteResultados").innerHTML = "";
     }
 
+    function abrirModalMembros(idEquipa) {
+        fetch(`/api/Equipa/GetMembros?id=${idEquipa}`)
+            .then(res => res.json())
+            .then(membros => {
+                fetch("/api/Equipa/Minhas")
+                    .then(r => r.json())
+                    .then(minhasEquipas => {
+                        const equipaAtual = minhasEquipas.find(e => e.idEquipa === idEquipa);
+                        const souDono = equipaAtual?.isCriador;
+
+                        const meuId = parseInt(document.getElementById("user-id").value); // input escondido com o ID atual
+                        const ul = document.getElementById("listaMembros");
+
+                        ul.innerHTML = membros.map(m => {
+                            if (souDono && m.id !== meuId) {
+                                return `<li class='list-group-item d-flex justify-content-between align-items-center'>
+                                        ${m.nome}
+                                        <button class='btn btn-sm btn-danger' onclick='removerMembro(${m.id}, ${idEquipa})'>Remover</button>
+                                    </li>`;
+                            } else if (!souDono && m.id === meuId) {
+                                return `<li class='list-group-item d-flex justify-content-between align-items-center'>
+                                        ${m.nome}
+                                        <button class='btn btn-sm btn-secondary' onclick='removerMembro(${m.id}, ${idEquipa})'>Sair</button>
+                                    </li>`;
+                            } else {
+                                return `<li class='list-group-item'>${m.nome}</li>`;
+                            }
+                        }).join("");
+
+                        document.getElementById("modalMembros").style.display = "flex";
+                    });
+            });
+    }
+
+
+
+    function fecharModalMembros() {
+        document.getElementById("modalMembros").style.display = "none";
+    }
+
+    function removerMembro(userId, equipaId) {
+        if (confirm("Tem a certeza que quer remover este membro da equipa?")) {
+            fetch('/api/Equipa/RemoverMembro', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, equipaId })
+            }).then(() => {
+                alert('Membro removido.');
+                abrirModalMembros(equipaId);
+            });
+        }
+    }
+
+    async function apagarEquipa(id) {
+        if (!confirm("Tens a certeza que queres apagar esta equipa? Isto eliminará também os projetos e tarefas associados.")) return;
+
+        try {
+            const res = await fetch(`/api/Equipa/Apagar/${id}`, { method: "DELETE" });
+            const data = await res.json();
+            if (res.ok) {
+                alert(data.message || "Equipa apagada.");
+                await carregarEquipas();
+            } else {
+                alert(data.message || "Erro ao apagar equipa.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Erro inesperado ao apagar equipa.");
+        }
+    }
+
     window.addEventListener("click", function (e) {
-        const modal1 = document.getElementById("modalCriarEquipa");
-        const modal2 = document.getElementById("modalConvite");
-        if (e.target === modal1) modal1.style.display = "none";
-        if (e.target === modal2) modal2.style.display = "none";
+        ["modalCriarEquipa", "modalConvite", "modalMembros"].forEach(id => {
+            const modal = document.getElementById(id);
+            if (e.target === modal) modal.style.display = "none";
+        });
     });
+    
+
 </script>
+
+<input type="hidden" id="user-id" value="@User.Claims.FirstOrDefault(c => c.Type == "id")?.Value" />
