@@ -8,7 +8,7 @@ using WebApplication2.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Banco de Dados
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
@@ -72,7 +72,7 @@ else
 
 AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
 {
-    Console.WriteLine("🔴 UNHANDLED EXCEPTION:");
+    Console.WriteLine(" UNHANDLED EXCEPTION:");
     Console.WriteLine(eventArgs.ExceptionObject?.ToString());
 };
 

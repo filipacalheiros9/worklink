@@ -1,8 +1,6 @@
 ﻿@{
     ViewBag.Title = "Minhas Equipas";
 }
-
-<!-- ✅ CSS Estilizado -->
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -165,7 +163,7 @@
                                 ${e.isCriador
                         ? `<button class="btn btn-sm btn-custom" onclick="abrirModalConvite(${e.idEquipa})">Convidar</button>`
                         : ''}
-                                <a href="/Equipa/ProjetosEquipas?idEquipa=${e.idEquipa}" class="btn btn-sm btn-custom">Projetos</a>
+                                <a href="/Home/ProjetosEquipa?idEquipa=${e.idEquipa}" class="btn btn-sm btn-custom">Projetos</a>
                                 ${e.isCriador
                         ? `<button class="btn btn-sm btn-danger" onclick="apagarEquipa(${e.idEquipa})">Apagar</button>`
                         : ''}

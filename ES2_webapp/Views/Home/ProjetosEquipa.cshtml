@@ -1,30 +1,28 @@
-﻿<!DOCTYPE html>
+﻿@* /Views/Home/ProjetosEquipa.cshtml *@
+@{
+    ViewData["Title"] = "Projetos da Equipa";
+    // Pega o idEquipa vindo na query-string: ?idEquipa=26
+    var idEquipaQuery = Context.Request.Query["idEquipa"].ToString();
+}
+
+<!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Projetos da Equipa</title>
+    <title>@ViewData["Title"]</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            color: #000;
-        }
-
+        /* ========== Mesmo CSS da página de “Meus Projetos” ========== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: #fff; color: #000; }
         .container {
             width: 100%;
             max-width: 1200px;
             padding: 40px 20px;
             margin: 0 auto;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -33,19 +31,16 @@
             gap: 10px;
             margin-bottom: 30px;
         }
-
         .header h2 {
             font-size: 2rem;
             font-weight: 600;
             color: #198754;
         }
-
         .project-list {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-
         .project-item {
             background-color: #f9fbff;
             border: 1px solid #d8e2ef;
@@ -54,30 +49,25 @@
             padding: 20px;
             transition: all 0.3s ease;
         }
-
         .project-item:hover {
             transform: scale(1.015);
             box-shadow: 0 6px 24px rgba(25, 135, 84, 0.15);
         }
-
         .project-item strong {
             font-size: 1.25rem;
         }
-
         .project-item span {
             display: block;
             margin-top: 6px;
             font-size: 0.95rem;
             color: #444;
         }
-
         .actions {
             display: flex;
             gap: 10px;
             align-items: center;
             margin-top: 8px;
         }
-
         .btn {
             background-color: #198754;
             color: #fff;
@@ -94,31 +84,19 @@
             transition: background-color 0.2s ease;
             box-shadow: 0 4px 12px rgba(25, 135, 84, 0.2);
         }
-
-        .btn:hover {
-            background-color: #157347;
-        }
-
+        .btn:hover { background-color: #157347; }
         .cancel-btn {
             background-color: #fff;
             color: #000;
             border: 1px solid #000;
             box-shadow: 0 2px 6px rgba(25, 135, 84, 0.15);
         }
-
-        .cancel-btn:hover {
-            background-color: #f0f0f0;
-        }
-
+        .cancel-btn:hover { background-color: #f0f0f0; }
         .fa-trash {
             color: #d63031;
             cursor: pointer;
         }
-
-        .fa-trash:hover {
-            transform: scale(1.2);
-        }
-
+        .fa-trash:hover { transform: scale(1.2); }
         .popup {
             background-color: #ffffff;
             padding: 30px 25px;
@@ -134,7 +112,6 @@
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
             color: #000;
         }
-
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -145,12 +122,10 @@
             display: none;
             z-index: 10;
         }
-
         label {
             font-size: 0.95rem;
             font-weight: 500;
         }
-
         input[type="text"] {
             width: 100%;
             padding: 10px 14px;
@@ -158,123 +133,195 @@
             border-radius: 8px;
             font-size: 1rem;
             background-color: #fff;
+            margin-bottom: 12px;
         }
+        /* ========== Fim do CSS ========== */
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <h2><i class="fas fa-folder me-2"></i> Projetos da Equipa</h2>
-        <button class="btn" id="createProjectBtn">
-            <i class="fa-solid fa-plus"></i> Criar Projeto
-        </button>
+    <div class="container">
+        <div class="header">
+            <h2><i class="fas fa-folder me-2"></i> Projetos da Equipa</h2>
+            <button class="btn" id="createProjectBtn">
+                <i class="fa-solid fa-plus"></i> Criar Projeto
+            </button>
+        </div>
+        <div class="project-list" id="projectList">
+            <p>Carregando projetos...</p>
+        </div>
     </div>
-    <div class="project-list" id="projectList"></div>
-</div>
 
-<div class="popup-overlay" id="popupOverlay"></div>
-<div class="popup" id="popup">
-    <h2>Criar Projeto</h2>
-    <form id="createProjectForm">
-        <label for="nomeProjeto">Nome do Projeto</label>
-        <input type="text" id="nomeProjeto" required>
+    <div class="popup-overlay" id="popupOverlay"></div>
+    <div class="popup" id="popup">
+        <h2>Criar Projeto</h2>
+        <form id="createProjectForm">
+            <label for="nomeProjeto">Nome do Projeto</label>
+            <input type="text" id="nomeProjeto" required />
 
-        <label for="nomeCliente">Nome do Cliente</label>
-        <input type="text" id="nomeCliente" required>
+            <label for="nomeCliente">Nome do Cliente</label>
+            <input type="text" id="nomeCliente" required />
 
-        <button type="submit" class="btn">Salvar</button>
-        <button type="button" class="btn cancel-btn" id="cancelBtn">Cancelar</button>
-    </form>
-</div>
+            <button type="submit" class="btn">Salvar</button>
+            <button type="button" class="btn cancel-btn" id="cancelBtn">Cancelar</button>
+        </form>
+    </div>
 
-<script>
-    const equipaId = new URLSearchParams(window.location.search).get('idEquipa');
-    let projetos = [];
+    @section Scripts {
+    <script>
+        // ********** VARIÁVEIS INICIAIS **********
+        // Pega o idEquipa que veio na query-string (ex: ?idEquipa=26)
+        const equipaId = "@idEquipaQuery";
+        let projetos = [];
 
-    async function carregarProjetos() {
-        try {
-            const res = await fetch(`/api/Projeto/PorEquipa/${equipaId}`);
-            projetos = await res.json();
-            mostrarProjetos();
-        } catch (error) {
-            alert('Erro ao carregar projetos.');
+        // ********** FUNÇÃO QUE BUSCA PROJETOS DA EQUIPA (GET) **********
+        async function carregarProjetos() {
+            // URL exata que o controller espera: /api/ProjetoEquipas/PorEquipa/{id}
+            const urlFetch = `/api/ProjetoEquipas/PorEquipa/${equipaId}`;
+            console.log("Chamando GET em:", urlFetch);
+
+            try {
+                const res = await fetch(urlFetch, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'   // ← Importante: envia o cookie de autenticação
+                });
+                console.log("Resposta GET status:", res.status);
+
+                if (!res.ok) {
+                    throw new Error(`GET falhou com status ${res.status}`);
+                }
+
+                projetos = await res.json();
+                mostrarProjetos();
+            } catch (error) {
+                console.error("Erro ao carregarProjetos():", error);
+                const list = document.getElementById('projectList');
+                list.innerHTML = `<p style="color:red;">Erro ao carregar projetos: ${error.message}</p>`;
+            }
         }
-    }
 
-    function mostrarProjetos() {
-        const list = document.getElementById('projectList');
-        list.innerHTML = '';
-        projetos.forEach(p => {
-            const div = document.createElement('div');
-            div.className = 'project-item';
-            div.innerHTML = `
-                <strong>${p.nomeProjeto}</strong>
-                <span>Cliente: ${p.nomeCliente}</span>
-                <span>Criador: ${p.criador}</span>
-                <div class="actions">
-                    <button class="btn" onclick="irParaTarefas(${p.idProjeto})">
-                        <i class="fa-solid fa-list-check"></i> Tarefas
-                    </button>
-                    <i class="fa-solid fa-trash" title="Eliminar" onclick="eliminarProjeto(${p.idProjeto})"></i>
-                </div>`;
-            list.appendChild(div);
-        });
-    }
+        // ********** FUNÇÃO QUE EXIBE PROJETOS NO DOM **********
+        function mostrarProjetos() {
+            const list = document.getElementById('projectList');
+            list.innerHTML = ""; // Limpa texto “Carregando projetos...” ou erros
 
-    async function criarProjeto(e) {
-        e.preventDefault();
-        const nomeProjeto = document.getElementById('nomeProjeto').value.trim();
-        const nomeCliente = document.getElementById('nomeCliente').value.trim();
+            if (!Array.isArray(projetos) || projetos.length === 0) {
+                list.innerHTML = "<p>Não foram encontrados projetos para esta equipa.</p>";
+                return;
+            }
 
-        const res = await fetch('/api/Projeto/CriarProjetoEquipa', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nome: nomeProjeto, nomeCliente, equipaId })
-        });
-
-        if (res.ok) {
-            await carregarProjetos();
-            fecharModal();
-            alert('Projeto criado.');
-        } else {
-            alert('Erro ao criar projeto.');
+            projetos.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'project-item';
+                div.innerHTML = `
+                    <strong>${p.nomeProjeto}</strong>
+                    <span>Cliente: ${p.nomeCliente}</span>
+                    <span>Criador: ${p.criador}</span>
+                    <div class="actions">
+                        <button class="btn" onclick="irParaTarefas(${p.idProjeto})">
+                            <i class="fa-solid fa-list-check"></i> Tarefas
+                        </button>
+                        <i class="fa-solid fa-trash" title="Eliminar" onclick="eliminarProjeto(${p.idProjeto})"></i>
+                    </div>`;
+                list.appendChild(div);
+            });
         }
-    }
 
-    async function eliminarProjeto(id) {
-        if (!confirm('Eliminar este projeto?')) return;
-        const res = await fetch(`/api/Projeto/EliminarProjetoEquipa/${id}`, {
-            method: 'DELETE'
-        });
-        if (res.ok) {
-            await carregarProjetos();
-            alert('Projeto eliminado.');
-        } else {
-            alert('Erro ao eliminar.');
+        // ********** FUNÇÃO DE CRIAÇÃO DE PROJETO (POST) **********
+        async function criarProjeto(e) {
+            e.preventDefault();
+            const nomeProjeto = document.getElementById('nomeProjeto').value.trim();
+            const nomeCliente = document.getElementById('nomeCliente').value.trim();
+
+            if (!nomeProjeto || !nomeCliente) {
+                alert("Preencha nome do projeto e nome do cliente.");
+                return;
+            }
+
+            // Monta o payload exatamente como o DTO espera:
+            // { nome: "...", nomeCliente: "...", equipaId: 26 }
+            const payload = { nome: nomeProjeto, nomeCliente, equipaId: parseInt(equipaId) };
+
+            const urlPost = "/api/ProjetoEquipas/CriarProjetoEquipa";
+            console.log("Chamando POST em:", urlPost, "com payload:", payload);
+
+            try {
+                const res = await fetch(urlPost, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',   // ← Inclui o cookie de autenticação
+                    body: JSON.stringify(payload)
+                });
+                console.log("Resposta POST status:", res.status);
+
+                if (!res.ok) {
+                    const textoErro = await res.text();
+                    throw new Error(`POST falhou com status ${res.status} – ${textoErro}`);
+                }
+
+                // Depois de criar, recarrega a lista
+                await carregarProjetos();
+                fecharModal();
+                alert('Projeto criado com sucesso.');
+            } catch (error) {
+                console.error("Erro ao criarProjeto():", error);
+                alert('Erro ao criar projeto: ' + error.message);
+            }
         }
+
+        // ********** FUNÇÃO DE EXCLUSÃO DE PROJETO (DELETE) **********
+        async function eliminarProjeto(id) {
+            if (!confirm('Deseja realmente eliminar este projeto?')) return;
+
+            const urlDelete = `/api/ProjetoEquipas/EliminarProjetoEquipa/${id}`;
+            console.log("Chamando DELETE em:", urlDelete);
+
+            try {
+                const res = await fetch(urlDelete, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'   // ← Inclui o cookie de autenticação
+                });
+                console.log("Resposta DELETE status:", res.status);
+
+                if (!res.ok) {
+                    const textoErro = await res.text();
+                    throw new Error(`DELETE falhou com status ${res.status} – ${textoErro}`);
+                }
+
+                await carregarProjetos();
+                alert('Projeto eliminado com sucesso.');
+            } catch (error) {
+                console.error("Erro ao eliminarProjeto():", error);
+                alert('Erro ao eliminar projeto: ' + error.message);
+            }
+        }
+
+        // ********** ABRIR / FECHAR MODAL **********
+        function abrirModal() {
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('popupOverlay').style.display = 'block';
+        }
+        function fecharModal() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('popupOverlay').style.display = 'none';
+            document.getElementById('createProjectForm').reset();
+        }
+
+        // ********** REDIRECIONAR PARA AS TAREFAS DO PROJETO **********
+        function irParaTarefas(idProjeto) {
+            window.location.href = `/Tarefas?projetoId=${idProjeto}`;
+        }
+
+        // ********** EVENTOS **********
+        document.getElementById('createProjectBtn').addEventListener('click', abrirModal);
+        document.getElementById('cancelBtn').addEventListener('click', fecharModal);
+        document.getElementById('popupOverlay').addEventListener('click', fecharModal);
+        document.getElementById('createProjectForm').addEventListener('submit', criarProjeto);
+
+        // ********** AO CARREGAR A PÁGINA, CHAMA carregarProjetos() **********
+        window.addEventListener('load', carregarProjetos);
+    </script>
     }
-
-    function abrirModal() {
-        document.getElementById('popup').style.display = 'block';
-        document.getElementById('popupOverlay').style.display = 'block';
-    }
-
-    function fecharModal() {
-        document.getElementById('popup').style.display = 'none';
-        document.getElementById('popupOverlay').style.display = 'none';
-        document.getElementById('createProjectForm').reset();
-    }
-
-    function irParaTarefas(id) {
-        window.location.href = `/Tarefas?projetoId=${id}`;
-    }
-
-    document.getElementById('createProjectBtn').addEventListener('click', abrirModal);
-    document.getElementById('cancelBtn').addEventListener('click', fecharModal);
-    document.getElementById('popupOverlay').addEventListener('click', fecharModal);
-    document.getElementById('createProjectForm').addEventListener('submit', criarProjeto);
-
-    window.onload = carregarProjetos;
-</script>
 </body>
 </html>

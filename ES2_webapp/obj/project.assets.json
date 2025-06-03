@@ -3234,11 +3234,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\worklink\\ES2_webapp\\ES2_webapp.csproj",
+      "projectUniqueName": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\worklinK\\ES2_webapp\\ES2_webapp.csproj",
       "projectName": "ES2_webapp",
-      "projectPath": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\worklink\\ES2_webapp\\ES2_webapp.csproj",
+      "projectPath": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\worklinK\\ES2_webapp\\ES2_webapp.csproj",
       "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\worklink\\ES2_webapp\\obj\\",
+      "outputPath": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\worklinK\\ES2_webapp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config"
