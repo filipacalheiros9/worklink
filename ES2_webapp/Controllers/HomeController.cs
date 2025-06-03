@@ -27,13 +27,12 @@ namespace WebApplication2.Controllers
         public IActionResult HomePageLogin() => View();
         public IActionResult AsMinhasEquipas() => View();
         public IActionResult CriarProjeto() => View();
-        public IActionResult Defenicoes() => View();
         public IActionResult Tarefas() => View();
         public IActionResult adminpage() => View();
         public IActionResult TarefasIND() => View();
         public IActionResult Convites() => View();
-        [HttpGet]
         public IActionResult Login() => View();
+        public IActionResult ProjetosEquipa() => View();
         
         
 

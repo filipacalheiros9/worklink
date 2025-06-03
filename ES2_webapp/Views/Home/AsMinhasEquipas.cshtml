@@ -102,6 +102,10 @@
         margin: 0 auto;
         padding: 20px;
     }
+
+    .gap-2 > * {
+        margin-left: 8px;
+    }
 </style>
 
 <div class="container">
@@ -152,11 +156,19 @@
                 ? "<p>Não estás em nenhuma equipa.</p>"
                 : equipas.map(e =>
                     `<div class="card">
-                        <div class="d-flex">
-                            <strong>${e.nome}</strong>
+                        <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <button class="btn-custom" onclick="abrirModalConvite(${e.idEquipa})">Convidar</button>
-                                <button class="btn btn-danger btn-sm ms-2" onclick="apagarEquipa(${e.idEquipa})">Apagar</button>
+                                <strong>${e.nome}</strong><br/>
+                                ${!e.isCriador ? '<small class="text-muted">Convidado</small>' : ''}
+                            </div>
+                            <div class="d-flex gap-2">
+                                ${e.isCriador
+                        ? `<button class="btn btn-sm btn-custom" onclick="abrirModalConvite(${e.idEquipa})">Convidar</button>`
+                        : ''}
+                                <a href="/Equipa/ProjetosEquipas?idEquipa=${e.idEquipa}" class="btn btn-sm btn-custom">Projetos</a>
+                                ${e.isCriador
+                        ? `<button class="btn btn-sm btn-danger" onclick="apagarEquipa(${e.idEquipa})">Apagar</button>`
+                        : ''}
                             </div>
                         </div>
                     </div>`
@@ -168,18 +180,24 @@
     }
 
     async function apagarEquipa(id) {
-        if (!confirm("Tens a certeza que queres apagar esta equipa e os seus projetos?")) return;
+        if (!confirm("Tens a certeza que queres apagar esta equipa? Isto eliminará também os projetos e tarefas associados.")) return;
 
-        const res = await fetch(`/api/Equipa/Apagar/${id}`, {
-            method: "DELETE"
-        });
+        try {
+            const res = await fetch(`/api/Equipa/Apagar/${id}`, {
+                method: "DELETE"
+            });
 
-        const data = await res.json();
-        if (res.ok) {
-            alert("Equipa apagada com sucesso.");
-            await carregarEquipas();
-        } else {
-            alert(data.message || "Erro ao apagar equipa.");
+            const data = await res.json();
+
+            if (res.ok) {
+                alert(data.message || "Equipa apagada.");
+                await carregarEquipas();
+            } else {
+                alert(data.message || "Erro ao apagar equipa.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Erro inesperado ao apagar equipa.");
         }
     }
 

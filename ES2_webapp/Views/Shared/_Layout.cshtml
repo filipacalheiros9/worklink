@@ -3,6 +3,7 @@
     var cargo = Context.Session.GetString("Cargo") ?? "";
 }
 
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -58,7 +59,7 @@
                                 <div id="conviteDropdown" class="d-none position-absolute bg-white border rounded shadow p-3" style="top: 60px; right: 10px; min-width: 250px; z-index: 1000;">
                                     <h6 class="mb-2">Convites</h6>
                                     <ul id="conviteLista" class="list-unstyled mb-2" style="max-height: 200px; overflow-y: auto;"></ul>
-                                    <a href="/Home/VerConvites" class="text-decoration-underline text-end d-block">Ver todos</a>
+                                    <a href="/Equipa/Convites">Ver todos</a>
                                 </div>
                             </li>
 
@@ -79,9 +80,6 @@
                                     </a>
                                     <a class="dropdown-item" asp-controller="Home" asp-action="AsMinhasEquipas">
                                         <i class="fas fa-people-arrows me-2 text-info"></i> As minhas equipas
-                                    </a>
-                                    <a class="dropdown-item" asp-controller="Home" asp-action="Defenicoes">
-                                        <i class="fas fa-sliders-h me-2 text-warning"></i> Definições
                                     </a>
                                     <a class="dropdown-item" asp-controller="Home" asp-action="TarefasIND">
                                         <i class="fas fa-tasks me-2 text-secondary"></i> Tarefas Individuais
@@ -104,7 +102,7 @@
         @RenderBody()
     </main>
 
-    <!-- FOOTER -->
+
     <footer class="bg-dark text-white text-center p-3 mt-5">
         <p>&copy; 2025 WorkLink</p>
         <a asp-controller="Home" asp-action="Contato" class="text-white text-decoration-underline">Contato</a>
@@ -122,37 +120,47 @@
         menu.classList.toggle("d-none");
     }
 
-    async function fetchConvites() {
+
+        async function fetchConvites() {
         const dropdown = document.getElementById("conviteDropdown");
         const lista = document.getElementById("conviteLista");
         const badge = document.getElementById("conviteCount");
 
         try {
-            const res = await fetch("/api/Equipa/Convites");
-            const convites = await res.json();
+        const res = await fetch("/api/Equipa/Convites");
+        const convites = await res.json();
 
-            lista.innerHTML = "";
+        // Filtrar apenas os convites não respondidos
+        const pendentes = convites.filter(c => c.resposta === null);
 
-            if (convites.length > 0) {
-                badge.textContent = convites.length;
-                badge.style.display = "inline-block";
-            } else {
-                badge.style.display = "none";
-            }
-
-            convites.slice(0, 3).forEach(c => {
-                const item = document.createElement("li");
-                item.classList.add("mb-2", "border-bottom", "pb-2");
-                item.innerHTML = `<strong>${c.equipa?.nome || "Equipa"}</strong><br><small>${c.mensagem || "(sem mensagem)"}</small>`;
-                lista.appendChild(item);
-            });
-
-        } catch (err) {
-            lista.innerHTML = "<li>Erro ao carregar convites</li>";
-        }
+        // Atualiza o badge de notificação
+        if (pendentes.length > 0) {
+        badge.textContent = pendentes.length;
+        badge.style.display = "inline-block";
+    } else {
+        badge.style.display = "none";
     }
 
-    function toggleConviteMenu() {
+        lista.innerHTML = "";
+
+        // Mostra os 3 convites mais recentes (pendentes ou todos, conforme preferência)
+        convites.slice(0, 3).forEach(c => {
+        const item = document.createElement("li");
+        item.classList.add("mb-2", "border-bottom", "pb-2");
+        item.innerHTML = `<strong>Equipa: ${c.equipa?.nome || "Equipa"}</strong><br><small>${c.mensagem || "(sem mensagem)"}</small>`;
+        lista.appendChild(item);
+    });
+
+    } catch (err) {
+        console.error(err);
+        lista.innerHTML = "<li>Erro ao carregar convites</li>";
+        badge.style.display = "none";
+    }
+    }
+
+
+
+function toggleConviteMenu() {
         const menu = document.getElementById("conviteDropdown");
         menu.classList.toggle("d-none");
         fetchConvites();
