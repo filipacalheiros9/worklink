@@ -5,6 +5,35 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 <link href="/css/Tarefas.css" rel="stylesheet" />
 
+<style>
+    /* Autocomplete styles */
+    .autocomplete {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+    .autocomplete-items {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid #ccc;
+        border-top: none;
+        z-index: 99;
+        background-color: #fff;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    .autocomplete-item {
+        padding: 8px;
+        cursor: pointer;
+    }
+    .autocomplete-item:hover,
+    .autocomplete-active {
+        background-color: #e9e9e9;
+    }
+</style>
+
 <div class="dashboard-container">
     <div class="dashboard-header">
         <h1 class="dashboard-title">
@@ -20,9 +49,9 @@
 </div>
 
 <!-- Modal Criar -->
-<div id="createModal" class="modal-overlay" style="display:none;">
+<div id="createModal" class="modal-overlay">
     <div class="modal-content">
-        <h3>Nova Tarefa Individual</h3>
+        <h3 class="popup-title">Nova Tarefa Individual</h3>
         <div class="form-group">
             <label>Nome da Tarefa:</label>
             <input type="text" id="taskName" class="form-input" autocomplete="off">
@@ -43,9 +72,9 @@
 </div>
 
 <!-- Modal Editar -->
-<div id="editModal" class="modal-overlay" style="display:none;">
+<div id="editModal" class="modal-overlay">
     <div class="modal-content">
-        <h3>Editar Tarefa</h3>
+        <h3 class="popup-title">Editar Tarefa</h3>
         <div class="form-group">
             <label>Nome da Tarefa:</label>
             <input type="text" id="editTaskName" class="form-input" autocomplete="off">
@@ -66,12 +95,22 @@
 </div>
 
 <!-- Modal Partilhar -->
-<div id="shareModal" class="modal-overlay" style="display:none;">
+<div id="shareModal" class="modal-overlay">
     <div class="modal-content">
-        <h3>Exportar para Projeto</h3>
+        <h3 class="popup-title">Exportar para Projeto</h3>
         <div class="form-group">
             <label>Pesquisar Projeto:</label>
-            <input type="text" id="shareProjectId" class="form-input" placeholder="ID ou Nome do Projeto">
+            <div class="autocomplete">
+                <input
+                    type="text"
+                    id="shareProjectName"
+                    class="form-input"
+                    placeholder="Comece a digitar..."
+                    autocomplete="off"
+                />
+                <input type="hidden" id="shareProjectIdHidden" />
+                <div id="shareAutocompleteList" class="autocomplete-items"></div>
+            </div>
         </div>
         <div class="form-actions">
             <button class="btn-primary" onclick="confirmarPartilha()">Partilhar</button>
@@ -87,6 +126,10 @@
 
     window.onload = async function () {
         await loadTasks();
+        // Garantir que modais começam escondidos
+        document.getElementById('createModal').style.display = 'none';
+        document.getElementById('editModal').style.display = 'none';
+        document.getElementById('shareModal').style.display = 'none';
     };
 
     async function loadTasks() {
@@ -100,21 +143,21 @@
             } else {
                 data.forEach(tarefa => {
                     html += `
-                <div class="task-item shadow-sm p-2 mb-2 rounded d-flex justify-content-between align-items-center">
-                    <div>
+                <div class="kanban-card shadow-sm p-2 mb-2 rounded d-flex justify-content-between align-items-center">
+                    <div class="task-text">
                         <input type="checkbox">
                         <span>${tarefa.nomeTarefa}</span><br>
-                        <small>Início: ${tarefa.dtInicio ?? '-'} ${tarefa.hrInicio}</small><br>
+                        <small>Início: ${tarefa.dtInicio ?? '-'} ${tarefa.hrInicio ?? ''}</small><br>
                         <small>€${(tarefa.precoHora ?? 0).toFixed(2)}/h</small>
                     </div>
-                    <div>
-                        <button class="btn btn-light btn-sm border me-2" onclick="openEditModal(${tarefa.idTarefa}, '${tarefa.nomeTarefa}', ${tarefa.precoHora ?? 0})">
+                    <div class="actions">
+                        <button onclick="openEditModal(${tarefa.idTarefa}, '${tarefa.nomeTarefa}', ${tarefa.precoHora ?? 0})">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
-                        <button class="btn btn-light btn-sm border me-2" onclick="openShareModal(${tarefa.idTarefa})">
+                        <button onclick="openShareModal(${tarefa.idTarefa})">
                             <i class="fas fa-share"></i>
                         </button>
-                        <button class="btn btn-light btn-sm border" onclick="deleteTask(${tarefa.idTarefa})">
+                        <button onclick="deleteTask(${tarefa.idTarefa})">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -222,7 +265,10 @@
 
     function openShareModal(id) {
         sharingTaskId = id;
-        document.getElementById('shareProjectId').value = '';
+        document.getElementById('shareProjectName').value = '';
+        document.getElementById('shareProjectIdHidden').value = '';
+        // limpa sugestões antigas
+        document.getElementById('shareAutocompleteList').innerHTML = '';
         document.getElementById('shareModal').style.display = 'flex';
     }
 
@@ -232,10 +278,10 @@
     }
 
     async function confirmarPartilha() {
-        const novoProjetoId = document.getElementById('shareProjectId').value.trim();
+        const novoProjetoId = document.getElementById('shareProjectIdHidden').value.trim();
 
         if (!novoProjetoId) {
-            alert("Por favor insira o ID do projeto destino.");
+            alert("Por favor selecione um projeto válido.");
             return;
         }
 
@@ -269,4 +315,108 @@
             alert('Erro ao apagar tarefa.');
         }
     }
+
+    // ============================
+    // Autocomplete para Compartilhar
+    // ============================
+    (function() {
+        const input = document.getElementById('shareProjectName');
+        const hiddenInput = document.getElementById('shareProjectIdHidden');
+        const listContainer = document.getElementById('shareAutocompleteList');
+        let currentFocus = -1;
+        let itemsData = [];
+        let lastTerm = '';
+
+        input.addEventListener('input', function() {
+            const term = this.value.trim();
+            if (term.length < 2 || term === lastTerm) {
+                removeShareListItems();
+                return;
+            }
+            lastTerm = term;
+            hiddenInput.value = '';
+
+            fetch(`/api/Projeto/Autocomplete?term=${encodeURIComponent(term)}`, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Não foi possível carregar projetos');
+                    return res.json();
+                })
+                .then(data => {
+                    itemsData = data;
+                    renderShareList(data);
+                })
+                .catch(err => {
+                    console.error('Erro no autocomplete de projetos:', err);
+                    removeShareListItems();
+                });
+        });
+
+        function renderShareList(data) {
+            removeShareListItems();
+            if (!data.length) return;
+
+            data.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('autocomplete-item');
+                itemDiv.innerHTML = item.nomeProjeto;
+                itemDiv.dataset.index = index;
+                itemDiv.addEventListener('click', function() {
+                    input.value = item.nomeProjeto;
+                    hiddenInput.value = item.idProjeto;
+                    removeShareListItems();
+                });
+                listContainer.appendChild(itemDiv);
+            });
+        }
+
+        input.addEventListener('keydown', function(e) {
+            let items = listContainer.getElementsByClassName('autocomplete-item');
+            if (!items) return;
+
+            if (e.key === 'ArrowDown') {
+                currentFocus++;
+                addActive(items);
+                e.preventDefault();
+            } else if (e.key === 'ArrowUp') {
+                currentFocus--;
+                addActive(items);
+                e.preventDefault();
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (currentFocus > -1 && items[currentFocus]) {
+                    items[currentFocus].click();
+                }
+            }
+        });
+
+        function addActive(items) {
+            if (!items) return;
+            removeActive(items);
+            if (currentFocus >= items.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = items.length - 1;
+            items[currentFocus].classList.add('autocomplete-active');
+        }
+
+        function removeActive(items) {
+            for (let i = 0; i < items.length; i++) {
+                items[i].classList.remove('autocomplete-active');
+            }
+        }
+
+        function removeShareListItems() {
+            while (listContainer.firstChild) {
+                listContainer.removeChild(listContainer.firstChild);
+            }
+            currentFocus = -1;
+        }
+
+        document.addEventListener('click', function (e) {
+            if (e.target !== input) {
+                removeShareListItems();
+            }
+        });
+    })();
 </script>

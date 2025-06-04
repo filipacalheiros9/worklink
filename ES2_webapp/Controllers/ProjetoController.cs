@@ -4,7 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication2.Data;
 using WebApplication2.Entities;
 using WebApplication2.DTO;
-using WebApplication2.Services; // ✅ novo
+using WebApplication2.Services;
+using System;
+using System.Linq;    // para LINQ
+using System.Collections.Generic; // para IEnumerable
 
 namespace WebApplication2.Controllers
 {
@@ -142,6 +145,36 @@ namespace WebApplication2.Controllers
                     detalhe = ex.InnerException?.Message ?? ex.Message
                 });
             }
+        }
+        
+        [HttpGet("Autocomplete")]
+        public IActionResult Autocomplete(string term)
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
+            if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
+                return Unauthorized();
+            
+            IEnumerable<Projeto> projetosPessoais = _projetoService.ObterProjetosPessoais(idUtilizador);
+            IEnumerable<Projeto> projetosEquipa   = _projetoService.ObterProjetosEquipa(idUtilizador);
+
+            var resultados = projetosPessoais
+                .Concat(projetosEquipa)
+                .Where(p => !string.IsNullOrWhiteSpace(p.NomeProjeto)
+                            && p.NomeProjeto
+                                 .IndexOf(term ?? string.Empty,
+                                          StringComparison.OrdinalIgnoreCase) >= 0)
+                .GroupBy(p => p.IdProjeto) // evita duplicados, se houver
+                .Select(g => g.First())
+                .Select(p => new
+                {
+                    idProjeto   = p.IdProjeto,
+                    nomeProjeto = p.NomeProjeto
+                })
+                .OrderBy(x => x.nomeProjeto)
+                .Take(10)
+                .ToList();
+
+            return Ok(resultados);
         }
     }
 }
