@@ -10,4 +10,6 @@ public class ProjetoTarefa
     [ForeignKey(nameof(Tarefa))]
     public int TarefaId { get; set; }
     public Tarefa Tarefa { get; set; } = null!;
+
+    public int Fase { get; set; } = 1; // <-- Adiciona isto (1 = "A fazer" por padrão)
 }

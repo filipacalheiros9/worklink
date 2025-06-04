@@ -26,9 +26,24 @@ namespace WebApplication2.Controllers
             ViewBag.NomeProjeto = projeto.NomeProjeto;
             return View("~/Views/Home/Tarefas.cshtml");
         }
+        [HttpPut("MoverTarefa/{idTarefa}")]
+        public async Task<IActionResult> MoverTarefa(int idTarefa, [FromBody] int novaFase)
+        {
+            var projetoTarefa = await _context.ProjetoTarefa
+                .FirstOrDefaultAsync(pt => pt.TarefaId == idTarefa);
+
+            if (projetoTarefa == null)
+                return NotFound();
+
+            projetoTarefa.Fase = novaFase;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Fase atualizada com sucesso." });
+        }
+
 
         [HttpGet("MinhasTarefas/{idProjeto}")]
-        public async Task<IActionResult> GetTarefasPorProjeto(int idProjeto) // ✅ mudou para int
+        public async Task<IActionResult> GetTarefasPorProjeto(int idProjeto)
         {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
             if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
@@ -42,11 +57,19 @@ namespace WebApplication2.Controllers
 
             var tarefas = await _context.ProjetoTarefa
                 .Where(pt => pt.IdProjeto == idProjeto)
-                .Select(pt => pt.Tarefa)
+                .Select(pt => new {
+                    pt.Tarefa.IdTarefa,
+                    pt.Tarefa.NomeTarefa,
+                    pt.Tarefa.PrecoHora,
+                    pt.Tarefa.DtFim,
+                    pt.Tarefa.HrFim,
+                    pt.Fase // <- necessário para o kanban
+                })
                 .ToListAsync();
 
             return Ok(tarefas);
         }
+
 
         [HttpPost("CriarTarefa")]
         public async Task<IActionResult> CriarTarefa([FromBody] TarefaCreate dto)

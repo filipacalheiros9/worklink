@@ -72,6 +72,29 @@ window.onload = () => {
   carregarTarefas();
 };
 
+function obterFasePorColuna(idColuna) {
+  switch (idColuna) {
+    case 'a-fazer': return 1;
+    case 'em-progresso': return 2;
+    case 'a-testar': return 3;
+    case 'finalizado': return 4;
+    default: return 1;
+  }
+}
+
+async function atualizarFaseTarefa(idTarefa, novaFase) {
+  try {
+    await fetch(`/Tarefas/MoverTarefa/${idTarefa}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(novaFase),
+      credentials: 'include'
+    });
+  } catch (e) {
+    console.error("Erro ao atualizar fase:", e);
+  }
+}
+
 async function carregarTarefas() {
   const colunas = ["A fazer", "Em progresso", "A testar", "Finalizado"];
   const refs = {};
@@ -88,9 +111,16 @@ async function carregarTarefas() {
     });
     if (!res.ok) throw new Error("Erro ao carregar tarefas.");
     const tarefas = await res.json();
-    tarefas.forEach(t => {
-      const el = criarCard(t.idTarefa, t.nomeTarefa, t.dtInicio, t.precoHora || 0);
-      refs["A fazer"].appendChild(el);
+    tarefas.forEach(tarefa => {
+      const card = criarCard(tarefa.idTarefa, tarefa.nomeTarefa, tarefa.dtFim || tarefa.dtInicio, tarefa.precoHora);
+
+      switch (tarefa.fase) {
+        case 1: document.getElementById("a-fazer").appendChild(card); break;
+        case 2: document.getElementById("em-progresso").appendChild(card); break;
+        case 3: document.getElementById("a-testar").appendChild(card); break;
+        case 4: document.getElementById("finalizado").appendChild(card); break;
+        default: break;
+      }
     });
   } catch (e) {
     console.error(e);
@@ -103,19 +133,32 @@ function criarColuna(nome) {
   const coluna = document.createElement('div');
   coluna.className = 'kanban-column';
 
+  let id = '';
+  switch (nome) {
+    case "A fazer": id = "a-fazer"; break;
+    case "Em progresso": id = "em-progresso"; break;
+    case "A testar": id = "a-testar"; break;
+    case "Finalizado": id = "finalizado"; break;
+  }
+
   coluna.innerHTML = `
     <h3>${nome}</h3>
-    <div class="card-list"></div>
+    <div class="card-list" id="${id}"></div>
     <button class="add-task-btn"><i class="fas fa-plus"></i> Nova Tarefa</button>
   `;
 
   const lista = coluna.querySelector('.card-list');
   lista.addEventListener('dragover', e => e.preventDefault());
-  lista.addEventListener('drop', e => {
+  lista.addEventListener('drop', async e => {
     e.preventDefault();
-    const id = e.dataTransfer.getData("text/plain");
-    const card = document.getElementById(id);
-    if (card && !lista.contains(card)) lista.appendChild(card);
+    const cardId = e.dataTransfer.getData("text/plain");
+    const card = document.getElementById(cardId);
+    if (card && !lista.contains(card)) {
+      lista.appendChild(card);
+      const novaFase = obterFasePorColuna(lista.id);
+      const idTarefa = cardId.replace("tarefa-", "");
+      await atualizarFaseTarefa(idTarefa, novaFase);
+    }
   });
 
   coluna.querySelector('.add-task-btn').onclick = () => {
