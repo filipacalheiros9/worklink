@@ -1,5 +1,4 @@
 ﻿using WebApplication2.Entities;
-using  WebApplication2.DTO;
 
 namespace WebApplication2.Services;
 
@@ -10,5 +9,9 @@ public interface IProjetoService
     Task AddProjetoAsync(Projeto projeto);
     Task UpdateProjetoAsync(Projeto projeto);
     Task DeleteProjetoAsync(int id);
-    List<Projeto> ObterTodosProjetos();
+
+    // 🟢 Métodos novos que precisas de declarar
+    List<Projeto> ObterProjetosPessoais(decimal idUtilizador);
+    List<Projeto> ObterProjetosEquipa(decimal idUtilizador);
+    List<Projeto> ObterProjetosVisiveis(decimal idUtilizador);
 }

@@ -36,9 +36,24 @@ public class ProjetoService : IProjetoService
     {
         await _projetoRepository.DeleteAsync(id);
     }
-    
-    public List<Projeto> ObterTodosProjetos()
+
+    // ✅ Projetos normais do utilizador (sem equipa associada)
+    public List<Projeto> ObterProjetosPessoais(decimal idUtilizador)
     {
-        return _projetoRepository.ObterTodosProjetos();
+        return _projetoRepository.ObterProjetosPessoais(idUtilizador);
+    }
+
+    // ✅ Projetos das equipas às quais o utilizador pertence
+    public List<Projeto> ObterProjetosEquipa(decimal idUtilizador)
+    {
+        return _projetoRepository.ObterProjetosEquipa(idUtilizador);
+    }
+
+    // 🧠 Junta pessoais + equipa (útil para dashboards ou listagens completas)
+    public List<Projeto> ObterProjetosVisiveis(decimal idUtilizador)
+    {
+        var pessoais = _projetoRepository.ObterProjetosPessoais(idUtilizador);
+        var equipa = _projetoRepository.ObterProjetosEquipa(idUtilizador);
+        return pessoais.Concat(equipa).ToList();
     }
 }

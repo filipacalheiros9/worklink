@@ -9,5 +9,6 @@ namespace WebApplication2.Data.Repositories;
         Task AddAsync(Projeto projeto);
         Task UpdateAsync(Projeto projeto);
         Task DeleteAsync(int id);
-        List<Projeto> ObterTodosProjetos();
+        List<Projeto> ObterProjetosPessoais(decimal idUtilizador);
+        List<Projeto> ObterProjetosEquipa(decimal idUtilizador);
     }

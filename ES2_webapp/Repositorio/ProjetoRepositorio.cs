@@ -44,9 +44,25 @@ public class ProjetoRepository : IProjetoRepositorio
             await _context.SaveChangesAsync();
         }
     }
-    
-    public List<Projeto> ObterTodosProjetos()
+
+    // ✅ Apenas os projetos do utilizador que NÃO estão associados a equipa
+    public List<Projeto> ObterProjetosPessoais(decimal idUtilizador)
     {
-        return _context.Projetos.ToList();
+        return _context.Projetos
+            .Where(p => p.IdUtilizador == idUtilizador && p.EquipaId == null)
+            .ToList();
     }
+
+    // ✅ Projetos de equipas às quais o utilizador pertence
+    public List<Projeto> ObterProjetosEquipa(decimal idUtilizador)
+    {
+        return _context.EquipaUtilizadores
+            .Where(eu => eu.UtilizadorId == idUtilizador)
+            .Join(_context.Projetos,
+                eu => eu.EquipaId,
+                p => p.EquipaId,
+                (eu, p) => p)
+            .ToList<Projeto>(); // 👈 resolve a ambiguidade do tipo
+    }
+
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication2.Data;
 using WebApplication2.Entities;
 using WebApplication2.DTO;
+using WebApplication2.Services; // ✅ novo
 
 namespace WebApplication2.Controllers
 {
@@ -11,11 +12,33 @@ namespace WebApplication2.Controllers
     [ApiController]
     public class ProjetoController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IProjetoService _projetoService;
 
-        public ProjetoController(ApplicationDbContext context)
+        public ProjetoController(IProjetoService projetoService)
         {
-            _context = context;
+            _projetoService = projetoService;
+        }
+
+        [HttpGet("ProjetosPessoais")]
+        public IActionResult GetProjetosPessoais()
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
+            if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
+                return Unauthorized();
+
+            var projetos = _projetoService.ObterProjetosPessoais(idUtilizador);
+            return Ok(projetos);
+        }
+
+        [HttpGet("ProjetosEquipa")]
+        public IActionResult GetProjetosEquipa()
+        {
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
+            if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
+                return Unauthorized();
+
+            var projetos = _projetoService.ObterProjetosEquipa(idUtilizador);
+            return Ok(projetos);
         }
 
         [HttpPost("CriarProjeto")]
@@ -25,18 +48,13 @@ namespace WebApplication2.Controllers
             {
                 if (!ModelState.IsValid)
                     return BadRequest(new { message = "Dados inválidos." });
-                
+
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
                 if (userIdClaim == null)
                     return Unauthorized(new { message = "Utilizador não autenticado." });
 
                 if (!decimal.TryParse(userIdClaim.Value, out var idUtilizador))
                     return BadRequest(new { message = "ID do utilizador inválido." });
-
-                // Verificar se o utilizador existe
-                var utilizadorExiste = await _context.Utilizadores.AnyAsync(u => u.IdUtilizador == idUtilizador);
-                if (!utilizadorExiste)
-                    return NotFound(new { message = "Utilizador não existe na base de dados." });
 
                 var projeto = new Projeto
                 {
@@ -45,8 +63,7 @@ namespace WebApplication2.Controllers
                     IdUtilizador = idUtilizador
                 };
 
-                _context.Projetos.Add(projeto);
-                await _context.SaveChangesAsync();
+                await _projetoService.AddProjetoAsync(projeto);
 
                 return Ok(new
                 {
@@ -56,9 +73,6 @@ namespace WebApplication2.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine("🟥 ERRO INTERNO CATCH:");
-                Console.WriteLine(ex.ToString());
-
                 return StatusCode(500, new
                 {
                     message = "Erro interno",
@@ -68,61 +82,23 @@ namespace WebApplication2.Controllers
             }
         }
 
-        [HttpGet("MeusProjetos")]
-        public async Task<IActionResult> GetMeusProjetos()
-        {
-            try
-            {
-                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
-                if (userIdClaim == null)
-                    return Unauthorized(new { message = "Utilizador não autenticado." });
-
-                if (!decimal.TryParse(userIdClaim.Value, out var idUtilizador))
-                    return BadRequest(new { message = "ID do utilizador inválido." });
-
-                var projetos = await _context.Projetos
-                    .Where(p => p.IdUtilizador == idUtilizador)
-                    .Select(p => new
-                    {
-                        p.IdProjeto,
-                        p.NomeProjeto,
-                        p.NomeCliente,
-                    })
-                    .ToListAsync();
-
-                return Ok(projetos);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("ERRO AO LISTAR PROJETOS:");
-                Console.WriteLine(ex.ToString());
-                return StatusCode(500, new { message = "Erro interno", detalhe = ex.Message });
-            }
-        }
-        
         [HttpPut("AtualizarProjeto/{id}")]
         public async Task<IActionResult> AtualizarProjeto(decimal id, [FromBody] ProjetoCreate projetoDTO)
         {
             try
             {
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
-                if (userIdClaim == null)
-                    return Unauthorized(new { message = "Utilizador não autenticado." });
+                if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
+                    return Unauthorized();
 
-                if (!decimal.TryParse(userIdClaim.Value, out var idUtilizador))
-                    return BadRequest(new { message = "ID do utilizador inválido." });
-
-                var projeto = await _context.Projetos
-                    .FirstOrDefaultAsync(p => p.IdProjeto == id && p.IdUtilizador == idUtilizador);
-
-                if (projeto == null)
+                var projeto = await _projetoService.GetProjetoByIdAsync((int)id);
+                if (projeto == null || projeto.IdUtilizador != idUtilizador)
                     return NotFound(new { message = "Projeto não encontrado ou não pertence a este utilizador." });
 
-                
                 projeto.NomeProjeto = projetoDTO.NomeProjeto;
                 projeto.NomeCliente = projetoDTO.NomeCliente;
 
-                await _context.SaveChangesAsync();
+                await _projetoService.UpdateProjetoAsync(projeto);
 
                 return Ok(new
                 {
@@ -132,14 +108,11 @@ namespace WebApplication2.Controllers
                         projeto.IdProjeto,
                         projeto.NomeProjeto,
                         projeto.NomeCliente,
-                        
                     }
                 });
             }
             catch (Exception ex)
             {
-                Console.WriteLine(" ERRO AO ATUALIZAR PROJETO:");
-                Console.WriteLine(ex.ToString());
                 return StatusCode(500, new { message = "Erro interno", detalhe = ex.Message });
             }
         }
@@ -150,31 +123,19 @@ namespace WebApplication2.Controllers
             try
             {
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
-                if (userIdClaim == null)
-                    return Unauthorized(new { message = "Utilizador não autenticado." });
+                if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
+                    return Unauthorized();
 
-                if (!decimal.TryParse(userIdClaim.Value, out var idUtilizador))
-                    return BadRequest(new { message = "ID do utilizador inválido." });
-
-                var projeto = await _context.Projetos
-                    .FirstOrDefaultAsync(p => p.IdProjeto == id && p.IdUtilizador == idUtilizador);
-
-                if (projeto == null)
+                var projeto = await _projetoService.GetProjetoByIdAsync((int)id);
+                if (projeto == null || projeto.IdUtilizador != idUtilizador)
                     return NotFound(new { message = "Projeto não encontrado ou não te pertence." });
-                
-                
-                var relacoes = _context.ProjetoTarefa.Where(pt => pt.IdProjeto == id);
-                _context.ProjetoTarefa.RemoveRange(relacoes);
 
-                _context.Projetos.Remove(projeto);
-                await _context.SaveChangesAsync();
+                await _projetoService.DeleteProjetoAsync((int)id);
 
                 return Ok(new { message = "Projeto eliminado com sucesso." });
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERRO AO ELIMINAR PROJETO:");
-                Console.WriteLine(ex.ToString());
                 return StatusCode(500, new
                 {
                     message = "Erro interno",
