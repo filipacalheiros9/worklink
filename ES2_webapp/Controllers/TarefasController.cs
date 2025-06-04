@@ -45,16 +45,32 @@ namespace WebApplication2.Controllers
         [HttpGet("MinhasTarefas/{idProjeto}")]
         public async Task<IActionResult> GetTarefasPorProjeto(int idProjeto)
         {
+            // 1) Extrair o Id do utilizador autenticado
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
             if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
                 return Unauthorized();
 
+            // 2) Obter o projeto (sem filtro de criador)
             var projeto = await _context.Projetos
-                .FirstOrDefaultAsync(p => p.IdProjeto == idProjeto && p.IdUtilizador == idUtilizador);
+                .FirstOrDefaultAsync(p => p.IdProjeto == idProjeto);
 
             if (projeto == null)
-                return NotFound();
+                return NotFound(new { message = "Projeto não existe." });
+            
+            var isCriador = projeto.IdUtilizador == idUtilizador;
+            var isMembroEquipa = false;
 
+            if (!isCriador && projeto.EquipaId != null)
+            {
+                isMembroEquipa = await _context.EquipaUtilizadores
+                    .AnyAsync(eu => eu.EquipaId == projeto.EquipaId 
+                                    && eu.UtilizadorId == idUtilizador);
+            }
+
+            if (!isCriador && !isMembroEquipa)
+                return Unauthorized(new { message = "Sem permissão para aceder a este projeto." });
+            
+            
             var tarefas = await _context.ProjetoTarefa
                 .Where(pt => pt.IdProjeto == idProjeto)
                 .Select(pt => new {
@@ -63,12 +79,14 @@ namespace WebApplication2.Controllers
                     pt.Tarefa.PrecoHora,
                     pt.Tarefa.DtFim,
                     pt.Tarefa.HrFim,
-                    pt.Fase // <- necessário para o kanban
+                    pt.Fase
                 })
                 .ToListAsync();
 
             return Ok(tarefas);
         }
+
+
 
 
         [HttpPost("CriarTarefa")]
@@ -80,13 +98,26 @@ namespace WebApplication2.Controllers
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
             if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
                 return Unauthorized(new { message = "Utilizador não autenticado." });
-
+            
             var projeto = await _context.Projetos
-                .FirstOrDefaultAsync(p => p.IdProjeto == dto.IdProjeto && p.IdUtilizador == idUtilizador);
+                .FirstOrDefaultAsync(p => p.IdProjeto == dto.IdProjeto);
 
             if (projeto == null)
-                return NotFound(new { message = "Projeto não encontrado ou não pertence ao utilizador." });
+                return NotFound(new { message = "Projeto não existe." });
+            
+            var isCriador = projeto.IdUtilizador == idUtilizador;
+            var isMembroEquipa = false;
 
+            if (!isCriador && projeto.EquipaId != null)
+            {
+                isMembroEquipa = await _context.EquipaUtilizadores
+                    .AnyAsync(eu => eu.EquipaId == projeto.EquipaId 
+                                 && eu.UtilizadorId == idUtilizador);
+            }
+
+            if (!isCriador && !isMembroEquipa)
+                return Unauthorized(new { message = "Sem permissão para criar tarefa neste projeto." });
+            
             var tarefa = new Tarefa
             {
                 NomeTarefa = dto.NomeTarefa,
@@ -95,7 +126,7 @@ namespace WebApplication2.Controllers
                 DtFim = dto.DtFim,
                 HrFim = dto.HrFim,
                 PrecoHora = dto.PrecoHora,
-                IdUtilizador = null // ✅ porque está ligada à equipa/projeto
+                IdUtilizador = null 
             };
 
             _context.Tarefas.Add(tarefa);
@@ -106,7 +137,6 @@ namespace WebApplication2.Controllers
                 IdProjeto = dto.IdProjeto,
                 TarefaId = tarefa.IdTarefa
             };
-
             _context.ProjetoTarefa.Add(projetoTarefa);
             await _context.SaveChangesAsync();
 
@@ -119,6 +149,7 @@ namespace WebApplication2.Controllers
                 dtInicio = tarefa.DtInicio
             });
         }
+
 
         [HttpPut("AtualizarTarefa/{id}")]
         public async Task<IActionResult> AtualizarTarefa(int id, [FromBody] TarefaEditDto dto)
