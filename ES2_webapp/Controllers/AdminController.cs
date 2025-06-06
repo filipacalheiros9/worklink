@@ -8,10 +8,12 @@ namespace WebApplication2.Controllers
     public class AdminController : Controller
     {
         private readonly IUtilizadorService _utilizadorService;
+        private readonly IProjetoService _projetoService;
 
-        public AdminController(IUtilizadorService utilizadorService)
+        public AdminController(IUtilizadorService utilizadorService, IProjetoService projetoService)
         {
             _utilizadorService = utilizadorService;
+            _projetoService = projetoService;
         }
 
         [HttpGet("utilizadores")]
@@ -24,11 +26,9 @@ namespace WebApplication2.Controllers
             }
             catch (Exception ex)
             {
-                // Retorna o erro para o front-end com status 500
                 return StatusCode(500, $"Erro interno: {ex.Message}");
             }
         }
-
 
         [HttpPost("utilizadores")]
         public async Task<IActionResult> CriarUtilizador([FromBody] Utilizador utilizador)
@@ -55,6 +55,13 @@ namespace WebApplication2.Controllers
         {
             await _utilizadorService.DeleteUtilizadorAsync(id);
             return Ok();
+        }
+
+        [HttpGet("projetos")]
+        public async Task<IActionResult> GetProjetos()
+        {
+            var projetos = await _projetoService.GetAllWithCriadorAsync();
+            return Json(projetos);
         }
     }
 }

@@ -11,4 +11,6 @@ namespace WebApplication2.Data.Repositories;
         Task DeleteAsync(int id);
         List<Projeto> ObterProjetosPessoais(decimal idUtilizador);
         List<Projeto> ObterProjetosEquipa(decimal idUtilizador);
+        Task<List<Projeto>> GetAllWithCriadorAsync();
+
     }

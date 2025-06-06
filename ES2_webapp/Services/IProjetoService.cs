@@ -14,4 +14,6 @@ public interface IProjetoService
     List<Projeto> ObterProjetosPessoais(decimal idUtilizador);
     List<Projeto> ObterProjetosEquipa(decimal idUtilizador);
     List<Projeto> ObterProjetosVisiveis(decimal idUtilizador);
+    Task<List<Projeto>> GetAllWithCriadorAsync();
+
 }

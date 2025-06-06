@@ -13,19 +13,36 @@
 </div>
 
 <div class="container mt-5">
+    <!-- Utilizadores -->
     <div class="d-flex justify-content-end mb-3">
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">Novo Utilizador</button>
     </div>
 
     <table class="table table-striped" id="utilizadoresTable">
         <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Username</th>
-                <th>Cargo</th>
-                <th>Ações</th>
-            </tr>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Username</th>
+            <th>Cargo</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- Projetos -->
+    <hr class="my-5" />
+    <h3>Projetos Existentes</h3>
+
+    <table class="table table-bordered mt-3" id="projetosTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome do Projeto</th>
+            <th>Cliente</th>
+            <th>Responsável</th>
+        </tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -121,6 +138,23 @@
         });
     }
 
+    function loadProjetos() {
+        $.get("/admin/projetos", function (data) {
+            const tbody = $("#projetosTable tbody");
+            tbody.empty();
+            data.forEach(p => {
+                tbody.append(`
+                    <tr>
+                        <td>${p.idProjeto}</td>
+                        <td>${p.nomeProjeto}</td>
+                        <td>${p.nomeCliente}</td>
+                        <td>${p.criador?.nome ?? "N/A"}</td>
+                    </tr>
+                `);
+            });
+        });
+    }
+
     function openEdit(u) {
         const modal = $("#editModal");
         modal.find("[name=IdUtilizador]").val(u.idUtilizador);
@@ -144,12 +178,8 @@
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(data),
-            success: () => {
-                location.reload(); // 🔄 resolve o bug de backdrop e atualiza
-            },
-            error: (xhr) => {
-                alert("Erro ao criar: " + xhr.responseText);
-            }
+            success: () => location.reload(),
+            error: (xhr) => alert("Erro ao criar: " + xhr.responseText)
         });
     });
 
@@ -165,13 +195,10 @@
             data: JSON.stringify(data),
             success: () => {
                 const modalEl = document.getElementById("editModal");
-                const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
-                modalInstance.hide();
+                bootstrap.Modal.getOrCreateInstance(modalEl).hide();
                 loadUtilizadores();
             },
-            error: (xhr) => {
-                alert("Erro ao editar: " + xhr.responseText);
-            }
+            error: (xhr) => alert("Erro ao editar: " + xhr.responseText)
         });
     });
 
@@ -182,16 +209,15 @@
             url: `/admin/utilizadores/${id}`,
             type: "DELETE",
             success: () => {
-                const modalEl = document.getElementById("deleteModal");
-                const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
-                modalInstance.hide();
+                bootstrap.Modal.getOrCreateInstance(document.getElementById("deleteModal")).hide();
                 loadUtilizadores();
             },
-            error: (xhr) => {
-                alert("Erro ao eliminar: " + xhr.responseText);
-            }
+            error: (xhr) => alert("Erro ao eliminar: " + xhr.responseText)
         });
     });
 
-    $(document).ready(loadUtilizadores);
+    $(document).ready(function () {
+        loadUtilizadores();
+        loadProjetos();
+    });
 </script>

@@ -56,4 +56,10 @@ public class ProjetoService : IProjetoService
         var equipa = _projetoRepository.ObterProjetosEquipa(idUtilizador);
         return pessoais.Concat(equipa).ToList();
     }
+
+    // 🔍 Projetos com criador incluído (para o admin)
+    public async Task<List<Projeto>> GetAllWithCriadorAsync()
+    {
+        return await _projetoRepository.GetAllWithCriadorAsync();
+    }
 }

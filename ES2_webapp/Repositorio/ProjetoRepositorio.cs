@@ -64,5 +64,12 @@ public class ProjetoRepository : IProjetoRepositorio
                 (eu, p) => p)
             .ToList<Projeto>(); // 👈 resolve a ambiguidade do tipo
     }
+    public async Task<List<Projeto>> GetAllWithCriadorAsync()
+    {
+        return await _context.Projetos
+            .Include(p => p.Criador)
+            .ToListAsync();
+    }
+
 
 }
