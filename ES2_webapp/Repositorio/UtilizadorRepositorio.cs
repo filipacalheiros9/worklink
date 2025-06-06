@@ -28,15 +28,33 @@ namespace WebApplication2.Data.Repositories
             _context.Utilizadores.Add(utilizador);
             await _context.SaveChangesAsync();
         }
-        
+
         public async Task AtualizarUtilizador(Utilizador utilizador)
         {
             _context.Utilizadores.Update(utilizador);
             await _context.SaveChangesAsync();
         }
+
         public async Task<int> CountAsync()
         {
             return await _context.Utilizadores.CountAsync();
+        }
+
+        public async Task<List<Utilizador>> GetAllAsync()
+        {
+            return await _context.Utilizadores
+                .Include(u => u.Cargo) // ESSENCIAL para evitar erro ao acessar u.Cargo.Nome
+                .ToListAsync();
+        }
+
+        public async Task DeleteAsync(decimal id)
+        {
+            var utilizador = await _context.Utilizadores.FirstOrDefaultAsync(u => u.IdUtilizador == id);
+            if (utilizador != null)
+            {
+                _context.Utilizadores.Remove(utilizador);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

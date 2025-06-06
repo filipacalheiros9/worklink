@@ -17,93 +17,93 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ES2_webapp
 build_property.RootNamespace = ES2_webapp
-build_property.ProjectDir = C:\Users\PC\OneDrive - Instituto Politécnico de Viana do Castelo\Documents\GitHub\worklinK\ES2_webapp\
+build_property.ProjectDir = C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\PC\OneDrive - Instituto Politécnico de Viana do Castelo\Documents\GitHub\worklinK\ES2_webapp
+build_property.MSBuildProjectDirectory = C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Equipas/Convite.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Equipas/Convite.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXF1aXBhc1xDb252aXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/adminpage.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/adminpage.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxhZG1pbnBhZ2UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/AsMinhasEquipas.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/AsMinhasEquipas.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBc01pbmhhc0VxdWlwYXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/Contato.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/Contato.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb250YXRvLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/Convites.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/Convites.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb252aXRlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/CriarProjeto.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/CriarProjeto.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDcmlhclByb2pldG8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/HomepageLogin.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/HomepageLogin.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIb21lcGFnZUxvZ2luLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/Index.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/Login.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/Perfil.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/Perfil.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQZXJmaWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/ProjetosEquipa.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/ProjetosEquipa.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcm9qZXRvc0VxdWlwYS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/Register.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/Tarefas.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/Tarefas.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxUYXJlZmFzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Home/TarefasIND.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Home/TarefasIND.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxUYXJlZmFzSU5ELmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Shared/Error.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/TarefaIND/Index.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/TarefaIND/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFyZWZhSU5EXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/_ViewImports.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/_ViewStart.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/PC/OneDrive - Instituto Politécnico de Viana do Castelo/Documents/GitHub/worklinK/ES2_webapp/Views/Shared/_Layout.cshtml]
+[C:/Users/kikos/OneDrive/Documentos/GitHub/worklink/ES2_webapp/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-7jlw7acpwn

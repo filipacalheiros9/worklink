@@ -3,9 +3,195 @@
 }
 
 <link href="/css/index.css" rel="stylesheet" />
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <div class="text-center page-title-style mt-5">
-    <h1 class="display-4 titulo-epico">Seja bem vindo à WorkLink!</h1>
-    <p class="subtexto-epico">Esta é a tua area do administrador</p>
+    <h1 class="display-4 titulo-epico">Seja bem-vindo à WorkLink!</h1>
+    <p class="subtexto-epico">Esta é a tua área de administração</p>
 </div>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">Novo Utilizador</button>
+    </div>
+
+    <table class="table table-striped" id="utilizadoresTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Username</th>
+                <th>Cargo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<!-- Modal Criar -->
+<div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="createForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Criar Utilizador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control mb-2" name="Nome" placeholder="Nome" required />
+                    <input class="form-control mb-2" name="Username" placeholder="Username" required />
+                    <input class="form-control mb-2" name="Password" placeholder="Password" required type="password" />
+                    <select class="form-control" name="CargoId" required>
+                        <option value="1">Admin</option>
+                        <option value="2">User</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Criar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Utilizador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="IdUtilizador" />
+                    <input class="form-control mb-2" name="Nome" placeholder="Nome" required />
+                    <input class="form-control mb-2" name="Username" placeholder="Username" required />
+                    <input class="form-control mb-2" name="Password" placeholder="Password" required type="password" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Tem a certeza que quer eliminar este utilizador?
+                <input type="hidden" id="deleteId" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="confirmDelete">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadUtilizadores() {
+        $.get("/admin/utilizadores", function (data) {
+            const tbody = $("#utilizadoresTable tbody");
+            tbody.empty();
+            data.forEach(u => {
+                tbody.append(`
+                    <tr>
+                        <td>${u.idUtilizador}</td>
+                        <td>${u.nome}</td>
+                        <td>${u.username}</td>
+                        <td>${u.cargo?.nome ?? ""}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick='openEdit(${JSON.stringify(u)})'>Editar</button>
+                            <button class="btn btn-sm btn-danger" onclick='openDelete(${u.idUtilizador})'>Eliminar</button>
+                        </td>
+                    </tr>
+                `);
+            });
+        });
+    }
+
+    function openEdit(u) {
+        const modal = $("#editModal");
+        modal.find("[name=IdUtilizador]").val(u.idUtilizador);
+        modal.find("[name=Nome]").val(u.nome);
+        modal.find("[name=Username]").val(u.username);
+        modal.find("[name=Password]").val(u.password);
+        modal.modal("show");
+    }
+
+    function openDelete(id) {
+        $("#deleteId").val(id);
+        $("#deleteModal").modal("show");
+    }
+
+    $("#createForm").submit(function (e) {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(this).entries());
+
+        $.ajax({
+            url: "/admin/utilizadores",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: () => {
+                location.reload(); // 🔄 resolve o bug de backdrop e atualiza
+            },
+            error: (xhr) => {
+                alert("Erro ao criar: " + xhr.responseText);
+            }
+        });
+    });
+
+    $("#editForm").submit(function (e) {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(this).entries());
+        const id = data.IdUtilizador;
+
+        $.ajax({
+            url: `/admin/utilizadores/${id}`,
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: () => {
+                const modalEl = document.getElementById("editModal");
+                const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modalInstance.hide();
+                loadUtilizadores();
+            },
+            error: (xhr) => {
+                alert("Erro ao editar: " + xhr.responseText);
+            }
+        });
+    });
+
+    $("#confirmDelete").click(function () {
+        const id = $("#deleteId").val();
+
+        $.ajax({
+            url: `/admin/utilizadores/${id}`,
+            type: "DELETE",
+            success: () => {
+                const modalEl = document.getElementById("deleteModal");
+                const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modalInstance.hide();
+                loadUtilizadores();
+            },
+            error: (xhr) => {
+                alert("Erro ao eliminar: " + xhr.responseText);
+            }
+        });
+    });
+
+    $(document).ready(loadUtilizadores);
+</script>

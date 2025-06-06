@@ -47,6 +47,17 @@ namespace WebApplication2.Services
         {
             return await _utilizadorRepository.CountAsync();
         }
+        
+        public async Task<List<Utilizador>> GetAllUtilizadoresAsync()
+        {
+            return await _utilizadorRepository.GetAllAsync();
+        }
+
+        public async Task DeleteUtilizadorAsync(decimal id)
+        {
+            await _utilizadorRepository.DeleteAsync(id);
+        }
+
 
         
     }

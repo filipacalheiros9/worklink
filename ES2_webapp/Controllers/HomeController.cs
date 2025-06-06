@@ -28,13 +28,22 @@ namespace WebApplication2.Controllers
         public IActionResult AsMinhasEquipas() => View();
         public IActionResult CriarProjeto() => View();
         public IActionResult Tarefas() => View();
-        public IActionResult adminpage() => View();
+
+        public IActionResult adminpage()
+        {
+            var cargoIdStr = HttpContext.Session.GetString("CargoId");
+            if (cargoIdStr == null || cargoIdStr != "1")
+            {
+                return Unauthorized(); // ou RedirectToAction("HomePageLogin");
+            }
+
+            return View();
+        }
+
         public IActionResult TarefasIND() => View();
         public IActionResult Convites() => View();
         public IActionResult Login() => View();
         public IActionResult ProjetosEquipa() => View();
-        
-        
 
         [HttpPost]
         public async Task<IActionResult> Login(string Username, string Password)
@@ -60,8 +69,9 @@ namespace WebApplication2.Controllers
                 HttpContext.Session.SetString("IdUtilizador", utilizador.IdUtilizador.ToString());
                 HttpContext.Session.SetString("LoggedIn", "true");
                 HttpContext.Session.SetString("Cargo", cargoNome);
+                HttpContext.Session.SetString("CargoId", utilizador.CargoId.ToString()); // <-- novo
 
-                if (cargoNome.ToLower() == "admin")
+                if (utilizador.CargoId == 1)
                 {
                     return RedirectToAction("adminpage", "Home");
                 }

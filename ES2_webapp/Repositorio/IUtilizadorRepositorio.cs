@@ -9,5 +9,9 @@ namespace WebApplication2.Data.Repositories
         Task AddAsync(Utilizador utilizador);
         Task AtualizarUtilizador(Utilizador utilizador);
         Task<int> CountAsync();
+        
+        Task<List<Utilizador>> GetAllAsync();
+        Task DeleteAsync(decimal id);
+
     }
 }

@@ -11,5 +11,9 @@ namespace WebApplication2.Services
         Task AtualizarPerfil(decimal idUtilizador, UtilizadorUpdate model);
 
         Task<int> CountUtilizadoresAsync();
+        
+        Task<List<Utilizador>> GetAllUtilizadoresAsync();
+        Task DeleteUtilizadorAsync(decimal id);
+
     }
 }
