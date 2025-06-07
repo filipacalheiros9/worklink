@@ -192,13 +192,17 @@
             return;
         }
 
-        const agora = new Date().toISOString();
-        const [dt, hr] = (dataHora || agora).split("T");
+        if (!dataHora) {
+            alert('Insere a data e hora de início.');
+            return;
+        }
+
+        const [dt, hr] = dataHora.split("T");
 
         const tarefaDTO = {
             nomeTarefa: nome,
             dtInicio: dt,
-            hrInicio: hr.split('.')[0],
+            hrInicio: hr,
             precoHora: preco
         };
 
@@ -209,13 +213,16 @@
                 body: JSON.stringify(tarefaDTO)
             });
 
-            if (!res.ok) throw new Error("Erro ao criar tarefa");
+            if (!res.ok) {
+                const error = await res.json();
+                throw new Error(error.message || "Erro ao criar tarefa");
+            }
 
             closeCreateModal();
             await loadTasks();
         } catch (e) {
             console.error(e);
-            alert('Erro ao criar tarefa.');
+            alert(e.message || 'Erro ao criar tarefa.');
         }
     }
 
@@ -237,7 +244,17 @@
         const dataHora = document.getElementById('editTaskEnd').value;
         const preco = parseFloat(document.getElementById('editTaskMoney').value.replace(',', '.')) || 0;
 
-        const [dtFim, hrFim] = dataHora ? dataHora.split("T") : [null, "00:00:00"];
+        if (!nome) {
+            alert('Insere o nome da tarefa.');
+            return;
+        }
+
+        if (!dataHora) {
+            alert('Insere a data e hora de fim.');
+            return;
+        }
+
+        const [dtFim, hrFim] = dataHora.split("T");
 
         const tarefa = {
             nomeTarefa: nome,
@@ -253,13 +270,16 @@
                 body: JSON.stringify(tarefa)
             });
 
-            if (!res.ok) throw new Error("Erro ao editar tarefa");
+            if (!res.ok) {
+                const error = await res.json();
+                throw new Error(error.message || "Erro ao editar tarefa");
+            }
 
             closeEditModal();
             await loadTasks();
         } catch (e) {
-            console.error("Erro ao editar tarefa:", e);
-            alert("Erro ao editar tarefa.");
+            console.error(e);
+            alert(e.message || 'Erro ao editar tarefa.');
         }
     }
 

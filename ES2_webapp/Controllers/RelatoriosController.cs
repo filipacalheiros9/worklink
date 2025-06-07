@@ -39,22 +39,34 @@ namespace ES2_webapp.Controllers
             if (ano < 2000)
                 return BadRequest("O parâmetro 'ano' deve ser um ano válido (>= 2000).");
 
-            var tarefas = await _context.Tarefas
+            // === ALTERAÇÃO AQUI ===
+            // Antes: só t.IdUtilizador == idUtilizador
+            // Agora incluímos também tarefas de projetos criados por idUtilizador
+            var todasTarefas = await _context.Tarefas
                 .AsNoTracking()
-                .Where(t =>
-                    t.IdUtilizador == idUtilizador &&
-                    (
-                        (t.DtInicio.HasValue && 
-                         t.DtInicio.Value.Year == ano && 
-                         t.DtInicio.Value.Month == mes) ||
-                        (t.DtFim.HasValue && 
-                         t.DtFim.Value.Year == ano && 
-                         t.DtFim.Value.Month == mes)
-                    )
-                )
                 .Include(t => t.ProjetosTarefas)
                     .ThenInclude(pt => pt.Projeto)
+                .Where(t =>
+                    (
+                        t.IdUtilizador == idUtilizador
+                        || t.ProjetosTarefas.Any(pt => pt.Projeto.IdUtilizador == idUtilizador)
+                    )
+                    &&
+                    (
+                        (t.DtInicio.HasValue && t.DtInicio.Value.Year == ano && t.DtInicio.Value.Month == mes)
+                        ||
+                        (t.DtFim.HasValue     && t.DtFim.Value.Year     == ano && t.DtFim.Value.Month     == mes)
+                    )
+                )
                 .ToListAsync();
+            // ========================
+
+            // Separar tarefas individuais e de projeto
+            var tarefasIndividuais = todasTarefas.Where(t => t.ProjetosTarefas == null || t.ProjetosTarefas.Count == 0).ToList();
+            var tarefasProjeto = todasTarefas.Where(t => t.ProjetosTarefas != null && t.ProjetosTarefas.Count > 0).ToList();
+
+            // Juntar tudo para o relatório final
+            var tarefas = tarefasIndividuais.Union(tarefasProjeto).ToList();
 
             var relatorio = new MonthlyReportDto
             {
@@ -134,6 +146,97 @@ namespace ES2_webapp.Controllers
             relatorio.CustoMesTotal = relatorio.Dias.Sum(d => d.TotalCusto);
 
             return View(relatorio);
+        }
+
+        public async Task<IActionResult> GetMonthlyReport(int mes, int ano)
+        {
+            var idUtilizador = HttpContext.Session.GetInt32("UserId");
+            if (!idUtilizador.HasValue)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            
+            var tarefas = await _context.Tarefas
+                .AsNoTracking()
+                .Include(t => t.ProjetosTarefas)
+                    .ThenInclude(pt => pt.Projeto)
+                .Where(t =>
+                    (
+                        t.IdUtilizador == idUtilizador.Value
+                        || t.ProjetosTarefas.Any(pt => pt.Projeto.IdUtilizador == idUtilizador.Value)
+                    )
+                    &&
+                    (
+                        (t.DtInicio.HasValue && t.DtInicio.Value.Year == ano && t.DtInicio.Value.Month == mes)
+                        ||
+                        (t.DtFim.HasValue     && t.DtFim.Value.Year     == ano && t.DtFim.Value.Month     == mes)
+                    )
+                )
+                .ToListAsync();
+
+            var relatorio = new MonthlyReportDto
+            {
+                Mes = mes,
+                Ano = ano,
+                Tarefas = tarefas.Select(t => new TarefaReportDto
+                {
+                    Nome = t.NomeTarefa,
+                    DataInicio = t.DtInicio,
+                    DataFim = t.DtFim,
+                    HoraInicio = t.HrInicio,
+                    HoraFim = t.HrFim,
+                    PrecoHora = t.PrecoHora,
+                    Projeto = t.ProjetosTarefas.FirstOrDefault()?.Projeto?.NomeProjeto ?? "Tarefa Individual"
+                }).ToList()
+            };
+
+            return View(relatorio);
+        }
+
+        [HttpGet("RelatorioMensalProjetoCliente")]
+        public async Task<IActionResult> RelatorioMensalProjetoCliente(int mes, int ano)
+        {
+            var tarefas = await _context.Tarefas
+                .Include(t => t.ProjetosTarefas)
+                    .ThenInclude(pt => pt.Projeto)
+                        .ThenInclude(p => p.Cliente)
+                .Include(t => t.Utilizador)
+                .Where(t =>
+                    (t.DtInicio.HasValue && t.DtInicio.Value.Year == ano && t.DtInicio.Value.Month == mes) ||
+                    (t.DtFim.HasValue && t.DtFim.Value.Year == ano && t.DtFim.Value.Month == mes)
+                )
+                .ToListAsync();
+
+            var resultado = tarefas
+                .SelectMany(t => t.ProjetosTarefas.Select(pt => new {
+                    Cliente = pt.Projeto.Cliente,
+                    Projeto = pt.Projeto,
+                    Tarefa = t,
+                    Utilizador = t.Utilizador
+                }))
+                .GroupBy(x => x.Cliente.NomeCliente)
+                .Select(gCliente => new ProjetoClienteReportDto {
+                    NomeCliente = gCliente.Key,
+                    Projetos = gCliente.GroupBy(x => x.Projeto.NomeProjeto)
+                        .Select(gProjeto => new ProjetoReportDto {
+                            NomeProjeto = gProjeto.Key,
+                            Dias = gProjeto.GroupBy(x => x.Tarefa.DtInicio)
+                                .Select(gDia => new DayProjetoReportDto {
+                                    Dia = gDia.Key.Value.ToDateTime(TimeOnly.MinValue),
+                                    Utilizadores = gDia.GroupBy(x => x.Utilizador.Nome)
+                                        .Select(gUser => new UtilizadorTarefaReportDto {
+                                            NomeUtilizador = gUser.Key,
+                                            Tarefas = gUser.Select(x => new TarefaProjetoReportDto {
+                                                NomeTarefa = x.Tarefa.NomeTarefa,
+                                                Horas = (decimal)((x.Tarefa.DtFim.Value.ToDateTime(TimeOnly.FromTimeSpan(x.Tarefa.HrFim)) - x.Tarefa.DtInicio.Value.ToDateTime(TimeOnly.FromTimeSpan(x.Tarefa.HrInicio))).TotalHours),
+                                                Custo = ((decimal)((x.Tarefa.DtFim.Value.ToDateTime(TimeOnly.FromTimeSpan(x.Tarefa.HrFim)) - x.Tarefa.DtInicio.Value.ToDateTime(TimeOnly.FromTimeSpan(x.Tarefa.HrInicio))).TotalHours)) * (x.Tarefa.PrecoHora ?? 0)
+                                            }).ToList()
+                                        }).ToList()
+                                }).ToList()
+                        }).ToList()
+                }).ToList();
+
+            return Ok(resultado);
         }
     }
 }

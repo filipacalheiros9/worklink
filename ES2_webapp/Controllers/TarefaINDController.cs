@@ -41,6 +41,18 @@ namespace WebApplication2.Controllers
             if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var userId))
                 return Unauthorized();
 
+            // Check for overlapping tasks
+            var hasOverlap = await _context.Tarefas
+                .Where(t => t.IdUtilizador == userId)
+                .AnyAsync(t => 
+                    (t.DtInicio <= dto.DtInicio && (!t.DtFim.HasValue || t.DtFim >= dto.DtInicio)) ||
+                    (dto.DtInicio <= t.DtInicio && (!dto.DtFim.HasValue || dto.DtFim >= t.DtInicio)));
+
+            if (hasOverlap)
+            {
+                return BadRequest(new { message = "Já existe uma tarefa ativa neste horário." });
+            }
+
             var tarefa = new Tarefa
             {
                 NomeTarefa = dto.NomeTarefa,
@@ -70,6 +82,22 @@ namespace WebApplication2.Controllers
         {
             var tarefa = await _context.Tarefas.FindAsync(id);
             if (tarefa == null) return NotFound();
+
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
+            if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
+
+            // Check for overlapping tasks, excluding the current task
+            var hasOverlap = await _context.Tarefas
+                .Where(t => t.IdUtilizador == userId && t.IdTarefa != id)
+                .AnyAsync(t => 
+                    (t.DtInicio <= dto.DtInicio && (!t.DtFim.HasValue || t.DtFim >= dto.DtInicio)) ||
+                    (dto.DtInicio <= t.DtInicio && (!dto.DtFim.HasValue || dto.DtFim >= t.DtInicio)));
+
+            if (hasOverlap)
+            {
+                return BadRequest(new { message = "Já existe uma tarefa ativa neste horário." });
+            }
 
             tarefa.NomeTarefa = dto.NomeTarefa;
             tarefa.DtFim = dto.DtFim;

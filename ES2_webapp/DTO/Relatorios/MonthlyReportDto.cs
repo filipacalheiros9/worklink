@@ -23,5 +23,8 @@ namespace ES2_webapp.DTO.Relatorios
 
         [JsonInclude]
         public decimal CustoMesTotal { get; set; }
+
+        [JsonInclude]
+        public List<TarefaReportDto> Tarefas { get; set; }
     }
 }

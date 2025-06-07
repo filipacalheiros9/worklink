@@ -217,6 +217,28 @@ namespace WebApplication2.Controllers
                 responsavelId = dto.IdUtilizadorResponsavel.Value;
             }
 
+            // 4.1) Verificar sobreposição de tarefas para o responsável
+            if (responsavelId.HasValue && dto.DtInicio.HasValue && dto.HrInicio != null && dto.DtFim.HasValue && dto.HrFim != null)
+            {
+                var inicioNova = dto.DtInicio.Value.ToDateTime(TimeOnly.FromTimeSpan(dto.HrInicio));
+                var fimNova = dto.DtFim.Value.ToDateTime(TimeOnly.FromTimeSpan(dto.HrFim));
+
+                var tarefasExistentes = await _context.Tarefas
+                    .Where(t => t.IdUtilizador == responsavelId.Value)
+                    .ToListAsync();
+
+                bool sobrepoe = tarefasExistentes.Any(t =>
+                    t.DtInicio.HasValue && t.DtFim.HasValue &&                                 
+                    inicioNova < t.DtFim.Value.ToDateTime(TimeOnly.FromTimeSpan(t.HrFim)) &&
+                    t.DtInicio.Value.ToDateTime(TimeOnly.FromTimeSpan(t.HrInicio)) < fimNova
+                );
+
+                if (sobrepoe)
+                {
+                    return BadRequest(new { message = "Já existe uma tarefa atribuída a este utilizador que se sobrepõe no tempo." });
+                }
+            }
+
             // 5) Construir a entidade Tarefa e salvar
             var tarefa = new Tarefa
             {
