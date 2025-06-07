@@ -3229,19 +3229,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\kikos\\.nuget\\packages\\": {}
+    "C:\\Users\\PC\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kikos\\OneDrive\\Documentos\\GitHub\\worklink\\ES2_webapp\\ES2_webapp.csproj",
+      "projectUniqueName": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\ES2_webapp.csproj",
       "projectName": "ES2_webapp",
-      "projectPath": "C:\\Users\\kikos\\OneDrive\\Documentos\\GitHub\\worklink\\ES2_webapp\\ES2_webapp.csproj",
-      "packagesPath": "C:\\Users\\kikos\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kikos\\OneDrive\\Documentos\\GitHub\\worklink\\ES2_webapp\\obj\\",
+      "projectPath": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\ES2_webapp.csproj",
+      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\kikos\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -3315,7 +3315,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\kikos\\.dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

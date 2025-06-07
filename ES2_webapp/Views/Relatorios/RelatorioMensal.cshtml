@@ -1,0 +1,89 @@
+﻿@using ES2_webapp.DTO.Relatorios
+@model ES2_webapp.DTO.Relatorios.MonthlyReportDto
+
+@{
+    ViewData["Title"] = $"Relatório Mensal - {Model.Mes}/{Model.Ano}";
+}
+
+<div class="container mt-4">
+    <h2>Relatório Mensal - @Model.Mes/@Model.Ano</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Resumo do Mês</h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <p><strong>Total de Horas:</strong> @Model.HorasMesTotal.ToString("N2")</p>
+                </div>
+                <div class="col-md-4">
+                    <p><strong>Custo Total:</strong> @Model.CustoMesTotal.ToString("C")</p>
+                </div>
+                <div class="col-md-4">
+                    <p><strong>Horas Diárias Permitidas:</strong> @Model.HorasDiariasPermitidas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @foreach (var dia in Model.Dias)
+    {
+        <div class="card mb-3 @(dia.ExcedeuHoras ? "border-danger" : "")">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    @dia.Dia.ToString("dd/MM/yyyy")
+                    @if (dia.ExcedeuHoras)
+                    {
+                        <span class="badge bg-danger">Excedeu Horas</span>
+                    }
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Total de Horas:</strong> @dia.TotalHoras.ToString("N2")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Custo Total:</strong> @dia.TotalCusto.ToString("C")</p>
+                    </div>
+                </div>
+
+                @if (dia.TarefasDoDia.Any())
+                {
+                    <h6>Tarefas do Dia:</h6>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Projeto</th>
+                                <th>Tarefa</th>
+                                <th>Horas</th>
+                                <th>Custo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var tarefa in dia.TarefasDoDia)
+                            {
+                                <tr>
+                                    <td>@tarefa.NomeProjeto</td>
+                                    <td>@tarefa.NomeTarefa</td>
+                                    <td>@tarefa.Horas.ToString("N2")</td>
+                                    <td>@tarefa.Custo.ToString("C")</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">Nenhuma tarefa registrada neste dia.</p>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+    </script>
+} 

@@ -1,4 +1,5 @@
 ﻿@model WebApplication2.Entities.Utilizador
+
 @{
     ViewData["Title"] = "O Meu Perfil";
 }
@@ -6,14 +7,14 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 <link href="~/css/perfil.css" rel="stylesheet" />
 
-
 <div class="container mt-5 mb-5">
+    <!-- ===== Formulário de edição de perfil ===== -->
     <div class="perfil-card">
         <h2 class="text-success text-center mb-4">
             <i class="fas fa-user-circle me-2"></i> O Meu Perfil
         </h2>
 
-        <div id="errorBox" class="alert-box"></div>
+        <div id="errorBox" class="alert-box" style="display: none;"></div>
 
         <form id="perfilForm">
             <input type="hidden" id="IdUtilizador" value="@Model.IdUtilizador" />
@@ -54,11 +55,43 @@
                 </div>
             </div>
 
-            <!-- Botão -->
+            <!-- Botão Guardar -->
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-success">Guardar Alterações</button>
             </div>
         </form>
+    </div>
+
+    <!-- ===== NOVA SECÇÃO: Relatório Mensal de Tarefas ===== -->
+    <div class="perfil-card mt-5">
+        <h3 class="text-success text-center mb-3">
+            <i class="fas fa-file-alt me-2"></i> Relatório Mensal de Tarefas
+        </h3>
+
+        <form method="get" asp-controller="Relatorios" asp-action="RelatorioMensal" class="row g-3 justify-content-center">
+            <!-- Passar idUtilizador como hidden -->
+            <input type="hidden" name="idUtilizador" value="@Model.IdUtilizador" />
+
+            <div class="col-auto">
+                <label for="mes" class="form-label">Mês:</label>
+                <select id="mes" name="mes" class="form-select">
+                    @for (int m = 1; m <= 12; m++)
+                    {
+                        <option value="@m">@m.ToString("D2")</option>
+                    }
+                </select>
+            </div>
+            <div class="col-auto">
+                <label for="ano" class="form-label">Ano:</label>
+                <input type="number" id="ano" name="ano" class="form-control" min="2000" max="2100" value="@DateTime.Now.Year" />
+            </div>
+            <div class="col-auto align-self-end">
+                <button type="submit" class="btn btn-success">Gerar Relatório</button>
+            </div>
+        </form>
+        <p class="text-muted text-center mt-2">
+            Escolha o mês e ano para visualizar o relatório de tarefas concluídas.
+        </p>
     </div>
 </div>
 
@@ -92,8 +125,6 @@
                 Password: password
             };
 
-            console.log("🟡 Dados enviados para a API:", data); // DEBUG
-
             try {
                 const response = await fetch(`/api/PerfilApi`, {
                     method: "PUT",
@@ -118,12 +149,12 @@
                             msg = `Erro HTTP ${response.status}`;
                         }
                     } catch {
-                        msg = "Erro inesperado: resposta inválida da API.";
+                        msg = "Resposta inválida da API.";
                     }
                     showError(msg);
                 }
             } catch (error) {
-                showError("Erro inesperado no envio: " + error.message);
+                showError("Erro inesperado: " + error.message);
             }
         });
     </script>

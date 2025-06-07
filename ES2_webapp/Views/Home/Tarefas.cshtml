@@ -1,7 +1,19 @@
 ﻿@{
   ViewData["Title"] = "Tarefas";
   var projetoNome = ViewBag.NomeProjeto;
-  var idProjeto = ViewBag.ProjetoId;
+  var idProjetoNullable = ViewBag.ProjetoId as int?;
+  var idProjeto = idProjetoNullable ?? 0;
+
+  // Obter EquipaId (pode ser null)
+  int? equipaId = null;
+  if (ViewBag.EquipaId != null)
+  {
+    int tmp;
+    if (int.TryParse(ViewBag.EquipaId.ToString(), out tmp))
+    {
+      equipaId = tmp;
+    }
+  }
 }
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
@@ -25,13 +37,30 @@
         <input type="text" id="popup-nome" class="form-input" autocomplete="off">
       </div>
       <div class="form-group">
-        <label for="popup-money">Dinheiro:</label>
-        <input type="text" id="popup-money" class="form-input" autocomplete="off">
-      </div>
-      <div class="form-group">
-        <label for="popup-datetime">Data e hora:</label>
+        <label for="popup-datetime">Data e hora de início:</label>
         <input type="datetime-local" id="popup-datetime" class="form-input">
       </div>
+      <div class="form-group">
+        <label for="popup-datetime-fim">Data e hora de fim:</label>
+        <input type="datetime-local" id="popup-datetime-fim" class="form-input">
+      </div>
+      <div class="form-group">
+        <label for="popup-money">Preço/Hora:</label>
+        <input type="number" id="popup-money" class="form-input" step="0.01" min="0">
+      </div>
+
+      @* Dropdown de Responsável (aparece só se for projeto de equipa) *@
+      @if (equipaId.HasValue)
+      {
+        <div class="form-group">
+          <label for="popup-responsavel">Responsável:</label>
+          <select id="popup-responsavel" class="form-input">
+            <option value="">-- Selecionar membro da equipa --</option>
+            @* Será preenchido via JavaScript *@
+          </select>
+        </div>
+      }
+
       <div class="form-actions">
         <button onclick="confirmarPopup()">Confirmar</button>
         <button onclick="fecharPopup()">Cancelar</button>
@@ -64,251 +93,328 @@
 </div>
 
 <script>
-const idProjeto = @Html.Raw(Json.Serialize(ViewBag.ProjetoId)) || 0;
-let colunaAlvo;
-let tarefaSendoEditada;
+  // idProjeto e equipaId são injetados pelo Razor
+  const idProjeto  = @idProjeto;
+  const equipaId   = @(equipaId.HasValue ? equipaId.Value.ToString() : "null");
 
-window.onload = () => {
-  carregarTarefas();
-};
+  let colunaAlvo;
+  let tarefaSendoEditada;
 
-function obterFasePorColuna(idColuna) {
-  switch (idColuna) {
-    case 'a-fazer': return 1;
-    case 'em-progresso': return 2;
-    case 'a-testar': return 3;
-    case 'finalizado': return 4;
-    default: return 1;
+  window.onload = () => {
+    carregarTarefas();
+  };
+
+  function obterFasePorColuna(idColuna) {
+    switch (idColuna) {
+      case 'a-fazer':      return 1;
+      case 'em-progresso': return 2;
+      case 'a-testar':     return 3;
+      case 'finalizado':   return 4;
+      default:             return 1;
+    }
   }
-}
 
-async function atualizarFaseTarefa(idTarefa, novaFase) {
-  try {
-    await fetch(`/Tarefas/MoverTarefa/${idTarefa}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(novaFase),
-      credentials: 'include'
-    });
-  } catch (e) {
-    console.error("Erro ao atualizar fase:", e);
+  async function atualizarFaseTarefa(idTarefa, novaFase) {
+    try {
+      await fetch(`/Tarefas/MoverTarefa/${idTarefa}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(novaFase),
+        credentials: 'include'
+      });
+    } catch (e) {
+      console.error("Erro ao atualizar fase:", e);
+    }
   }
-}
 
-async function carregarTarefas() {
-  const colunas = ["A fazer", "Em progresso", "A testar", "Finalizado"];
-  const refs = {};
+  async function carregarTarefas() {
+    // 1) Criar colunas Kanban dinamicamente
+    const colunas = ["A fazer", "Em progresso", "A testar", "Finalizado"];
+    colunas.forEach(titulo => criarColuna(titulo));
 
-  colunas.forEach(titulo => {
-    const coluna = criarColuna(titulo);
-    refs[titulo] = coluna.querySelector('.card-list');
-  });
+    // 2) Montar URL correta
+    let url;
+    if (equipaId !== null) {
+      url = `/Tarefas/TarefasEquipa/${equipaId}`;
+    } else {
+      url = `/Tarefas/MinhasTarefas/${idProjeto}`;
+    }
 
-  try {
-    const res = await fetch(`/Tarefas/MinhasTarefas/${idProjeto}`, {
-      method: 'GET',
-      credentials: 'include'
-    });
-    if (!res.ok) throw new Error("Erro ao carregar tarefas.");
-    const tarefas = await res.json();
-    tarefas.forEach(tarefa => {
-      const card = criarCard(tarefa.idTarefa, tarefa.nomeTarefa, tarefa.dtFim || tarefa.dtInicio, tarefa.precoHora);
+    console.log("URL chamada:", url);
 
-      switch (tarefa.fase) {
-        case 1: document.getElementById("a-fazer").appendChild(card); break;
-        case 2: document.getElementById("em-progresso").appendChild(card); break;
-        case 3: document.getElementById("a-testar").appendChild(card); break;
-        case 4: document.getElementById("finalizado").appendChild(card); break;
-        default: break;
+    try {
+      const res = await fetch(url, {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if (!res.ok) {
+        throw new Error(`Erro ao carregar tarefas. Status=${res.status}`);
+      }
+
+      const tarefas = await res.json();
+      console.log("tarefas recebidas:", tarefas);
+
+      // 3) Renderizar cada tarefa na coluna correspondente
+      tarefas.forEach(tarefa => {
+        const card = criarCard(
+          tarefa.idTarefa,
+          tarefa.nomeTarefa,
+          tarefa.dtFim || tarefa.dtInicio,
+          tarefa.precoHora
+        );
+
+        switch (tarefa.fase) {
+          case 0: // "A fazer" inicial
+          case 1:
+            document.getElementById("a-fazer").appendChild(card);
+            break;
+          case 2:
+            document.getElementById("em-progresso").appendChild(card);
+            break;
+          case 3:
+            document.getElementById("a-testar").appendChild(card);
+            break;
+          case 4:
+            document.getElementById("finalizado").appendChild(card);
+            break;
+          default:
+            break;
+        }
+      });
+
+    } catch (e) {
+      console.error("Erro em carregarTarefas():", e);
+      alert("Erro ao carregar tarefas: " + e.message);
+    }
+  }
+
+  function criarColuna(nome) {
+    const board = document.getElementById('kanbanBoard');
+    const coluna = document.createElement('div');
+    coluna.className = 'kanban-column';
+
+    let id = '';
+    switch (nome) {
+      case "A fazer":      id = "a-fazer";      break;
+      case "Em progresso": id = "em-progresso"; break;
+      case "A testar":     id = "a-testar";     break;
+      case "Finalizado":   id = "finalizado";   break;
+    }
+
+    coluna.innerHTML = `
+      <h3>${nome}</h3>
+      <div class="card-list" id="${id}"></div>
+      <button class="add-task-btn"><i class="fas fa-plus"></i> Nova Tarefa</button>
+    `;
+
+    const lista = coluna.querySelector('.card-list');
+    lista.addEventListener('dragover', e => e.preventDefault());
+    lista.addEventListener('drop', async e => {
+      e.preventDefault();
+      const cardId = e.dataTransfer.getData("text/plain");
+      const card = document.getElementById(cardId);
+      if (card && !lista.contains(card)) {
+        lista.appendChild(card);
+        const novaFase = obterFasePorColuna(lista.id);
+        const idTarefa = cardId.replace("tarefa-", "");
+        await atualizarFaseTarefa(idTarefa, novaFase);
       }
     });
-  } catch (e) {
-    console.error(e);
-    alert("Erro ao carregar tarefas.");
-  }
-}
 
-function criarColuna(nome) {
-  const board = document.getElementById('kanbanBoard');
-  const coluna = document.createElement('div');
-  coluna.className = 'kanban-column';
+    coluna.querySelector('.add-task-btn').onclick = () => {
+      colunaAlvo = coluna;
+      abrirPopupCriacao();
+    };
 
-  let id = '';
-  switch (nome) {
-    case "A fazer": id = "a-fazer"; break;
-    case "Em progresso": id = "em-progresso"; break;
-    case "A testar": id = "a-testar"; break;
-    case "Finalizado": id = "finalizado"; break;
+    board.appendChild(coluna);
+    return coluna;
   }
 
-  coluna.innerHTML = `
-    <h3>${nome}</h3>
-    <div class="card-list" id="${id}"></div>
-    <button class="add-task-btn"><i class="fas fa-plus"></i> Nova Tarefa</button>
-  `;
+  function criarCard(id, texto, data, preco = 0) {
+    const card = document.createElement('div');
+    card.className = 'kanban-card';
+    card.id = `tarefa-${id}`;
+    card.draggable = true;
 
-  const lista = coluna.querySelector('.card-list');
-  lista.addEventListener('dragover', e => e.preventDefault());
-  lista.addEventListener('drop', async e => {
-    e.preventDefault();
-    const cardId = e.dataTransfer.getData("text/plain");
-    const card = document.getElementById(cardId);
-    if (card && !lista.contains(card)) {
-      lista.appendChild(card);
-      const novaFase = obterFasePorColuna(lista.id);
-      const idTarefa = cardId.replace("tarefa-", "");
-      await atualizarFaseTarefa(idTarefa, novaFase);
+    card.innerHTML = `
+      <input type="checkbox" title="Início: ${new Date(data).toLocaleString()}">
+      <span class="task-text">${texto}</span>
+      <small class="text-muted">€${Number(preco).toFixed(2)}/h</small>
+      <div class="actions">
+        <button class="edit-btn"><i class="fas fa-pencil-alt"></i></button>
+        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+      </div>
+    `;
+
+    card.addEventListener("dragstart", e => {
+      e.dataTransfer.setData("text/plain", card.id);
+      setTimeout(() => card.style.opacity = '0.5', 0);
+    });
+    card.addEventListener("dragend", () => card.style.opacity = '1');
+
+    card.querySelector('.edit-btn').onclick = () => {
+      tarefaSendoEditada = card;
+      document.getElementById('edit-nome').value = texto;
+      const precoInput = document.getElementById('edit-preco');
+      if (precoInput) precoInput.value = preco;
+      document.getElementById('edit-datetime').value = '';
+      document.getElementById('popup-editar').style.display = 'flex';
+    };
+
+    card.querySelector('.delete-btn').onclick = () => {
+      if (confirm("Eliminar esta tarefa?")) excluirTarefa(id, card);
+    };
+
+    return card;
+  }
+
+  // Função que carrega membros da equipa no select de responsável
+  async function carregarMembrosEquipa() {
+    if (equipaId === null) return;
+    try {
+      const res = await fetch(`/Tarefas/MembrosEquipe/${idProjeto}`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if (!res.ok) throw new Error("Erro ao obter membros da equipa.");
+      const membros = await res.json();
+      console.log("membros da equipa:", membros);
+
+      const select = document.getElementById('popup-responsavel');
+      select.querySelectorAll('option:not([value=""])').forEach(o => o.remove());
+      membros.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.idUtilizador;
+        opt.textContent = m.nome;
+        select.appendChild(opt);
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Falha ao carregar membros da equipa.");
+    }
+  }
+
+  function abrirPopupCriacao() {
+    document.getElementById('popup-nome').value = '';
+    document.getElementById('popup-datetime').value = '';
+    document.getElementById('popup-datetime-fim').value = '';
+    document.getElementById('popup-money').value = '';
+    if (equipaId !== null) {
+      carregarMembrosEquipa();
+    }
+    document.getElementById('popup').style.display = 'flex';
+  }
+
+  function fecharPopup() {
+    document.getElementById('popup').style.display = 'none';
+  }
+
+  function fecharPopupEditar() {
+    document.getElementById('popup-editar').style.display = 'none';
+  }
+
+  async function confirmarPopup() {
+    const nome = document.getElementById('popup-nome').value.trim();
+    const preco = parseFloat(document.getElementById('popup-money').value.replace(',', '.')) || 0;
+    const dataHoraInicio = document.getElementById('popup-datetime').value;
+    const dataHoraFim = document.getElementById('popup-datetime-fim').value;
+    const agora = new Date().toISOString();
+    const [dtInicio, hrInicio] = (dataHoraInicio || agora).split("T");
+    let dtFim = null, hrFim = null;
+    if (dataHoraFim) {
+      [dtFim, hrFim] = dataHoraFim.split("T");
+    }
+
+    let idResp = null;
+    if (equipaId !== null) {
+      const sel = document.getElementById('popup-responsavel');
+      idResp = sel.value ? parseInt(sel.value) : null;
+    }
+
+    const tarefa = {
+      nomeTarefa: nome,
+      precoHora: preco,
+      dtInicio: dtInicio,
+      hrInicio: hrInicio ? hrInicio.split('.')[0] : '00:00:00',
+      dtFim: dtFim,
+      hrFim: hrFim ? hrFim.split('.')[0] : '00:00:00',
+      idProjeto: idProjeto,
+      idUtilizadorResponsavel: idResp
+    };
+
+    try {
+      const res = await fetch('/Tarefas/CriarTarefa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(tarefa),
+        credentials: 'include'
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Erro ao criar tarefa.");
+      }
+      const data = await res.json();
+      const novaCard = criarCard(data.idTarefa, data.nomeTarefa, data.dtInicio, data.precoHora);
+      colunaAlvo.querySelector('.card-list').appendChild(novaCard);
+      fecharPopup();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function confirmarEdicao() {
+    const nome = document.getElementById('edit-nome').value.trim();
+    const preco = parseFloat(document.getElementById('edit-preco').value.replace(',', '.')) || 0;
+    const dataHora = document.getElementById('edit-datetime').value;
+    const [dt, hr] = dataHora ? dataHora.split("T") : [null, null];
+
+    const id = tarefaSendoEditada.id.replace("tarefa-", "");
+    const tarefa = {
+      nomeTarefa: nome,
+      precoHora: preco,
+      dtFim: dt || null,
+      hrFim: hr || null
+    };
+
+    try {
+      const res = await fetch(`/Tarefas/AtualizarTarefa/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(tarefa),
+        credentials: 'include'
+      });
+
+      if (!res.ok) throw new Error("Erro ao atualizar tarefa.");
+      tarefaSendoEditada.querySelector('.task-text').textContent = nome;
+      tarefaSendoEditada.querySelector('small').textContent = `€${preco.toFixed(2)}/h`;
+      fecharPopupEditar();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function excluirTarefa(id, card) {
+    try {
+      const res = await fetch(`/Tarefas/EliminarTarefa/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (!res.ok) throw new Error("Erro ao eliminar tarefa.");
+      card.remove();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      fecharPopup();
+      fecharPopupEditar();
+    }
+    if (e.key === "Enter" && e.ctrlKey) {
+      if (document.getElementById('popup').style.display === 'flex') confirmarPopup();
+      if (document.getElementById('popup-editar').style.display === 'flex') confirmarEdicao();
     }
   });
-
-  coluna.querySelector('.add-task-btn').onclick = () => {
-    colunaAlvo = coluna;
-    abrirPopupCriacao();
-  };
-
-  board.appendChild(coluna);
-  return coluna;
-}
-
-function criarCard(id, texto, data, preco = 0) {
-  const card = document.createElement('div');
-  card.className = 'kanban-card';
-  card.id = `tarefa-${id}`;
-  card.draggable = true;
-
-  card.innerHTML = `
-    <input type="checkbox" title="Início: ${new Date(data).toLocaleString()}">
-    <span class="task-text">${texto}</span>
-    <small class="text-muted">€${Number(preco).toFixed(2)}/h</small>
-    <div class="actions">
-      <button class="edit-btn"><i class="fas fa-pencil-alt"></i></button>
-      <button class="delete-btn"><i class="fas fa-trash"></i></button>
-    </div>
-  `;
-
-  card.addEventListener("dragstart", e => {
-    e.dataTransfer.setData("text/plain", card.id);
-    setTimeout(() => card.style.opacity = '0.5', 0);
-  });
-
-  card.addEventListener("dragend", () => card.style.opacity = '1');
-
-  card.querySelector('.edit-btn').onclick = () => {
-    tarefaSendoEditada = card;
-    document.getElementById('edit-nome').value = texto;
-    const precoInput = document.getElementById('edit-preco');
-    if (precoInput) precoInput.value = preco;
-    document.getElementById('edit-datetime').value = '';
-    document.getElementById('popup-editar').style.display = 'flex';
-  };
-
-  card.querySelector('.delete-btn').onclick = () => {
-    if (confirm("Eliminar esta tarefa?")) excluirTarefa(id, card);
-  };
-
-  return card;
-}
-
-function abrirPopupCriacao() {
-  document.getElementById('popup-nome').value = '';
-  document.getElementById('popup-datetime').value = '';
-  document.getElementById('popup-money').value = '';
-  document.getElementById('popup').style.display = 'flex';
-}
-
-function fecharPopup() {
-  document.getElementById('popup').style.display = 'none';
-}
-
-function fecharPopupEditar() {
-  document.getElementById('popup-editar').style.display = 'none';
-}
-
-async function confirmarPopup() {
-  const nome = document.getElementById('popup-nome').value.trim();
-  const preco = parseFloat(document.getElementById('popup-money').value.replace(',', '.')) || 0;
-  const dataHora = document.getElementById('popup-datetime').value;
-  const agora = new Date().toISOString();
-  const [dt, hr] = (dataHora || agora).split("T");
-
-  const tarefa = {
-    nomeTarefa: nome,
-    precoHora: preco,
-    dtInicio: dt,
-    hrInicio: hr ? hr.split('.')[0] : '00:00:00',
-    idProjeto: idProjeto
-  };
-
-  try {
-    const res = await fetch('/Tarefas/CriarTarefa', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(tarefa),
-      credentials: 'include'
-    });
-
-    if (!res.ok) throw new Error("Erro ao criar tarefa.");
-    const data = await res.json();
-    const novaCard = criarCard(data.idTarefa, data.nomeTarefa, data.dtInicio, data.precoHora);
-    colunaAlvo.querySelector('.card-list').appendChild(novaCard);
-    fecharPopup();
-  } catch (e) {
-    alert(e.message);
-  }
-}
-
-async function confirmarEdicao() {
-  const nome = document.getElementById('edit-nome').value.trim();
-  const preco = parseFloat(document.getElementById('edit-preco').value.replace(',', '.')) || 0;
-  const dataHora = document.getElementById('edit-datetime').value;
-  const [dt, hr] = dataHora ? dataHora.split("T") : [null, null];
-
-  const id = tarefaSendoEditada.id.replace("tarefa-", "");
-  const tarefa = {
-    nomeTarefa: nome,
-    precoHora: preco,
-    dtFim: dt || null,
-    hrFim: hr || null
-  };
-
-  try {
-    const res = await fetch(`/Tarefas/AtualizarTarefa/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(tarefa),
-      credentials: 'include'
-    });
-
-    if (!res.ok) throw new Error("Erro ao atualizar tarefa.");
-    tarefaSendoEditada.querySelector('.task-text').textContent = nome;
-    tarefaSendoEditada.querySelector('small').textContent = `€${preco.toFixed(2)}/h`;
-    fecharPopupEditar();
-  } catch (e) {
-    alert(e.message);
-  }
-}
-
-async function excluirTarefa(id, card) {
-  try {
-    const res = await fetch(`/Tarefas/EliminarTarefa/${id}`, {
-      method: 'DELETE',
-      credentials: 'include'
-    });
-    if (!res.ok) throw new Error("Erro ao eliminar tarefa.");
-    card.remove();
-  } catch (e) {
-    alert(e.message);
-  }
-}
-
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") {
-    fecharPopup();
-    fecharPopupEditar();
-  }
-  if (e.key === "Enter" && e.ctrlKey) {
-    if (document.getElementById('popup').style.display === 'flex') confirmarPopup();
-    if (document.getElementById('popup-editar').style.display === 'flex') confirmarEdicao();
-  }
-});
 </script>

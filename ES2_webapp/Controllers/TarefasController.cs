@@ -1,9 +1,8 @@
-﻿// WebApplication2/Controllers/TarefasController.cs
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ES2_webapp.Data;
 using WebApplication2.DTO;
+using WebApplication2.Models;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -22,23 +21,26 @@ namespace WebApplication2.Controllers
             _context = context;
         }
 
-        // ============================================================================
-        // Index (renderiza a View de tarefas, recebendo somente o projetoId por URL)
-        // ============================================================================
+        // ----------------------------------------------
+        // View de Kanban: exibe a página de Tarefas para um dado projeto
+        // ----------------------------------------------
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> Index(int projetoId)
         {
             var projeto = await _context.Projetos.FindAsync(projetoId);
-            if (projeto == null) return NotFound();
+            if (projeto == null)
+                return NotFound();
 
-            ViewBag.ProjetoId = projeto.IdProjeto;
+            ViewBag.ProjetoId   = projeto.IdProjeto;
             ViewBag.NomeProjeto = projeto.NomeProjeto;
+            ViewBag.EquipaId    = projeto.EquipaId; // pode ser null se for projeto individual
+
             return View("~/Views/Home/Tarefas.cshtml");
         }
 
-        // ===================================================
-        // MoverTarefa: só atualiza a coluna “Fase” da tarefa
-        // ===================================================
+        // ----------------------------------------------
+        // MoverTarefa: altera a fase (coluna) de uma tarefa no Kanban
+        // ----------------------------------------------
         [HttpPut("MoverTarefa/{idTarefa}")]
         public async Task<IActionResult> MoverTarefa(int idTarefa, [FromBody] int novaFase)
         {
@@ -54,24 +56,26 @@ namespace WebApplication2.Controllers
             return Ok(new { message = "Fase atualizada com sucesso." });
         }
 
-        // =======================================================================================
-        // GetTarefasPorProjeto: lista as tarefas associadas, permitindo acesso a criador ou membro de equipa
-        // =======================================================================================
+        // ----------------------------------------------
+        // MinhasTarefas: retorna todas as tarefas de um projeto,
+        // incluindo nome do responsável
+        // ----------------------------------------------
         [HttpGet("MinhasTarefas/{idProjeto}")]
         public async Task<IActionResult> GetTarefasPorProjeto(int idProjeto)
         {
-            // 1) Extrair o Id do utilizador autenticado
+            // 1) Verificar se o utilizador autenticado existe
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
             if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
                 return Unauthorized();
 
-            // 2) Obter o projeto (sem filtrar pelo criador)
+            // 2) Verificar se o projeto existe
             var projeto = await _context.Projetos
                 .FirstOrDefaultAsync(p => p.IdProjeto == idProjeto);
 
             if (projeto == null)
                 return NotFound(new { message = "Projeto não existe." });
 
+            // 3) Verificar permissões: criador ou membro de equipa
             var isCriador = projeto.IdUtilizador == idUtilizador;
             var isMembroEquipa = false;
 
@@ -85,7 +89,7 @@ namespace WebApplication2.Controllers
             if (!isCriador && !isMembroEquipa)
                 return Unauthorized(new { message = "Sem permissão para aceder a este projeto." });
 
-            // 3) Buscar todas as tarefas associadas a esse projeto
+            // 4) Buscar todas as tarefas associadas a esse projeto
             var tarefas = await _context.ProjetoTarefa
                 .Where(pt => pt.IdProjeto == idProjeto)
                 .Select(pt => new
@@ -97,7 +101,6 @@ namespace WebApplication2.Controllers
                     pt.Tarefa.HrInicio,
                     pt.Tarefa.DtFim,
                     pt.Tarefa.HrFim,
-                    // Se houver responsável, mostrar também o nome
                     IdResponsavel = pt.Tarefa.IdUtilizador,
                     ResponsavelNome = pt.Tarefa.IdUtilizador != null
                         ? _context.Utilizadores
@@ -112,11 +115,63 @@ namespace WebApplication2.Controllers
             return Ok(tarefas);
         }
 
-        // =======================================================================================
-        // CriarTarefa: cria nova tarefa associada a um projeto de equipa
-        // ***************************************************************************************
-        // Lê TarefaCreateEquipa (não TarefaCreate)
-        // =======================================================================================
+        // ----------------------------------------------
+        // **NOVO**: Retorna todas as tarefas de todos os projetos ligados
+        // a uma equipa, para que qualquer membro da equipa veja tudo
+        // ----------------------------------------------
+        [HttpGet("TarefasEquipa/{idEquipa}")]
+        public async Task<IActionResult> GetTarefasPorEquipa(int idEquipa)
+        {
+            // 1) Verificar utilizador autenticado
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
+            if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
+                return Unauthorized();
+
+            // 2) Confirmar que este utilizador pertence à Equipa (ou é criador de algum projeto dessa equipa)
+            var pertenceEquipa = await _context.EquipaUtilizadores
+                .AnyAsync(eu => eu.EquipaId == idEquipa && eu.UtilizadorId == idUtilizador);
+
+            if (!pertenceEquipa)
+            {
+                // Alternativa: permitir se for criador de algum projeto que tenha EquipaId = idEquipa
+                var eCriadorProjeto = await _context.Projetos
+                    .AnyAsync(p => p.EquipaId == idEquipa && p.IdUtilizador == idUtilizador);
+
+                if (!eCriadorProjeto)
+                    return Unauthorized(new { message = "Sem permissão para ver tarefas desta equipa." });
+            }
+
+            // 3) Trazer as tarefas de todos os projetos cujo Projeto.EquipaId == idEquipa
+            var tarefasEquipa = await _context.ProjetoTarefa
+                .Where(pt => pt.Projeto.EquipaId == idEquipa)
+                .Select(pt => new
+                {
+                    pt.Tarefa.IdTarefa,
+                    pt.Tarefa.NomeTarefa,
+                    pt.Tarefa.PrecoHora,
+                    pt.Tarefa.DtInicio,
+                    pt.Tarefa.HrInicio,
+                    pt.Tarefa.DtFim,
+                    pt.Tarefa.HrFim,
+                    IdResponsavel = pt.Tarefa.IdUtilizador,
+                    ResponsavelNome = pt.Tarefa.IdUtilizador != null
+                        ? _context.Utilizadores
+                            .Where(u => u.IdUtilizador == pt.Tarefa.IdUtilizador)
+                            .Select(u => u.Nome)
+                            .FirstOrDefault()
+                        : null,
+                    pt.Fase,
+                    NomeProjeto = pt.Projeto.NomeProjeto,
+                    IdProjeto = pt.Projeto.IdProjeto
+                })
+                .ToListAsync();
+
+            return Ok(tarefasEquipa);
+        }
+
+        // ----------------------------------------------
+        // CriarTarefa: cria uma nova tarefa (eventualmente associando um responsável)
+        // ----------------------------------------------
         [HttpPost("CriarTarefa")]
         public async Task<IActionResult> CriarTarefa([FromBody] TarefaCreateEquipa dto)
         {
@@ -128,14 +183,14 @@ namespace WebApplication2.Controllers
             if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
                 return Unauthorized(new { message = "Utilizador não autenticado." });
 
-            // 2) Buscar o projeto onde vai ser criada a tarefa
+            // 2) Buscar o projeto onde será criada a tarefa
             var projeto = await _context.Projetos
                 .FirstOrDefaultAsync(p => p.IdProjeto == dto.IdProjeto);
 
             if (projeto == null)
                 return NotFound(new { message = "Projeto não existe." });
 
-            // 3) Verificar se é criador OU membro da equipa
+            // 3) Verificar permissões: criador ou membro de equipa
             var isCriador = projeto.IdUtilizador == idUtilizador;
             var isMembroEquipa = false;
             if (!isCriador && projeto.EquipaId.HasValue)
@@ -147,11 +202,10 @@ namespace WebApplication2.Controllers
             if (!isCriador && !isMembroEquipa)
                 return Unauthorized(new { message = "Sem permissão para criar tarefa neste projeto." });
 
-            // 4) Decidir quem será o responsável pela tarefa:
+            // 4) Se foi indicado um responsável, verificar se faz parte da equipa
             int? responsavelId = null;
             if (dto.IdUtilizadorResponsavel.HasValue)
             {
-                // Se o projeto tem equipa, certifica-se de que este responsável é membro dela
                 if (projeto.EquipaId.HasValue)
                 {
                     var ehMembro = await _context.EquipaUtilizadores
@@ -162,13 +216,8 @@ namespace WebApplication2.Controllers
                 }
                 responsavelId = dto.IdUtilizadorResponsavel.Value;
             }
-            else
-            {
-                // Nenhum responsável explicitamente enviado: deixamos como null
-                responsavelId = null;
-            }
 
-            // 5) Criar e guardar a entidade Tarefa
+            // 5) Construir a entidade Tarefa e salvar
             var tarefa = new Tarefa
             {
                 NomeTarefa   = dto.NomeTarefa,
@@ -177,18 +226,18 @@ namespace WebApplication2.Controllers
                 DtFim        = dto.DtFim,
                 HrFim        = dto.HrFim,
                 PrecoHora    = dto.PrecoHora,
-                IdUtilizador = responsavelId    // pode ser null
+                IdUtilizador = responsavelId
             };
 
             _context.Tarefas.Add(tarefa);
             await _context.SaveChangesAsync();
 
-            // 6) Associar ao ProjetoTarefa
+            // 6) Associar a ProjetoTarefa (inicialmente na fase 0)
             var projetoTarefa = new ProjetoTarefa
             {
                 IdProjeto = dto.IdProjeto,
                 TarefaId  = tarefa.IdTarefa,
-                Fase      = 0 // ou valor inicial que preferir
+                Fase      = 0
             };
             _context.ProjetoTarefa.Add(projetoTarefa);
             await _context.SaveChangesAsync();
@@ -203,20 +252,18 @@ namespace WebApplication2.Controllers
             });
         }
 
-        // =======================================================================================
-        // AtualizarTarefa: atualiza campos básicos da tarefa e opcionalmente altera responsável
-        // =======================================================================================
+        // ----------------------------------------------
+        // AtualizarTarefa: edita os campos de uma tarefa existente
+        // ----------------------------------------------
         [HttpPut("AtualizarTarefa/{id}")]
         public async Task<IActionResult> AtualizarTarefa(int id, [FromBody] TarefaEditDto dto)
         {
             try
             {
-                // 1) Buscar a tarefa
                 var tarefa = await _context.Tarefas.FindAsync(id);
                 if (tarefa == null)
                     return NotFound(new { message = "Tarefa não encontrada." });
 
-                // 2) Verificar permissão:
                 var projetoTarefa = await _context.ProjetoTarefa
                     .FirstOrDefaultAsync(pt => pt.TarefaId == id);
 
@@ -224,6 +271,7 @@ namespace WebApplication2.Controllers
                 {
                     var projeto = await _context.Projetos
                         .FirstOrDefaultAsync(p => p.IdProjeto == projetoTarefa.IdProjeto);
+
                     var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
                     if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
                         return Unauthorized();
@@ -242,20 +290,21 @@ namespace WebApplication2.Controllers
                         return Unauthorized(new { message = "Sem permissão para editar esta tarefa." });
                 }
 
-                // 3) Atualizar campos básicos
+                // Atualizar campos básicos
                 tarefa.NomeTarefa = dto.NomeTarefa;
-                tarefa.DtFim      = dto.DtFim ?? tarefa.DtFim;
-                tarefa.PrecoHora  = dto.PrecoHora;
+                if (dto.DtFim.HasValue)
+                    tarefa.DtFim = dto.DtFim.Value;
+                tarefa.PrecoHora = dto.PrecoHora;
 
-                // 4) Se vier IdUtilizadorResponsavel, validamos e alteramos
+                // Se indicaram novo responsável, verificar se faz parte da equipa
                 if (dto.IdUtilizadorResponsavel.HasValue)
                 {
                     int novoResp = dto.IdUtilizadorResponsavel.Value;
-
                     if (projetoTarefa != null)
                     {
                         var projeto = await _context.Projetos
                             .FirstOrDefaultAsync(p => p.IdProjeto == projetoTarefa.IdProjeto);
+
                         if (projeto.EquipaId.HasValue)
                         {
                             var ehMembro = await _context.EquipaUtilizadores
@@ -265,7 +314,6 @@ namespace WebApplication2.Controllers
                                 return BadRequest(new { message = "Novo responsável não faz parte desta equipa." });
                         }
                     }
-
                     tarefa.IdUtilizador = novoResp;
                 }
 
@@ -282,9 +330,9 @@ namespace WebApplication2.Controllers
             }
         }
 
-        // =======================================================================================
-        // Exclui o projeto e todas as tarefas associadas (método existente, mantido sem alterações)
-        // =======================================================================================
+        // ----------------------------------------------
+        // EliminarProjeto: apaga um projeto e todas as tarefas associadas
+        // ----------------------------------------------
         [HttpDelete("EliminarProjeto/{id}")]
         public async Task<IActionResult> EliminarProjeto(int id)
         {
@@ -313,9 +361,75 @@ namespace WebApplication2.Controllers
             }
         }
 
-        // =======================================================================================
-        // Novo endpoint: retorna todos os membros da equipa de um projeto (para popular dropdown)
-        // =======================================================================================
+        // ----------------------------------------------
+        // EliminarTarefa: apaga uma única tarefa (DELETE /Tarefas/EliminarTarefa/{id})
+        // ----------------------------------------------
+        [HttpDelete("EliminarTarefa/{id}")]
+        public async Task<IActionResult> EliminarTarefa(int id)
+        {
+            try
+            {
+                // 1) Verificar claim do utilizador autenticado
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "id");
+                if (userIdClaim == null || !decimal.TryParse(userIdClaim.Value, out var idUtilizador))
+                    return Unauthorized(new { message = "Utilizador não autenticado." });
+
+                // 2) Encontrar a tarefa
+                var tarefa = await _context.Tarefas.FindAsync(id);
+                if (tarefa == null)
+                    return NotFound(new { message = "Tarefa não encontrada." });
+
+                // 3) Verificar permissão de quem vai apagar
+                var projetoTarefa = await _context.ProjetoTarefa
+                    .FirstOrDefaultAsync(pt => pt.TarefaId == id);
+
+                if (projetoTarefa != null)
+                {
+                    var projeto = await _context.Projetos
+                        .FirstOrDefaultAsync(p => p.IdProjeto == projetoTarefa.IdProjeto);
+
+                    var isCriador = projeto.IdUtilizador == idUtilizador;
+                    var isResponsavel = tarefa.IdUtilizador == idUtilizador;
+                    var isMembroEquipa = false;
+
+                    if (projeto.EquipaId.HasValue)
+                    {
+                        isMembroEquipa = await _context.EquipaUtilizadores
+                            .AnyAsync(eu => eu.EquipaId == projeto.EquipaId
+                                         && eu.UtilizadorId == idUtilizador);
+                    }
+
+                    if (!isCriador && !isResponsavel && !isMembroEquipa)
+                        return Unauthorized(new { message = "Sem permissão para eliminar esta tarefa." });
+                }
+                else
+                {
+                    // Se não estiver associado a nenhum ProjetoTarefa, negar.
+                    return Unauthorized(new { message = "Tarefa não está ligada a nenhum projeto ou sem permissão." });
+                }
+
+                // 4) Remover vínculo em ProjetoTarefa
+                _context.ProjetoTarefa.Remove(projetoTarefa);
+                // 5) Remover a tarefa
+                _context.Tarefas.Remove(tarefa);
+
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Tarefa eliminada com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Erro interno ao eliminar tarefa.",
+                    detalhe = ex.Message
+                });
+            }
+        }
+
+        // ----------------------------------------------
+        // MembrosEquipe: obtém lista de membros de equipa
+        // (para popular dropdown de Responsável)
+        // ----------------------------------------------
         [HttpGet("MembrosEquipe/{idProjeto}")]
         public async Task<IActionResult> GetMembrosEquipe(int idProjeto)
         {
@@ -348,14 +462,13 @@ namespace WebApplication2.Controllers
                     .Select(eu => new
                     {
                         idUtilizador = eu.UtilizadorId,
-                        nome = eu.Utilizador.Nome // Proprietário do Utilizador deve ter a propriedade Nome
+                        nome = eu.Utilizador.Nome
                     })
                     .OrderBy(x => x.nome)
                     .ToListAsync();
             }
             else
             {
-                // Projeto pessoal: único "membro" é o próprio criador
                 var criador = await _context.Utilizadores
                     .FirstOrDefaultAsync(u => u.IdUtilizador == projeto.IdUtilizador);
                 if (criador != null)
