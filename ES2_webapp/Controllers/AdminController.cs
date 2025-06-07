@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication2.Entities;
 using WebApplication2.Services;
+using System.Linq; // <- Importante para o Select()
 
 namespace WebApplication2.Controllers
 {
@@ -22,13 +23,16 @@ namespace WebApplication2.Controllers
             try
             {
                 var utilizadores = await _utilizadorService.GetAllUtilizadoresAsync();
-                return Json(utilizadores);
+                var ordenados = utilizadores.OrderBy(u => u.IdUtilizador); // <- Corrigido aqui
+                return Json(ordenados);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Erro interno: {ex.Message}");
             }
         }
+
+
 
         [HttpPost("utilizadores")]
         public async Task<IActionResult> CriarUtilizador([FromBody] Utilizador utilizador)
@@ -61,7 +65,19 @@ namespace WebApplication2.Controllers
         public async Task<IActionResult> GetProjetos()
         {
             var projetos = await _projetoService.GetAllWithCriadorAsync();
-            return Json(projetos);
+
+            var response = projetos.Select(p => new
+            {
+                idProjeto = p.IdProjeto,
+                nomeProjeto = p.NomeProjeto,
+                nomeCliente = p.NomeCliente,
+                criador = new
+                {
+                    nome = p.Criador?.Nome ?? "N/A"
+                }
+            });
+
+            return Json(response);
         }
     }
 }
