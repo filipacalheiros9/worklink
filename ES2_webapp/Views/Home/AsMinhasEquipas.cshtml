@@ -1,357 +1,249 @@
 ﻿@{
     ViewBag.Title = "Minhas Equipas";
 }
-<style>
-    body {
-        font-family: Arial, sans-serif;
-    }
 
-    h2 {
-        color: #2e7d32;
-        margin-bottom: 20px;
-    }
+<!-- Dependências -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+<link href="~/css/minhasequipas.css" rel="stylesheet" />
 
-    .btn-custom {
-        background-color: #2e7d32;
-        color: white;
-        border: none;
-        padding: 6px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
+<div class="container-fluid my-5">
+  <!-- Cabeçalho -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-success">
+      <i class="fas fa-users me-2"></i>Minhas Equipas
+    </h2>
+    <button
+      id="btnAbrirModal"
+      class="btn btn-success rounded-pill px-4 py-2 shadow-sm"
+      onclick="abrirModalCriarEquipa()">
+      <i class="fas fa-plus me-1"></i> Criar Equipa
+    </button>
+  </div>
 
-    .btn-custom:hover {
-        background-color: #27642b;
-    }
-
-    .card {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 12px;
-        background-color: #f8f8f8;
-        margin-bottom: 12px;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.4);
-        justify-content: center;
-        align-items: center;
-        z-index: 999;
-    }
-
-    .modal-content {
-        background: white;
-        border-radius: 14px;
-        padding: 25px;
-        width: 90%;
-        max-width: 400px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 10px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-        margin-bottom: 12px;
-    }
-
-    .d-flex {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-
-    .mt-3 {
-        margin-top: 1rem;
-    }
-
-    .container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .gap-2 > * {
-        margin-left: 8px;
-    }
-
-    #autocompleteResultados {
-        max-height: 150px;
-        overflow-y: auto;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        margin-bottom: 10px;
-    }
-
-    #autocompleteResultados div {
-        padding: 8px;
-        cursor: pointer;
-    }
-
-    #autocompleteResultados div:hover {
-        background-color: #eeeeee;
-    }
-</style>
-
-<div class="container">
-    <h2>Minhas Equipas</h2>
-    <button id="btnAbrirModal" class="btn-custom" onclick="abrirModalCriarEquipa()">+ Criar Equipa</button>
-    <div id="listaEquipas" class="mt-3"></div>
+  <!-- Lista de Equipas (inject via JS) -->
+  <div id="listaEquipas" class="d-flex flex-wrap justify-content-center gap-4"></div>
 </div>
 
 <!-- Modal Criar Equipa -->
 <div id="modalCriarEquipa" class="modal">
-    <div class="modal-content">
-        <h4 class="text-center">Criar Nova Equipa</h4>
-        <input type="text" id="nomeEquipa" placeholder="Nome da Equipa" class="form-control" />
-        <button class="btn-custom" onclick="criarEquipa()">Salvar</button>
-        <button class="btn btn-secondary mt-2" onclick="fecharModalCriarEquipa()">Cancelar</button>
+  <div class="modal-content popup-card">
+    <h4 class="popup-title">Criar Nova Equipa</h4>
+    <div class="popup-body">
+      <label for="nomeEquipa" class="form-label small">Nome da Equipa</label>
+      <input type="text" id="nomeEquipa" class="form-control mb-3" placeholder="Ex: Marketing" />
+
+      <button class="btn btn-success w-100 mb-2" onclick="criarEquipa()">
+        <i class="fas fa-save me-1"></i> Salvar
+      </button>
+      <button class="btn btn-outline-secondary w-100" onclick="fecharModalCriarEquipa()">
+        Cancelar
+      </button>
     </div>
+  </div>
 </div>
 
-<!-- Modal Convite -->
+<!-- Modal Convidar Utilizador -->
 <div id="modalConvite" class="modal">
-    <div class="modal-content">
-        <h4 class="text-center">Convidar Utilizador</h4>
-        <input type="text" id="inputUsername" placeholder="Pesquisar utilizador..." class="form-control" autocomplete="off" />
-        <div id="autocompleteResultados"></div>
-        <textarea id="mensagemConvite" placeholder="Mensagem (opcional)" class="form-control"></textarea>
-        <button class="btn-custom" onclick="enviarConvite()">Enviar</button>
-        <button class="btn btn-secondary mt-2" onclick="fecharModalConvite()">Cancelar</button>
+  <div class="modal-content popup-card">
+    <h4 class="popup-title">Convidar Utilizador</h4>
+    <div class="popup-body">
+      <input type="text" id="inputUsername" class="form-control mb-2"
+             placeholder="Pesquisar utilizador…" autocomplete="off" />
+      <div id="autocompleteResultados"></div>
+      <textarea id="mensagemConvite" class="form-control mb-3"
+                placeholder="Mensagem (opcional)"></textarea>
+
+      <button class="btn btn-success w-100 mb-2" onclick="enviarConvite()">
+        <i class="fas fa-paper-plane me-1"></i> Enviar
+      </button>
+      <button class="btn btn-outline-secondary w-100" onclick="fecharModalConvite()">
+        Cancelar
+      </button>
     </div>
+  </div>
 </div>
 
 <!-- Modal Membros -->
 <div id="modalMembros" class="modal">
-    <div class="modal-content">
-        <h4 class="text-center">Membros da Equipa</h4>
-        <ul id="listaMembros" class="list-group mb-3"></ul>
-        <button class="btn btn-secondary mt-2" onclick="fecharModalMembros()">Fechar</button>
-    </div>
+  <div class="modal-content popup-card">
+    <h4 class="popup-title">Membros da Equipa</h4>
+    <ul id="listaMembros" class="list-group mb-3"></ul>
+    <button class="btn btn-outline-secondary w-100" onclick="fecharModalMembros()">
+      Fechar
+    </button>
+  </div>
 </div>
 
-<script>
-    let equipaSelecionadaId = null;
-    let usernameSelecionado = null;
-
-    window.onload = async function () {
-        await carregarEquipas();
-    };
-
-    async function carregarEquipas() {
-        const container = document.getElementById("listaEquipas");
-        container.innerHTML = "<p>A carregar...</p>";
-
-        try {
-            const res = await fetch("/api/Equipa/Minhas");
-            const equipas = await res.json();
-
-            if (!res.ok) throw new Error(equipas.message || "Erro");
-
-            container.innerHTML = equipas.length === 0
-                ? "<p>Não estás em nenhuma equipa.</p>"
-                : equipas.map(e =>
-                    `<div class="card">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>${e.nome}</strong><br/>
-                                ${!e.isCriador ? '<small class="text-muted">Convidado</small>' : ''}
-                            </div>
-                            <div class="d-flex gap-2">
-                                ${e.isCriador ? `<button class="btn btn-sm btn-custom" onclick="abrirModalConvite(${e.idEquipa})">Convidar</button>` : ''}
-                                <a href="/Home/ProjetosEquipa?idEquipa=${e.idEquipa}" class="btn btn-sm btn-custom">Projetos</a>
-                                <button class="btn btn-sm btn-secondary" onclick="abrirModalMembros(${e.idEquipa})">Membros</button>
-                                ${e.isCriador ? `<button class="btn btn-sm btn-danger" onclick="apagarEquipa(${e.idEquipa})">Apagar</button>` : ''}
-                            </div>
-                        </div>
-                    </div>`
-                ).join('');
-        } catch (err) {
-            console.error(err);
-            container.innerHTML = "<p>Erro ao carregar equipas.</p>";
-        }
-    }
-
-    function abrirModalCriarEquipa() {
-        document.getElementById("modalCriarEquipa").style.display = "flex";
-    }
-
-    function fecharModalCriarEquipa() {
-        document.getElementById("modalCriarEquipa").style.display = "none";
-    }
-
-    async function criarEquipa() {
-        const nome = document.getElementById("nomeEquipa").value.trim();
-        if (!nome) return alert("Nome obrigatório");
-
-        const res = await fetch("/api/Equipa/Criar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ nome })
-        });
-
-        if (res.ok) {
-            alert("Equipa criada!");
-            fecharModalCriarEquipa();
-            await carregarEquipas();
-        } else {
-            const erro = await res.json();
-            alert(erro.message || "Erro ao criar equipa");
-        }
-    }
-
-    function abrirModalConvite(idEquipa) {
-        equipaSelecionadaId = idEquipa;
-        usernameSelecionado = null;
-        document.getElementById("inputUsername").value = "";
-        document.getElementById("mensagemConvite").value = "";
-        document.getElementById("autocompleteResultados").innerHTML = "";
-        document.getElementById("modalConvite").style.display = "flex";
-    }
-
-    function fecharModalConvite() {
-        document.getElementById("modalConvite").style.display = "none";
-    }
-
-    async function enviarConvite() {
-        const mensagem = document.getElementById("mensagemConvite").value.trim();
-        if (!usernameSelecionado || !equipaSelecionadaId) return alert("Seleciona um utilizador.");
-
-        const res = await fetch("/api/Equipa/Convidar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                usernameDestinatario: usernameSelecionado,
-                mensagem,
-                idEquipa: equipaSelecionadaId
-            })
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-            alert("Convite enviado.");
-            fecharModalConvite();
-        } else {
-            alert(data.message || "Erro ao enviar convite.");
-        }
-    }
-
-    document.getElementById('inputUsername').addEventListener('input', async function () {
-        const query = this.value.trim();
-        if (query.length < 2) {
-            document.getElementById('autocompleteResultados').innerHTML = "";
-            return;
-        }
-
-        const res = await fetch(`/api/Equipa/PesquisarUtilizador?query=${encodeURIComponent(query)}`);
-        const data = await res.json();
-
-        let html = '';
-        data.forEach(user => {
-            html += `<div onclick="selecionarUsername('${user.username}')">${user.username}</div>`;
-        });
-
-        document.getElementById('autocompleteResultados').innerHTML = html;
-    });
-
-    function selecionarUsername(username) {
-        usernameSelecionado = username;
-        document.getElementById("inputUsername").value = username;
-        document.getElementById("autocompleteResultados").innerHTML = "";
-    }
-
-    function abrirModalMembros(idEquipa) {
-        fetch(`/api/Equipa/GetMembros?id=${idEquipa}`)
-            .then(res => res.json())
-            .then(membros => {
-                fetch("/api/Equipa/Minhas")
-                    .then(r => r.json())
-                    .then(minhasEquipas => {
-                        const equipaAtual = minhasEquipas.find(e => e.idEquipa === idEquipa);
-                        const souDono = equipaAtual?.isCriador;
-
-                        const meuId = parseInt(document.getElementById("user-id").value); // input escondido com o ID atual
-                        const ul = document.getElementById("listaMembros");
-
-                        ul.innerHTML = membros.map(m => {
-                            if (souDono && m.id !== meuId) {
-                                return `<li class='list-group-item d-flex justify-content-between align-items-center'>
-                                        ${m.nome}
-                                        <button class='btn btn-sm btn-danger' onclick='removerMembro(${m.id}, ${idEquipa})'>Remover</button>
-                                    </li>`;
-                            } else if (!souDono && m.id === meuId) {
-                                return `<li class='list-group-item d-flex justify-content-between align-items-center'>
-                                        ${m.nome}
-                                        <button class='btn btn-sm btn-secondary' onclick='removerMembro(${m.id}, ${idEquipa})'>Sair</button>
-                                    </li>`;
-                            } else {
-                                return `<li class='list-group-item'>${m.nome}</li>`;
-                            }
-                        }).join("");
-
-                        document.getElementById("modalMembros").style.display = "flex";
-                    });
-            });
-    }
-
-
-
-    function fecharModalMembros() {
-        document.getElementById("modalMembros").style.display = "none";
-    }
-
-    function removerMembro(userId, equipaId) {
-        if (confirm("Tem a certeza que quer remover este membro da equipa?")) {
-            fetch('/api/Equipa/RemoverMembro', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, equipaId })
-            }).then(() => {
-                alert('Membro removido.');
-                abrirModalMembros(equipaId);
-            });
-        }
-    }
-
-    async function apagarEquipa(id) {
-        if (!confirm("Tens a certeza que queres apagar esta equipa? Isto eliminará também os projetos e tarefas associados.")) return;
-
-        try {
-            const res = await fetch(`/api/Equipa/Apagar/${id}`, { method: "DELETE" });
-            const data = await res.json();
-            if (res.ok) {
-                alert(data.message || "Equipa apagada.");
-                await carregarEquipas();
-            } else {
-                alert(data.message || "Erro ao apagar equipa.");
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Erro inesperado ao apagar equipa.");
-        }
-    }
-
-    window.addEventListener("click", function (e) {
-        ["modalCriarEquipa", "modalConvite", "modalMembros"].forEach(id => {
-            const modal = document.getElementById(id);
-            if (e.target === modal) modal.style.display = "none";
-        });
-    });
-    
-
-</script>
-
 <input type="hidden" id="user-id" value="@User.Claims.FirstOrDefault(c => c.Type == "id")?.Value" />
+
+@section Scripts {
+    <script>
+        let equipaSelecionadaId = null,
+            usernameSelecionado = null;
+
+        window.onload = carregarEquipas;
+
+        async function carregarEquipas() {
+            const container = document.getElementById("listaEquipas");
+            container.innerHTML = "<p>Carregando equipas…</p>";
+
+            try {
+                const res = await fetch("/api/Equipa/Minhas");
+                const equipas = await res.json();
+                if (!res.ok) throw new Error(equipas.message);
+
+                container.innerHTML = equipas.length === 0
+                    ? "<p>Não fazes parte de nenhuma equipa.</p>"
+                    : equipas.map(e => `
+            <div class="perfil-card">
+              <div class="card-header">
+                <i class="fas fa-users"></i>
+                <span class="card-title">${e.nome}</span>
+                <span class="role-badge ${e.isCriador ? 'owner' : 'guest'}">
+                  ${e.isCriador ? 'Proprietário' : 'Convidado'}
+                </span>
+              </div>
+              <!-- corpo vazio para espaçamento -->
+              <div class="card-body"></div>
+              <div class="card-actions">
+                ${e.isCriador ? `
+                  <button class="btn-icon" onclick="abrirModalConvite(${e.idEquipa})" title="Convidar">
+                    <i class="fas fa-user-plus"></i>
+                  </button>` : ''}
+                <button class="btn-icon"
+                        onclick="location.href='/Home/ProjetosEquipa?idEquipa=${e.idEquipa}'"
+                        title="Projetos">
+                  <i class="fas fa-tasks"></i>
+                </button>
+                <button class="btn-icon" onclick="abrirModalMembros(${e.idEquipa})" title="Membros">
+                  <i class="fas fa-users"></i>
+                </button>
+                ${e.isCriador ? `
+                  <button class="btn-icon btn-danger" onclick="apagarEquipa(${e.idEquipa})" title="Apagar">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>` : ''}
+              </div>
+            </div>
+          `).join("");
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = "<p>Erro ao carregar equipas.</p>";
+            }
+        }
+
+        function abrirModalCriarEquipa() { document.getElementById("modalCriarEquipa").style.display = "flex"; }
+        function fecharModalCriarEquipa() { document.getElementById("modalCriarEquipa").style.display = "none"; }
+
+        async function criarEquipa() {
+            const nome = document.getElementById("nomeEquipa").value.trim();
+            if (!nome) return alert("Nome obrigatório");
+            const res = await fetch("/api/Equipa/Criar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nome })
+            });
+            if (res.ok) { fecharModalCriarEquipa(); carregarEquipas(); }
+            else { const e = await res.json(); alert(e.message || "Erro"); }
+        }
+
+        function abrirModalConvite(id) {
+            equipaSelecionadaId = id;
+            usernameSelecionado = null;
+            document.getElementById("inputUsername").value = "";
+            document.getElementById("autocompleteResultados").innerHTML = "";
+            document.getElementById("mensagemConvite").value = "";
+            document.getElementById("modalConvite").style.display = "flex";
+        }
+        function fecharModalConvite() { document.getElementById("modalConvite").style.display = "none"; }
+
+        document.getElementById('inputUsername').addEventListener('input', async function() {
+            const q = this.value.trim();
+            if (q.length < 2) {
+                document.getElementById("autocompleteResultados").innerHTML = "";
+                return;
+            }
+            const res = await fetch(`/api/Equipa/PesquisarUtilizador?query=${encodeURIComponent(q)}`);
+            const data = await res.json();
+            document.getElementById("autocompleteResultados").innerHTML =
+                data.map(u => `<div onclick="selecionarUsername('${u.username}')">${u.username}</div>`).join("");
+        });
+        function selecionarUsername(u) {
+            usernameSelecionado = u;
+            document.getElementById("inputUsername").value = u;
+            document.getElementById("autocompleteResultados").innerHTML = "";
+        }
+
+        async function enviarConvite() {
+            if (!usernameSelecionado || !equipaSelecionadaId) return alert("Seleciona um utilizador");
+            const msg = document.getElementById("mensagemConvite").value.trim();
+            const res = await fetch("/api/Equipa/Convidar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    usernameDestinatario: usernameSelecionado,
+                    mensagem: msg,
+                    idEquipa: equipaSelecionadaId
+                })
+            });
+            if (res.ok) fecharModalConvite();
+            else { const e = await res.json(); alert(e.message || "Erro"); }
+        }
+
+        function abrirModalMembros(id) {
+            fetch(`/api/Equipa/GetMembros?id=${id}`)
+                .then(r => r.json())
+                .then(membros => {
+                    fetch("/api/Equipa/Minhas")
+                        .then(r => r.json())
+                        .then(eqs => {
+                            const eq = eqs.find(x => x.idEquipa === id),
+                                dono = eq?.isCriador,
+                                meuId = +document.getElementById("user-id").value;
+                            const ul = document.getElementById("listaMembros");
+                            ul.innerHTML = membros.map(m => {
+                                if (dono && m.id !== meuId) {
+                                    return `<li class="list-group-item d-flex justify-content-between align-items-center">
+                          ${m.nome}
+                          <button class="btn btn-sm btn-danger" onclick="removerMembro(${m.id},${id})">Remover</button>
+                        </li>`;
+                                }
+                                if (!dono && m.id === meuId) {
+                                    return `<li class="list-group-item d-flex justify-content-between align-items-center">
+                          ${m.nome}
+                          <button class="btn btn-sm btn-secondary" onclick="removerMembro(${m.id},${id})">Sair</button>
+                        </li>`;
+                                }
+                                return `<li class="list-group-item">${m.nome}</li>`;
+                            }).join("");
+                            document.getElementById("modalMembros").style.display = "flex";
+                        });
+                });
+        }
+        function fecharModalMembros() { document.getElementById("modalMembros").style.display = "none"; }
+
+        function removerMembro(userId, equipId) {
+            if (!confirm("Remover membro?")) return;
+            fetch("/api/Equipa/RemoverMembro", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId, equipaId: equipId })
+            }).then(() => abrirModalMembros(equipId));
+        }
+
+        async function apagarEquipa(id) {
+            if (!confirm("Apagar equipa?")) return;
+            const res = await fetch(`/api/Equipa/Apagar/${id}`, { method: "DELETE" });
+            if (res.ok) carregarEquipas();
+        }
+
+        window.addEventListener("click", e => {
+            ["modalCriarEquipa", "modalConvite", "modalMembros"].forEach(id => {
+                if (e.target === document.getElementById(id)) {
+                    document.getElementById(id).style.display = "none";
+                }
+            });
+        });
+    </script>
+
+}

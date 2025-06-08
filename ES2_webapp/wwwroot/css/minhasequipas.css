@@ -1,0 +1,208 @@
+﻿:root {
+    --primaria:   #00914b;
+    --secundaria: #00a86b;
+    --danger:     #e74c3c;
+    --bg-card:    #ffffff;
+    --shadow:     rgba(0, 0, 0, 0.08);
+}
+
+/* ================================== */
+/*   Card de Equipa (formato X/Y)     */
+/* ================================== */
+.perfil-card {
+    position: relative;
+    background: var(--bg-card);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px var(--shadow);
+    overflow: hidden;
+
+    /* X: largo, Y: baixo */
+    width: 350px;
+    min-height: 120px;
+
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 0.5rem;
+}
+.perfil-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px var(--shadow);
+}
+/* Listra lateral */
+.perfil-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 6px;
+    background: linear-gradient(to bottom, var(--primaria), var(--secundaria));
+}
+
+/* ===== Header ===== */
+.card-header {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.card-header i {
+    font-size: 1.25rem;
+    color: var(--primaria);
+}
+.card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+.role-badge {
+    margin-left: auto;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.role-badge.owner {
+    background: var(--secundaria);
+    color: #fff;
+}
+.role-badge.guest {
+    background: #f0f0f0;
+    color: #555;
+}
+
+/* ===== Body (vazio para espaçamento) ===== */
+.card-body {
+    padding: 0; /* sem texto */
+}
+
+/* ===== Actions ===== */
+.card-actions {
+    padding: 0.5rem 1rem 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+.btn-icon {
+    background: var(--primaria);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    transition: background 0.3s, transform 0.2s;
+    cursor: pointer;
+}
+.btn-icon:hover {
+    background: var(--secundaria);
+    transform: scale(1.2);
+}
+.btn-icon.btn-danger {
+    background: var(--danger);
+}
+.btn-icon.btn-danger:hover {
+    background: #c0392b;
+}
+.btn-icon:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,145,75,0.25);
+}
+
+/* ========================= */
+/*   Modais (popups)         */
+/* ========================= */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+.modal-content.popup-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 450px;
+    padding: 1.5rem;
+    box-shadow: 0 12px 32px var(--shadow);
+    animation: fadeInDown 0.4s ease-out forwards;
+}
+@keyframes fadeInDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to   { transform: translateY(0);     opacity: 1; }
+}
+
+/* Popup Body */
+.popup-body {
+    background: var(--bg-card);
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1rem;
+}
+.popup-title {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--primaria);
+    margin-bottom: 1rem;
+}
+
+/* Inputs no popup */
+.popup-body .form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.3s ease;
+}
+.popup-body .form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(0,145,75,0.25);
+    outline: none;
+}
+
+/* Botões no popup */
+.popup-body .btn-success {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+.popup-body .btn-success:hover {
+    background: var(--secundaria);
+    transform: translateY(-2px);
+}
+.popup-body .btn-outline-secondary {
+    width: 100%;
+    border-width: 2px;
+    color: var(--primaria);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+.popup-body .btn-outline-secondary:hover {
+    background: var(--primaria);
+    color: #fff;
+}
+
+/* Autocomplete */
+#autocompleteResultados {
+    max-height: 140px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+#autocompleteResultados div {
+    padding: 0.5rem;
+    cursor: pointer;
+}
+#autocompleteResultados div:hover {
+    background-color: #f0f0f0;
+}

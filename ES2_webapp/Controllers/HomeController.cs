@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
+using ES2_webapp.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WebApplication2.Entities;
 using WebApplication2.Models;
 using WebApplication2.Services;
 using WebApplication2.Factories;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication2.Controllers
 {
@@ -14,11 +16,13 @@ namespace WebApplication2.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUtilizadorService _utilizadorService;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger, IUtilizadorService utilizadorService)
+        public HomeController(ILogger<HomeController> logger, IUtilizadorService utilizadorService, ApplicationDbContext context)
         {
             _logger = logger;
             _utilizadorService = utilizadorService;
+            _context = context;
         }
 
         public IActionResult Index() => View();
@@ -125,6 +129,17 @@ namespace WebApplication2.Controllers
 
             if (utilizador == null)
                 return RedirectToAction("Login", "Home");
+
+            // Buscar projetos do utilizador (pessoais e de equipa)
+            var projetosDoUtilizador = await _context.Projetos
+                .Where(p =>
+                    p.IdUtilizador == id
+                    || (p.EquipaId != null &&
+                        _context.EquipaUtilizadores.Any(eu => eu.EquipaId == p.EquipaId && eu.UtilizadorId == id))
+                )
+                .OrderBy(p => p.NomeProjeto)
+                .ToListAsync();
+            ViewBag.ProjetosDoUser = projetosDoUtilizador;
 
             return View(utilizador);
         }

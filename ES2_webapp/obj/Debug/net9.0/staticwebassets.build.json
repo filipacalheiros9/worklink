@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "u5sUoGSwuJUyAxalFymMUI84jV8a9U4XvyKUR6rk+1A=",
+  "Hash": "xHmlOtC/G+KiGYZVl49xisReNynq5TXg8FLZ3UydNbw=",
   "Source": "ES2_webapp",
   "BasePath": "_content/ES2_webapp",
   "Mode": "Default",
@@ -185,12 +185,12 @@
       "OriginalItemSpec": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\4x8lpxe5d9-pi9m70xngm.gz",
+      "Identity": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\4x8lpxe5d9-ho3d04geg9.gz",
       "SourceId": "ES2_webapp",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\",
       "BasePath": "_content/ES2_webapp",
-      "RelativePath": "css/perfil#[.{fingerprint=pi9m70xngm}]?.css.gz",
+      "RelativePath": "css/perfil#[.{fingerprint=ho3d04geg9}]?.css.gz",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Alternative",
@@ -199,8 +199,8 @@
       "RelatedAsset": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\perfil.css",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "v9c3rq08z6",
-      "Integrity": "HfyXaOg1KJO3IxaZVNWPUaiovabGVz7fBObXd0dUvx0=",
+      "Fingerprint": "4p6i8npgu2",
+      "Integrity": "mLnOVhSUHlD4w2Bg8uFZKcJFef4W1hpf7a6+dpow+Fk=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\perfil.css"
@@ -689,12 +689,12 @@
       "OriginalItemSpec": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
     },
     {
-      "Identity": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\ipoz24y8y7-ys1bq99z1b.gz",
+      "Identity": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\ipoz24y8y7-2vuih462j3.gz",
       "SourceId": "ES2_webapp",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\",
       "BasePath": "_content/ES2_webapp",
-      "RelativePath": "css/index#[.{fingerprint=ys1bq99z1b}]?.css.gz",
+      "RelativePath": "css/index#[.{fingerprint=2vuih462j3}]?.css.gz",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Alternative",
@@ -703,8 +703,8 @@
       "RelatedAsset": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\index.css",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
-      "Fingerprint": "t24rhiv1kz",
-      "Integrity": "Zban2FJAd3Ynr0b+lHBAsXWzBBcjmgARYiocY7jZ++0=",
+      "Fingerprint": "0asz2mbcn2",
+      "Integrity": "GHzpiT8KVRrKecwrga6kC99FnPARnVtgdIp5ya1jnIk=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\index.css"
@@ -1172,6 +1172,27 @@
       "OriginalItemSpec": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js"
     },
     {
+      "Identity": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\u3jmffpgjt-nun429oye1.gz",
+      "SourceId": "ES2_webapp",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/ES2_webapp",
+      "RelativePath": "css/minhasequipas#[.{fingerprint=nun429oye1}]?.css.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\minhasequipas.css",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "016iorw7ak",
+      "Integrity": "BBOj55yCFN8pObPy2MxMWdbWTjijgM0L2QH+GjFVmt8=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\minhasequipas.css"
+    },
+    {
       "Identity": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\u5q5y6tizk-gye83jo8yx.gz",
       "SourceId": "ES2_webapp",
       "SourceType": "Discovered",
@@ -1585,8 +1606,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "ys1bq99z1b",
-      "Integrity": "4kv5oYzKUMYUPMWAljd5gIuTCvVNbuD8ifnrPWzu0m8=",
+      "Fingerprint": "2vuih462j3",
+      "Integrity": "vo3B7rAktjZzdPDiWfRwscr4LktS/WaC37fT+5OeNcU=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\index.css"
@@ -1613,6 +1634,27 @@
       "OriginalItemSpec": "wwwroot\\css\\Login.css"
     },
     {
+      "Identity": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\minhasequipas.css",
+      "SourceId": "ES2_webapp",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\",
+      "BasePath": "_content/ES2_webapp",
+      "RelativePath": "css/minhasequipas#[.{fingerprint}]?.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "nun429oye1",
+      "Integrity": "v1emRzRSO6FOMRDEcunXIfexPHSH0QdTqdO8OTspqB8=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\minhasequipas.css"
+    },
+    {
       "Identity": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\perfil.css",
       "SourceId": "ES2_webapp",
       "SourceType": "Discovered",
@@ -1627,8 +1669,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "pi9m70xngm",
-      "Integrity": "sRAU9kwRHnc75bUGUC21aDFRAKx5OYBvLqh6Cc4LiU0=",
+      "Fingerprint": "ho3d04geg9",
+      "Integrity": "H5w/c81SyUPwcE4WOLxlcgMBDC6WhLF3ryN+4fve4I8=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\perfil.css"
@@ -3341,8 +3383,8 @@
       ]
     },
     {
-      "Route": "css/index.css",
-      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\ipoz24y8y7-ys1bq99z1b.gz",
+      "Route": "css/index.2vuih462j3.css",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\ipoz24y8y7-2vuih462j3.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
@@ -3361,15 +3403,15 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"Zban2FJAd3Ynr0b+lHBAsXWzBBcjmgARYiocY7jZ++0=\""
+          "Value": "\"GHzpiT8KVRrKecwrga6kC99FnPARnVtgdIp5ya1jnIk=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
+          "Value": "Sun, 08 Jun 2025 11:51:41 GMT"
         },
         {
           "Name": "Cache-Control",
-          "Value": "no-cache"
+          "Value": "max-age=31536000, immutable"
         },
         {
           "Name": "Content-Encoding",
@@ -3385,18 +3427,26 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"4kv5oYzKUMYUPMWAljd5gIuTCvVNbuD8ifnrPWzu0m8=\""
+          "Value": "W/\"vo3B7rAktjZzdPDiWfRwscr4LktS/WaC37fT+5OeNcU=\""
         }
       ],
       "EndpointProperties": [
         {
+          "Name": "fingerprint",
+          "Value": "2vuih462j3"
+        },
+        {
+          "Name": "label",
+          "Value": "css/index.css"
+        },
+        {
           "Name": "integrity",
-          "Value": "sha256-4kv5oYzKUMYUPMWAljd5gIuTCvVNbuD8ifnrPWzu0m8="
+          "Value": "sha256-vo3B7rAktjZzdPDiWfRwscr4LktS/WaC37fT+5OeNcU="
         }
       ]
     },
     {
-      "Route": "css/index.css",
+      "Route": "css/index.2vuih462j3.css",
       "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\index.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -3406,7 +3456,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "2820"
+          "Value": "2824"
         },
         {
           "Name": "Content-Type",
@@ -3414,121 +3464,21 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"4kv5oYzKUMYUPMWAljd5gIuTCvVNbuD8ifnrPWzu0m8=\""
+          "Value": "\"vo3B7rAktjZzdPDiWfRwscr4LktS/WaC37fT+5OeNcU=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-4kv5oYzKUMYUPMWAljd5gIuTCvVNbuD8ifnrPWzu0m8="
-        }
-      ]
-    },
-    {
-      "Route": "css/index.css.gz",
-      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\ipoz24y8y7-ys1bq99z1b.gz",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "987"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"Zban2FJAd3Ynr0b+lHBAsXWzBBcjmgARYiocY7jZ++0=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "no-cache"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "integrity",
-          "Value": "sha256-Zban2FJAd3Ynr0b+lHBAsXWzBBcjmgARYiocY7jZ++0="
-        }
-      ]
-    },
-    {
-      "Route": "css/index.ys1bq99z1b.css",
-      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\ipoz24y8y7-ys1bq99z1b.gz",
-      "Selectors": [
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip",
-          "Quality": "0.001012145749"
-        }
-      ],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "987"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"Zban2FJAd3Ynr0b+lHBAsXWzBBcjmgARYiocY7jZ++0=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
+          "Value": "Sun, 08 Jun 2025 11:51:41 GMT"
         },
         {
           "Name": "Cache-Control",
           "Value": "max-age=31536000, immutable"
-        },
-        {
-          "Name": "Content-Encoding",
-          "Value": "gzip"
-        },
-        {
-          "Name": "Vary",
-          "Value": "Content-Encoding"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "W/\"4kv5oYzKUMYUPMWAljd5gIuTCvVNbuD8ifnrPWzu0m8=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "ys1bq99z1b"
+          "Value": "2vuih462j3"
         },
         {
           "Name": "label",
@@ -3536,58 +3486,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-4kv5oYzKUMYUPMWAljd5gIuTCvVNbuD8ifnrPWzu0m8="
+          "Value": "sha256-vo3B7rAktjZzdPDiWfRwscr4LktS/WaC37fT+5OeNcU="
         }
       ]
     },
     {
-      "Route": "css/index.ys1bq99z1b.css",
-      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\index.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "2820"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"4kv5oYzKUMYUPMWAljd5gIuTCvVNbuD8ifnrPWzu0m8=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "ys1bq99z1b"
-        },
-        {
-          "Name": "label",
-          "Value": "css/index.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-4kv5oYzKUMYUPMWAljd5gIuTCvVNbuD8ifnrPWzu0m8="
-        }
-      ]
-    },
-    {
-      "Route": "css/index.ys1bq99z1b.css.gz",
-      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\ipoz24y8y7-ys1bq99z1b.gz",
+      "Route": "css/index.2vuih462j3.css.gz",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\ipoz24y8y7-2vuih462j3.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -3604,11 +3509,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"Zban2FJAd3Ynr0b+lHBAsXWzBBcjmgARYiocY7jZ++0=\""
+          "Value": "\"GHzpiT8KVRrKecwrga6kC99FnPARnVtgdIp5ya1jnIk=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
+          "Value": "Sun, 08 Jun 2025 11:51:41 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3626,7 +3531,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "ys1bq99z1b"
+          "Value": "2vuih462j3"
         },
         {
           "Name": "label",
@@ -3634,7 +3539,144 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-Zban2FJAd3Ynr0b+lHBAsXWzBBcjmgARYiocY7jZ++0="
+          "Value": "sha256-GHzpiT8KVRrKecwrga6kC99FnPARnVtgdIp5ya1jnIk="
+        }
+      ]
+    },
+    {
+      "Route": "css/index.css",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\ipoz24y8y7-2vuih462j3.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001012145749"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "987"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"GHzpiT8KVRrKecwrga6kC99FnPARnVtgdIp5ya1jnIk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 08 Jun 2025 11:51:41 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"vo3B7rAktjZzdPDiWfRwscr4LktS/WaC37fT+5OeNcU=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-vo3B7rAktjZzdPDiWfRwscr4LktS/WaC37fT+5OeNcU="
+        }
+      ]
+    },
+    {
+      "Route": "css/index.css",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\index.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2824"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"vo3B7rAktjZzdPDiWfRwscr4LktS/WaC37fT+5OeNcU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 08 Jun 2025 11:51:41 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-vo3B7rAktjZzdPDiWfRwscr4LktS/WaC37fT+5OeNcU="
+        }
+      ]
+    },
+    {
+      "Route": "css/index.css.gz",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\ipoz24y8y7-2vuih462j3.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "987"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"GHzpiT8KVRrKecwrga6kC99FnPARnVtgdIp5ya1jnIk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 08 Jun 2025 11:51:41 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-GHzpiT8KVRrKecwrga6kC99FnPARnVtgdIp5ya1jnIk="
         }
       ]
     },
@@ -3937,13 +3979,13 @@
       ]
     },
     {
-      "Route": "css/perfil.css",
-      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\4x8lpxe5d9-pi9m70xngm.gz",
+      "Route": "css/minhasequipas.css",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\u3jmffpgjt-nun429oye1.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.002544529262"
+          "Quality": "0.000720461095"
         }
       ],
       "ResponseHeaders": [
@@ -3953,15 +3995,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "392"
+          "Value": "1387"
         },
         {
           "Name": "ETag",
-          "Value": "\"HfyXaOg1KJO3IxaZVNWPUaiovabGVz7fBObXd0dUvx0=\""
+          "Value": "\"BBOj55yCFN8pObPy2MxMWdbWTjijgM0L2QH+GjFVmt8=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
+          "Value": "Sun, 08 Jun 2025 14:44:39 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3981,13 +4023,311 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"sRAU9kwRHnc75bUGUC21aDFRAKx5OYBvLqh6Cc4LiU0=\""
+          "Value": "W/\"v1emRzRSO6FOMRDEcunXIfexPHSH0QdTqdO8OTspqB8=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-sRAU9kwRHnc75bUGUC21aDFRAKx5OYBvLqh6Cc4LiU0="
+          "Value": "sha256-v1emRzRSO6FOMRDEcunXIfexPHSH0QdTqdO8OTspqB8="
+        }
+      ]
+    },
+    {
+      "Route": "css/minhasequipas.css",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\minhasequipas.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "4720"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"v1emRzRSO6FOMRDEcunXIfexPHSH0QdTqdO8OTspqB8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 08 Jun 2025 14:44:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-v1emRzRSO6FOMRDEcunXIfexPHSH0QdTqdO8OTspqB8="
+        }
+      ]
+    },
+    {
+      "Route": "css/minhasequipas.css.gz",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\u3jmffpgjt-nun429oye1.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1387"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"BBOj55yCFN8pObPy2MxMWdbWTjijgM0L2QH+GjFVmt8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 08 Jun 2025 14:44:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-BBOj55yCFN8pObPy2MxMWdbWTjijgM0L2QH+GjFVmt8="
+        }
+      ]
+    },
+    {
+      "Route": "css/minhasequipas.nun429oye1.css",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\u3jmffpgjt-nun429oye1.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000720461095"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1387"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"BBOj55yCFN8pObPy2MxMWdbWTjijgM0L2QH+GjFVmt8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 08 Jun 2025 14:44:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"v1emRzRSO6FOMRDEcunXIfexPHSH0QdTqdO8OTspqB8=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "nun429oye1"
+        },
+        {
+          "Name": "label",
+          "Value": "css/minhasequipas.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-v1emRzRSO6FOMRDEcunXIfexPHSH0QdTqdO8OTspqB8="
+        }
+      ]
+    },
+    {
+      "Route": "css/minhasequipas.nun429oye1.css",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\minhasequipas.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "4720"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"v1emRzRSO6FOMRDEcunXIfexPHSH0QdTqdO8OTspqB8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 08 Jun 2025 14:44:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "nun429oye1"
+        },
+        {
+          "Name": "label",
+          "Value": "css/minhasequipas.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-v1emRzRSO6FOMRDEcunXIfexPHSH0QdTqdO8OTspqB8="
+        }
+      ]
+    },
+    {
+      "Route": "css/minhasequipas.nun429oye1.css.gz",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\u3jmffpgjt-nun429oye1.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1387"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"BBOj55yCFN8pObPy2MxMWdbWTjijgM0L2QH+GjFVmt8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 08 Jun 2025 14:44:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "nun429oye1"
+        },
+        {
+          "Name": "label",
+          "Value": "css/minhasequipas.css.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-BBOj55yCFN8pObPy2MxMWdbWTjijgM0L2QH+GjFVmt8="
+        }
+      ]
+    },
+    {
+      "Route": "css/perfil.css",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\4x8lpxe5d9-ho3d04geg9.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000968054211"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1032"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"mLnOVhSUHlD4w2Bg8uFZKcJFef4W1hpf7a6+dpow+Fk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 08 Jun 2025 13:37:01 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"H5w/c81SyUPwcE4WOLxlcgMBDC6WhLF3ryN+4fve4I8=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-H5w/c81SyUPwcE4WOLxlcgMBDC6WhLF3ryN+4fve4I8="
         }
       ]
     },
@@ -4002,7 +4342,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "754"
+          "Value": "2858"
         },
         {
           "Name": "Content-Type",
@@ -4010,11 +4350,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"sRAU9kwRHnc75bUGUC21aDFRAKx5OYBvLqh6Cc4LiU0=\""
+          "Value": "\"H5w/c81SyUPwcE4WOLxlcgMBDC6WhLF3ryN+4fve4I8=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
+          "Value": "Sun, 08 Jun 2025 13:37:01 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4024,13 +4364,13 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-sRAU9kwRHnc75bUGUC21aDFRAKx5OYBvLqh6Cc4LiU0="
+          "Value": "sha256-H5w/c81SyUPwcE4WOLxlcgMBDC6WhLF3ryN+4fve4I8="
         }
       ]
     },
     {
       "Route": "css/perfil.css.gz",
-      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\4x8lpxe5d9-pi9m70xngm.gz",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\4x8lpxe5d9-ho3d04geg9.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4039,7 +4379,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "392"
+          "Value": "1032"
         },
         {
           "Name": "Content-Type",
@@ -4047,11 +4387,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"HfyXaOg1KJO3IxaZVNWPUaiovabGVz7fBObXd0dUvx0=\""
+          "Value": "\"mLnOVhSUHlD4w2Bg8uFZKcJFef4W1hpf7a6+dpow+Fk=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
+          "Value": "Sun, 08 Jun 2025 13:37:01 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4069,18 +4409,18 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-HfyXaOg1KJO3IxaZVNWPUaiovabGVz7fBObXd0dUvx0="
+          "Value": "sha256-mLnOVhSUHlD4w2Bg8uFZKcJFef4W1hpf7a6+dpow+Fk="
         }
       ]
     },
     {
-      "Route": "css/perfil.pi9m70xngm.css",
-      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\4x8lpxe5d9-pi9m70xngm.gz",
+      "Route": "css/perfil.ho3d04geg9.css",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\4x8lpxe5d9-ho3d04geg9.gz",
       "Selectors": [
         {
           "Name": "Content-Encoding",
           "Value": "gzip",
-          "Quality": "0.002544529262"
+          "Quality": "0.000968054211"
         }
       ],
       "ResponseHeaders": [
@@ -4090,15 +4430,15 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "392"
+          "Value": "1032"
         },
         {
           "Name": "ETag",
-          "Value": "\"HfyXaOg1KJO3IxaZVNWPUaiovabGVz7fBObXd0dUvx0=\""
+          "Value": "\"mLnOVhSUHlD4w2Bg8uFZKcJFef4W1hpf7a6+dpow+Fk=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
+          "Value": "Sun, 08 Jun 2025 13:37:01 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4118,13 +4458,13 @@
         },
         {
           "Name": "ETag",
-          "Value": "W/\"sRAU9kwRHnc75bUGUC21aDFRAKx5OYBvLqh6Cc4LiU0=\""
+          "Value": "W/\"H5w/c81SyUPwcE4WOLxlcgMBDC6WhLF3ryN+4fve4I8=\""
         }
       ],
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "pi9m70xngm"
+          "Value": "ho3d04geg9"
         },
         {
           "Name": "label",
@@ -4132,12 +4472,12 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-sRAU9kwRHnc75bUGUC21aDFRAKx5OYBvLqh6Cc4LiU0="
+          "Value": "sha256-H5w/c81SyUPwcE4WOLxlcgMBDC6WhLF3ryN+4fve4I8="
         }
       ]
     },
     {
-      "Route": "css/perfil.pi9m70xngm.css",
+      "Route": "css/perfil.ho3d04geg9.css",
       "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\wwwroot\\css\\perfil.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -4147,7 +4487,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "754"
+          "Value": "2858"
         },
         {
           "Name": "Content-Type",
@@ -4155,11 +4495,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"sRAU9kwRHnc75bUGUC21aDFRAKx5OYBvLqh6Cc4LiU0=\""
+          "Value": "\"H5w/c81SyUPwcE4WOLxlcgMBDC6WhLF3ryN+4fve4I8=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
+          "Value": "Sun, 08 Jun 2025 13:37:01 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4169,7 +4509,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "pi9m70xngm"
+          "Value": "ho3d04geg9"
         },
         {
           "Name": "label",
@@ -4177,13 +4517,13 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-sRAU9kwRHnc75bUGUC21aDFRAKx5OYBvLqh6Cc4LiU0="
+          "Value": "sha256-H5w/c81SyUPwcE4WOLxlcgMBDC6WhLF3ryN+4fve4I8="
         }
       ]
     },
     {
-      "Route": "css/perfil.pi9m70xngm.css.gz",
-      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\4x8lpxe5d9-pi9m70xngm.gz",
+      "Route": "css/perfil.ho3d04geg9.css.gz",
+      "AssetFile": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\Debug\\net9.0\\compressed\\4x8lpxe5d9-ho3d04geg9.gz",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -4192,7 +4532,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "392"
+          "Value": "1032"
         },
         {
           "Name": "Content-Type",
@@ -4200,11 +4540,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"HfyXaOg1KJO3IxaZVNWPUaiovabGVz7fBObXd0dUvx0=\""
+          "Value": "\"mLnOVhSUHlD4w2Bg8uFZKcJFef4W1hpf7a6+dpow+Fk=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 07 Jun 2025 14:53:27 GMT"
+          "Value": "Sun, 08 Jun 2025 13:37:01 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4222,7 +4562,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "pi9m70xngm"
+          "Value": "ho3d04geg9"
         },
         {
           "Name": "label",
@@ -4230,7 +4570,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-HfyXaOg1KJO3IxaZVNWPUaiovabGVz7fBObXd0dUvx0="
+          "Value": "sha256-mLnOVhSUHlD4w2Bg8uFZKcJFef4W1hpf7a6+dpow+Fk="
         }
       ]
     },

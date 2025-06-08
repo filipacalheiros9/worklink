@@ -30,8 +30,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>ys1bq99z1b</Fingerprint>
-      <Integrity>4kv5oYzKUMYUPMWAljd5gIuTCvVNbuD8ifnrPWzu0m8=</Integrity>
+      <Fingerprint>2vuih462j3</Fingerprint>
+      <Integrity>vo3B7rAktjZzdPDiWfRwscr4LktS/WaC37fT+5OeNcU=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\index.css'))</OriginalItemSpec>
@@ -54,6 +54,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\Login.css'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\minhasequipas.css'))">
+      <SourceType>Package</SourceType>
+      <SourceId>ES2_webapp</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/ES2_webapp</BasePath>
+      <RelativePath>css/minhasequipas.css</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>nun429oye1</Fingerprint>
+      <Integrity>v1emRzRSO6FOMRDEcunXIfexPHSH0QdTqdO8OTspqB8=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\minhasequipas.css'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\perfil.css'))">
       <SourceType>Package</SourceType>
       <SourceId>ES2_webapp</SourceId>
@@ -66,8 +84,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>pi9m70xngm</Fingerprint>
-      <Integrity>sRAU9kwRHnc75bUGUC21aDFRAKx5OYBvLqh6Cc4LiU0=</Integrity>
+      <Fingerprint>ho3d04geg9</Fingerprint>
+      <Integrity>H5w/c81SyUPwcE4WOLxlcgMBDC6WhLF3ryN+4fve4I8=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\perfil.css'))</OriginalItemSpec>

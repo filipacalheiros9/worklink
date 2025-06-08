@@ -18,5 +18,6 @@ public class Projeto
     
     public int? EquipaId { get; set; }
     public Equipa? Equipa { get; set; }
+
     public ICollection<ProjetoTarefa> ProjetosTarefas { get; set; } = new List<ProjetoTarefa>();
 }

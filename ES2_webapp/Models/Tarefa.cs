@@ -17,6 +17,8 @@ public class Tarefa
     public decimal? PrecoHora { get; set; }
     
     public decimal? IdUtilizador { get; set; }
+    [ForeignKey("IdUtilizador")]
+    public Utilizador? Utilizador { get; set; }
     
     public ICollection<ProjetoTarefa> ProjetosTarefas { get; set; } = new List<ProjetoTarefa>();
 }

@@ -4,157 +4,142 @@
     ViewData["Title"] = "O Meu Perfil";
 }
 
+<!-- Dependências -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+<!-- Teu CSS personalizado -->
 <link href="~/css/perfil.css" rel="stylesheet" />
 
-<div class="container mt-5 mb-5">
-    <!-- ===== Formulário de edição de perfil ===== -->
-    <div class="perfil-card">
-        <h2 class="text-success text-center mb-4">
-            <i class="fas fa-user-circle me-2"></i> O Meu Perfil
-        </h2>
+<main class="profile-page container py-5">
+    <div class="row g-4">
+        <!-- PERFIL -->
+        <div class="col-12 col-lg-6">
+            <div class="perfil-card mb-4">
+                <h5 class="mb-3">
+                    <i class="fas fa-user-edit text-success me-2"></i>Editar Perfil
+                </h5>
+                <form id="perfilForm" novalidate>
+                    <input type="hidden" id="IdUtilizador" value="@Model.IdUtilizador" />
 
-        <div id="errorBox" class="alert-box" style="display: none;"></div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-white"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="Nome" value="@Model.Nome" readonly />
+                        <button class="btn edit-btn" type="button" onclick="enableEdit('Nome')">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
 
-        <form id="perfilForm">
-            <input type="hidden" id="IdUtilizador" value="@Model.IdUtilizador" />
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-white"><i class="fas fa-at"></i></span>
+                        <input type="text" class="form-control" id="Username" value="@Model.Username" readonly />
+                        <button class="btn edit-btn" type="button" onclick="enableEdit('Username')">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
 
-            <!-- Nome -->
-            <div class="mb-4">
-                <label class="form-label">Nome</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-white"><i class="fas fa-user text-success"></i></span>
-                    <input class="form-control" id="Nome" value="@Model.Nome" readonly />
-                    <button type="button" class="btn btn-light border" onclick="enableEdit('Nome')">
-                        <i class="fas fa-pencil-alt text-muted"></i>
+                    <div class="input-group mb-4">
+                        <span class="input-group-text bg-white"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="Password" value="@Model.Password" readonly />
+                        <button class="btn edit-btn" type="button" onclick="toggleEditAndShow('Password', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <div id="errorBox" class="alert-box mb-3" style="display:none;"></div>
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="fas fa-save me-1"></i> Guardar Alterações
                     </button>
-                </div>
+                </form>
             </div>
+        </div>
 
-            <!-- Username -->
-            <div class="mb-4">
-                <label class="form-label">Username</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-white"><i class="fas fa-at text-success"></i></span>
-                    <input class="form-control" id="Username" value="@Model.Username" readonly />
-                    <button type="button" class="btn btn-light border" onclick="enableEdit('Username')">
-                        <i class="fas fa-pencil-alt text-muted"></i>
-                    </button>
-                </div>
+        <!-- RELATÓRIO -->
+        <div class="col-12 col-lg-6">
+            <div class="perfil-card mb-4">
+                <h5 class="mb-3">
+                    <i class="fas fa-chart-line text-success me-2"></i>Relatório Mensal
+                </h5>
+                <form method="get" asp-controller="Relatorios" asp-action="RelatorioMensal" class="row g-3">
+                    <input type="hidden" name="idUtilizador" value="@Model.IdUtilizador" />
+                    <div class="col-6">
+                        <label class="form-label small text-uppercase">Mês</label>
+                        <select id="mes" name="mes" class="form-select">
+                            @for (int m = 1; m <= 12; m++)
+                            {
+                                <option value="@m">@m.ToString("D2")</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small text-uppercase">Ano</label>
+                        <input type="number" id="ano" name="ano" class="form-control" min="2000" max="2100" value="@DateTime.Now.Year" />
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-file-alt me-1"></i> Gerar Relatório
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <!-- Password -->
-            <div class="mb-4">
-                <label class="form-label">Password</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-white"><i class="fas fa-lock text-success"></i></span>
-                    <input type="password" class="form-control" id="Password" value="@Model.Password" readonly />
-                    <button type="button" class="btn btn-light border" onclick="enableEdit('Password')">
-                        <i class="fas fa-pencil-alt text-muted"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Botão Guardar -->
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-success">Guardar Alterações</button>
-            </div>
-        </form>
+        </div>
     </div>
-
-    <!-- ===== NOVA SECÇÃO: Relatório Mensal de Tarefas ===== -->
-    <div class="perfil-card mt-5">
-        <h3 class="text-success text-center mb-3">
-            <i class="fas fa-file-alt me-2"></i> Relatório Mensal de Tarefas
-        </h3>
-
-        <form method="get" asp-controller="Relatorios" asp-action="RelatorioMensal" class="row g-3 justify-content-center">
-            <!-- Passar idUtilizador como hidden -->
-            <input type="hidden" name="idUtilizador" value="@Model.IdUtilizador" />
-
-            <div class="col-auto">
-                <label for="mes" class="form-label">Mês:</label>
-                <select id="mes" name="mes" class="form-select">
-                    @for (int m = 1; m <= 12; m++)
-                    {
-                        <option value="@m">@m.ToString("D2")</option>
-                    }
-                </select>
-            </div>
-            <div class="col-auto">
-                <label for="ano" class="form-label">Ano:</label>
-                <input type="number" id="ano" name="ano" class="form-control" min="2000" max="2100" value="@DateTime.Now.Year" />
-            </div>
-            <div class="col-auto align-self-end">
-                <button type="submit" class="btn btn-success">Gerar Relatório</button>
-            </div>
-        </form>
-        <p class="text-muted text-center mt-2">
-            Escolha o mês e ano para visualizar o relatório de tarefas concluídas.
-        </p>
-    </div>
-</div>
+</main>
 
 @section Scripts {
     <script>
         function enableEdit(id) {
-            const input = document.getElementById(id);
-            input.removeAttribute('readonly');
-            input.focus();
+            const i = document.getElementById(id);
+            i.removeAttribute('readonly');
+            i.focus();
+            i.classList.add('animate__animated','animate__pulse');
+            i.addEventListener('animationend', () => i.classList.remove('animate__animated','animate__pulse'), { once: true });
         }
 
-        function showError(msg) {
-            const errorBox = document.getElementById("errorBox");
-            errorBox.textContent = msg;
-            errorBox.style.display = "block";
+        function toggleEditAndShow(id, btn) {
+            const i = document.getElementById(id);
+            enableEdit(id);
+            if (i.type === 'password') {
+                i.type = 'text';
+                btn.firstElementChild.classList.replace('fa-eye','fa-eye-slash');
+            } else {
+                i.type = 'password';
+                btn.firstElementChild.classList.replace('fa-eye-slash','fa-eye');
+            }
         }
 
-        document.getElementById("perfilForm").addEventListener("submit", async function (e) {
+        document.getElementById('perfilForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            document.getElementById("errorBox").style.display = "none";
-
-            const id = parseFloat(document.getElementById("IdUtilizador").value);
-            const nome = document.getElementById("Nome").value;
-            const username = document.getElementById("Username").value;
-            const password = document.getElementById("Password").value;
+            document.getElementById('errorBox').style.display = 'none';
 
             const data = {
-                IdUtilizador: id,
-                Nome: nome,
-                Username: username,
-                Password: password
+                IdUtilizador: +document.getElementById('IdUtilizador').value,
+                Nome:         document.getElementById('Nome').value,
+                Username:     document.getElementById('Username').value,
+                Password:     document.getElementById('Password').value
             };
 
             try {
-                const response = await fetch(`/api/PerfilApi`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                const res = await fetch(`/api/PerfilApi`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    alert(result.Message || "Alterações guardadas com sucesso!");
-                    location.reload();
-                } else {
-                    let msg = "Erro desconhecido.";
-                    try {
-                        const contentType = response.headers.get("content-type");
-                        if (contentType && contentType.includes("application/json")) {
-                            const errorData = await response.json();
-                            msg = errorData.Message || msg;
-                        } else {
-                            msg = `Erro HTTP ${response.status}`;
-                        }
-                    } catch {
-                        msg = "Resposta inválida da API.";
-                    }
-                    showError(msg);
+                if (!res.ok) throw res;
+                const { Message } = await res.json();
+                alert(Message || 'Guardado com sucesso!');
+                location.reload();
+            } catch (err) {
+                let msg = 'Erro inesperado.';
+                if (err.json) {
+                    const j = await err.json();
+                    msg = j.Message || msg;
+                } else if (err.status) {
+                    msg = `HTTP ${err.status}`;
                 }
-            } catch (error) {
-                showError("Erro inesperado: " + error.message);
+                const box = document.getElementById('errorBox');
+                box.textContent = msg;
+                box.style.display = 'block';
             }
         });
     </script>
