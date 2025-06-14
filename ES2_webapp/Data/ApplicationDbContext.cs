@@ -69,7 +69,7 @@ public class ApplicationDbContext : DbContext
             .WithMany()
             .HasForeignKey(eu => eu.UtilizadorId);
 
-        // ✅ Convite → Equipa
+        //  Convite → Equipa
         modelBuilder.Entity<Convite>()
             .HasOne(c => c.Equipa)
             .WithMany(e => e.Convites)

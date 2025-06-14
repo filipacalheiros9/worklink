@@ -542,9 +542,7 @@ C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\s
 C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\scopedcss\bundle\ES2_webapp.styles.css
 C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\scopedcss\projectbundle\ES2_webapp.bundle.scp.css
 C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\compressed\0z408haa9n-khy4lop6wu.gz
-C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\compressed\ipoz24y8y7-ys1bq99z1b.gz
 C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\compressed\m7nzaiyp57-rwrblcfuas.gz
-C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\compressed\4x8lpxe5d9-pi9m70xngm.gz
 C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\compressed\z8a1qiyr6p-vww72hy87e.gz
 C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\compressed\dcpkqkx5lp-gjceytjai3.gz
 C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\compressed\dc308yoi8z-1m29utinq6.gz
@@ -838,3 +836,6 @@ C:\Users\PC\OneDrive - Instituto Politécnico de Viana do Castelo\Documents\GitH
 C:\Users\PC\OneDrive - Instituto Politécnico de Viana do Castelo\Documents\GitHub\goingday\worklink\worklink\ES2_webapp\obj\Debug\net9.0\compressed\ipoz24y8y7-2vuih462j3.gz
 C:\Users\PC\OneDrive - Instituto Politécnico de Viana do Castelo\Documents\GitHub\goingday\worklink\worklink\ES2_webapp\obj\Debug\net9.0\compressed\u3jmffpgjt-nun429oye1.gz
 C:\Users\PC\OneDrive - Instituto Politécnico de Viana do Castelo\Documents\GitHub\goingday\worklink\worklink\ES2_webapp\obj\Debug\net9.0\compressed\4x8lpxe5d9-ho3d04geg9.gz
+C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\compressed\ipoz24y8y7-2vuih462j3.gz
+C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\compressed\u3jmffpgjt-nun429oye1.gz
+C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net9.0\compressed\4x8lpxe5d9-ho3d04geg9.gz

@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net9.0": {
+    "net8.0": {
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -473,12 +473,12 @@
           "Microsoft.Extensions.Primitives": "9.0.5"
         },
         "compile": {
-          "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.Caching.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.Caching.Abstractions.dll": {
             "related": ".xml"
           }
         },
@@ -496,12 +496,12 @@
           "Microsoft.Extensions.Primitives": "9.0.5"
         },
         "compile": {
-          "lib/net9.0/Microsoft.Extensions.Caching.Memory.dll": {
+          "lib/net8.0/Microsoft.Extensions.Caching.Memory.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.Caching.Memory.dll": {
+          "lib/net8.0/Microsoft.Extensions.Caching.Memory.dll": {
             "related": ".xml"
           }
         },
@@ -515,12 +515,12 @@
           "Microsoft.Extensions.Primitives": "9.0.5"
         },
         "compile": {
-          "lib/net9.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
             "related": ".xml"
           }
         },
@@ -534,12 +534,12 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
         },
         "compile": {
-          "lib/net9.0/Microsoft.Extensions.DependencyInjection.dll": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.DependencyInjection.dll": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.dll": {
             "related": ".xml"
           }
         },
@@ -550,12 +550,12 @@
       "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.5": {
         "type": "package",
         "compile": {
-          "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
             "related": ".xml"
           }
         },
@@ -565,13 +565,17 @@
       },
       "Microsoft.Extensions.DependencyModel/9.0.5": {
         "type": "package",
+        "dependencies": {
+          "System.Text.Encodings.Web": "9.0.5",
+          "System.Text.Json": "9.0.5"
+        },
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net8.0/_._": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.DependencyModel.dll": {
+          "lib/net8.0/Microsoft.Extensions.DependencyModel.dll": {
             "related": ".xml"
           }
         },
@@ -587,12 +591,12 @@
           "Microsoft.Extensions.Options": "9.0.5"
         },
         "compile": {
-          "lib/net9.0/Microsoft.Extensions.Logging.dll": {
+          "lib/net8.0/Microsoft.Extensions.Logging.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.Logging.dll": {
+          "lib/net8.0/Microsoft.Extensions.Logging.dll": {
             "related": ".xml"
           }
         },
@@ -603,15 +607,16 @@
       "Microsoft.Extensions.Logging.Abstractions/9.0.5": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.5",
+          "System.Diagnostics.DiagnosticSource": "9.0.5"
         },
         "compile": {
-          "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
             "related": ".xml"
           }
         },
@@ -626,12 +631,12 @@
           "Microsoft.Extensions.Primitives": "9.0.5"
         },
         "compile": {
-          "lib/net9.0/Microsoft.Extensions.Options.dll": {
+          "lib/net8.0/Microsoft.Extensions.Options.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.Options.dll": {
+          "lib/net8.0/Microsoft.Extensions.Options.dll": {
             "related": ".xml"
           }
         },
@@ -642,12 +647,12 @@
       "Microsoft.Extensions.Primitives/9.0.5": {
         "type": "package",
         "compile": {
-          "lib/net9.0/Microsoft.Extensions.Primitives.dll": {
+          "lib/net8.0/Microsoft.Extensions.Primitives.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.Primitives.dll": {
+          "lib/net8.0/Microsoft.Extensions.Primitives.dll": {
             "related": ".xml"
           }
         },
@@ -738,12 +743,12 @@
           "Microsoft.OpenApi": "1.6.23"
         },
         "compile": {
-          "lib/net9.0/Swashbuckle.AspNetCore.Swagger.dll": {
+          "lib/net8.0/Swashbuckle.AspNetCore.Swagger.dll": {
             "related": ".pdb;.xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Swashbuckle.AspNetCore.Swagger.dll": {
+          "lib/net8.0/Swashbuckle.AspNetCore.Swagger.dll": {
             "related": ".pdb;.xml"
           }
         },
@@ -757,12 +762,12 @@
           "Swashbuckle.AspNetCore.Swagger": "8.1.1"
         },
         "compile": {
-          "lib/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll": {
+          "lib/net8.0/Swashbuckle.AspNetCore.SwaggerGen.dll": {
             "related": ".pdb;.xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll": {
+          "lib/net8.0/Swashbuckle.AspNetCore.SwaggerGen.dll": {
             "related": ".pdb;.xml"
           }
         }
@@ -770,12 +775,12 @@
       "Swashbuckle.AspNetCore.SwaggerUI/8.1.1": {
         "type": "package",
         "compile": {
-          "lib/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {
+          "lib/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {
             "related": ".pdb;.xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {
+          "lib/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {
             "related": ".pdb;.xml"
           }
         },
@@ -925,20 +930,36 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
-      "System.IO.Pipelines/7.0.0": {
+      "System.Diagnostics.DiagnosticSource/9.0.5": {
         "type": "package",
         "compile": {
-          "lib/net7.0/_._": {
+          "lib/net8.0/System.Diagnostics.DiagnosticSource.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net7.0/System.IO.Pipelines.dll": {
+          "lib/net8.0/System.Diagnostics.DiagnosticSource.dll": {
             "related": ".xml"
           }
         },
         "build": {
-          "buildTransitive/net6.0/_._": {}
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
+      "System.IO.Pipelines/9.0.5": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/_._": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/System.IO.Pipelines.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
         }
       },
       "System.Reflection.Metadata/7.0.0": {
@@ -976,15 +997,41 @@
           "buildTransitive/netcoreapp3.1/_._": {}
         }
       },
-      "System.Text.Json/9.0.5": {
+      "System.Text.Encodings.Web/9.0.5": {
         "type": "package",
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net8.0/_._": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/System.Text.Json.dll": {
+          "lib/net8.0/System.Text.Encodings.Web.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        },
+        "runtimeTargets": {
+          "runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll": {
+            "assetType": "runtime",
+            "rid": "browser"
+          }
+        }
+      },
+      "System.Text.Json/9.0.5": {
+        "type": "package",
+        "dependencies": {
+          "System.IO.Pipelines": "9.0.5",
+          "System.Text.Encodings.Web": "9.0.5"
+        },
+        "compile": {
+          "lib/net8.0/_._": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/System.Text.Json.dll": {
             "related": ".xml"
           }
         },
@@ -3038,29 +3085,57 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "System.IO.Pipelines/7.0.0": {
-      "sha512": "jRn6JYnNPW6xgQazROBLSfpdoczRw694vO5kKvMcNnpXuolEixUyw6IBuBs2Y2mlSX/LdLvyyWmfXhaI3ND1Yg==",
+    "System.Diagnostics.DiagnosticSource/9.0.5": {
+      "sha512": "WoI5or8kY2VxFdDmsaRZ5yaYvvb+4MCyy66eXo79Cy1uMa7qXeGIlYmZx7R9Zy5S4xZjmqvkk2V8L6/vDwAAEA==",
       "type": "package",
-      "path": "system.io.pipelines/7.0.0",
+      "path": "system.diagnostics.diagnosticsource/9.0.5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Diagnostics.DiagnosticSource.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Diagnostics.DiagnosticSource.targets",
+        "lib/net462/System.Diagnostics.DiagnosticSource.dll",
+        "lib/net462/System.Diagnostics.DiagnosticSource.xml",
+        "lib/net8.0/System.Diagnostics.DiagnosticSource.dll",
+        "lib/net8.0/System.Diagnostics.DiagnosticSource.xml",
+        "lib/net9.0/System.Diagnostics.DiagnosticSource.dll",
+        "lib/net9.0/System.Diagnostics.DiagnosticSource.xml",
+        "lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll",
+        "lib/netstandard2.0/System.Diagnostics.DiagnosticSource.xml",
+        "system.diagnostics.diagnosticsource.9.0.5.nupkg.sha512",
+        "system.diagnostics.diagnosticsource.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "System.IO.Pipelines/9.0.5": {
+      "sha512": "5WXo+3MGcnYn54+1ojf+kRzKq1Q6sDUnovujNJ2ky1nl1/kP3+PMil9LPbFvZ2mkhvAGmQcY07G2sfHat/v0Fw==",
+      "type": "package",
+      "path": "system.io.pipelines/9.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
         "buildTransitive/net461/System.IO.Pipelines.targets",
         "buildTransitive/net462/_._",
-        "buildTransitive/net6.0/_._",
+        "buildTransitive/net8.0/_._",
         "buildTransitive/netcoreapp2.0/System.IO.Pipelines.targets",
         "lib/net462/System.IO.Pipelines.dll",
         "lib/net462/System.IO.Pipelines.xml",
-        "lib/net6.0/System.IO.Pipelines.dll",
-        "lib/net6.0/System.IO.Pipelines.xml",
-        "lib/net7.0/System.IO.Pipelines.dll",
-        "lib/net7.0/System.IO.Pipelines.xml",
+        "lib/net8.0/System.IO.Pipelines.dll",
+        "lib/net8.0/System.IO.Pipelines.xml",
+        "lib/net9.0/System.IO.Pipelines.dll",
+        "lib/net9.0/System.IO.Pipelines.xml",
         "lib/netstandard2.0/System.IO.Pipelines.dll",
         "lib/netstandard2.0/System.IO.Pipelines.xml",
-        "system.io.pipelines.7.0.0.nupkg.sha512",
+        "system.io.pipelines.9.0.5.nupkg.sha512",
         "system.io.pipelines.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -3115,6 +3190,38 @@
         "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml",
         "system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
         "system.runtime.compilerservices.unsafe.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "System.Text.Encodings.Web/9.0.5": {
+      "sha512": "HJPmqP2FsE+WVUUlTsZ4IFRSyzw40yz0ubiTnsaqm+Xo5fFZhVRvx6Zn8tLXj92/6pbre6OA4QL2A2vnCSKxJA==",
+      "type": "package",
+      "path": "system.text.encodings.web/9.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Text.Encodings.Web.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Text.Encodings.Web.targets",
+        "lib/net462/System.Text.Encodings.Web.dll",
+        "lib/net462/System.Text.Encodings.Web.xml",
+        "lib/net8.0/System.Text.Encodings.Web.dll",
+        "lib/net8.0/System.Text.Encodings.Web.xml",
+        "lib/net9.0/System.Text.Encodings.Web.dll",
+        "lib/net9.0/System.Text.Encodings.Web.xml",
+        "lib/netstandard2.0/System.Text.Encodings.Web.dll",
+        "lib/netstandard2.0/System.Text.Encodings.Web.xml",
+        "runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll",
+        "runtimes/browser/lib/net8.0/System.Text.Encodings.Web.xml",
+        "runtimes/browser/lib/net9.0/System.Text.Encodings.Web.dll",
+        "runtimes/browser/lib/net9.0/System.Text.Encodings.Web.xml",
+        "system.text.encodings.web.9.0.5.nupkg.sha512",
+        "system.text.encodings.web.nuspec",
         "useSharedDesignerContext.txt"
       ]
     },
@@ -3220,7 +3327,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net9.0": [
+    "net8.0": [
       "Microsoft.EntityFrameworkCore >= 9.0.5",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.5",
       "Microsoft.EntityFrameworkCore.Tools >= 9.0.5",
@@ -3229,29 +3336,29 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\PC\\.nuget\\packages\\": {}
+    "C:\\Users\\kikos\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\ES2_webapp.csproj",
+      "projectUniqueName": "C:\\Users\\kikos\\OneDrive\\Documentos\\GitHub\\worklink\\ES2_webapp\\ES2_webapp.csproj",
       "projectName": "ES2_webapp",
-      "projectPath": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\ES2_webapp.csproj",
-      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\PC\\OneDrive - Instituto Politécnico de Viana do Castelo\\Documents\\GitHub\\goingday\\worklink\\worklink\\ES2_webapp\\obj\\",
+      "projectPath": "C:\\Users\\kikos\\OneDrive\\Documentos\\GitHub\\worklink\\ES2_webapp\\ES2_webapp.csproj",
+      "packagesPath": "C:\\Users\\kikos\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\kikos\\OneDrive\\Documentos\\GitHub\\worklink\\ES2_webapp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\kikos\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net9.0"
+        "net8.0"
       ],
       "sources": {
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net9.0": {
-          "targetAlias": "net9.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "projectReferences": {}
         }
       },
@@ -3268,8 +3375,8 @@
       "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
-      "net9.0": {
-        "targetAlias": "net9.0",
+      "net8.0": {
+        "targetAlias": "net8.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
@@ -3307,6 +3414,24 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.13, 8.0.13]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[8.0.13, 8.0.13]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.13, 8.0.13]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[8.0.13, 8.0.13]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -3315,7 +3440,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Users\\kikos\\.dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

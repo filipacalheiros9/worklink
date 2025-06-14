@@ -23,7 +23,7 @@ namespace WebApplication2.Controllers
             try
             {
                 var utilizadores = await _utilizadorService.GetAllUtilizadoresAsync();
-                var ordenados = utilizadores.OrderBy(u => u.IdUtilizador); // <- Corrigido aqui
+                var ordenados = utilizadores.OrderBy(u => u.IdUtilizador); 
                 return Json(ordenados);
             }
             catch (Exception ex)
