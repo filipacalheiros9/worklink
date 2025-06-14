@@ -138,3 +138,6 @@ C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net8.0\r
 C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net8.0\ES2_webapp.pdb
 C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net8.0\ES2_webapp.genruntimeconfig.cache
 C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net8.0\ref\ES2_webapp.dll
+C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\bin\Debug\net8.0\ES2_webapp.staticwebassets.endpoints.json
+C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\kikos\OneDrive\Documentos\GitHub\worklink\ES2_webapp\obj\Debug\net8.0\staticwebassets\msbuild.ES2_webapp.Microsoft.AspNetCore.StaticWebAssetEndpoints.props

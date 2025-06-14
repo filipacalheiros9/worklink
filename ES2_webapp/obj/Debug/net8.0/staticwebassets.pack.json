@@ -2,7 +2,7 @@
   "Files": [
     {
       "Id": "C:\\Users\\kikos\\OneDrive\\Documentos\\GitHub\\worklink\\ES2_webapp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\ES2_webapp.bundle.scp.css",
-      "PackagePath": "staticwebassets\\ES2_webapp.bundle.scp.css"
+      "PackagePath": "staticwebassets\\ES2_webapp.wjp162u1jt.bundle.scp.css"
     },
     {
       "Id": "C:\\Users\\kikos\\OneDrive\\Documentos\\GitHub\\worklink\\ES2_webapp\\wwwroot\\app.css",
@@ -291,6 +291,10 @@
     {
       "Id": "C:\\Users\\kikos\\OneDrive\\Documentos\\GitHub\\worklink\\ES2_webapp\\wwwroot\\lib\\jquery\\dist\\jquery.slim.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.slim.min.map"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.ES2_webapp.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.ES2_webapp.Microsoft.AspNetCore.StaticWebAssets.props",
